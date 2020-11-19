@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component,useState,useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Button} from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
@@ -9,11 +9,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // create a component
 const ActividadesForm = (props) => {
-    const [selectedStartDate, setSelectedStartDate] = useState(null);
-    const [selectedEndDate, setSelectedEndDate] = useState(null);
-    const [capacitaciones,setCapacitaciones]  = useState(null);
-    const [visitas,setVisitas] = useState(null);
-    const [asesorias,setAsesorias ] = useState(null);
+    const [selectedStartDate, setSelectedStartDate] = useState('');
+    const [selectedEndDate, setSelectedEndDate] = useState('');
+    const [capacitaciones,setCapacitaciones]  = useState('');
+    const [visitas,setVisitas] = useState('');
+    const [asesorias,setAsesorias ] = useState('');
     // const [capacitaciones,setCapacitaciones]  = useState(['01/11/20','11/11/20','18/11/20','30/11/20','03/12/20']);
     // const [visitas,setVisitas] = useState(['03/11/20','13/11/20','22/11/20','25/11/20','10/12/20']);
     // const [asesorias,setAsesorias ] = useState(['08/11/20','10/11/20','19/11/20','03/11/20','22/12/20']);
@@ -21,19 +21,19 @@ const ActividadesForm = (props) => {
     const [tipoUsuario,setTipoUsuario] = useState(null);
     const [id2,setId2] = useState(null);
 
-    useEffect( () => {
-      getVariables();
-      getAsesorias();
-      getCapacitaciones();
-      getVisitas();
+    // useEffect( () => {
+    //   getVariables().then(getAsesorias());
+      
+    //   return async function cleanup(){
+    //     setVisitas(null);
+    //     setAsesorias(null);
+    //     setCapacitaciones(null);
+    //     setId(null);
+    //     setTipoUsuario(null);
+    //     setId2(null);
+    //   }
 
-      return function cleanup(){
-        setVisitas(null);
-        setAsesorias(null);
-        setCapacitaciones(null);
-      }
-
-    },[]);
+    // },[]);
 
     const getVariables = async()=>{
       let aidi = await AsyncStorage.getItem("id");
@@ -48,87 +48,83 @@ const ActividadesForm = (props) => {
       let param1 = id;
       let param2 = tipoUsuario;
       let param3 = id2;
-      let resp = await fetch(`http://10.0.2.2:8080/actividades/${param1}/${param2}/${param3}`);
+      let param4 = "asesoria";
+      let resp = await fetch(`http://10.0.2.2:8080/actividades/${param1}/${param2}/${param3}/${param4}`);
       let respJson = await resp.json();
-      console.log("Asesorias: ",respJson);
-    };
-
-    const getCapacitaciones = async () => {
-      let param1 = id;
-      let param2 = tipoUsuario;
-      let param3 = id2;
-      let resp = await fetch(`http://10.0.2.2:8080/actividades/${param1}/${param2}/${param3}`);
-      let respJson = await resp.json();
-      console.log("Capacitaciones: ",respJson);
-    };
-
-    const getVisitas = async () => {
-      let param1 = id;
-      let param2 = tipoUsuario;
-      let param3 = id2;
-      let resp = await fetch(`http://10.0.2.2:8080/actividades/${param1}/${param2}/${param3}`);
-      let respJson = await resp.json();
-      console.log("Visitas: ",respJson);
+      let aux = await respJson[0];
+      console.log('Aux: '+aux);
+      setAsesorias(aux);
+      aux = await respJson[1];
+      console.log('Aux: '+aux);
+      setCapacitaciones(aux);
+      aux = await respJson[2];
+      setVisitas(aux);
     };
 
     const customDatesStylesCallback = date => {
-      let deit = new Date(date);
-      deit.setHours(12,0,0,0);
-      let day = deit.getDate();
-      let month = deit.getMonth();
-      let year = deit.getFullYear();
-      let decada = ''+year.toString()[2];
-      let año = ''+year.toString()[3];
-
-      year = decada+año;
-      if(day.toString().length < 2){
-        day = '0'+day;
-      }
-      
-
-      let dateCompairable = day+'/'+(month+1)+'/'+year;
-
-      for( dias in asesorias){
-        if(dateCompairable == asesorias[dias]){
-          return {
-            style:{
-              backgroundColor: '#988C0C',
-            },
-            textStyle: {
-              color: '#fff',
-              fontWeight: 'bold',
-            }
-          };
+      getVariables().then((date )=>{
+        console.log("Visitas xD: "+visitas,'Capacitaciones xd: '+capacitaciones,'Visitas Xd: '+visitas);
+        let deit = new Date(date);
+        deit.setHours(12,0,0,0);
+        let day = deit.getDate();
+        let month = deit.getMonth();
+        let year = deit.getFullYear();
+        let decada = ''+year.toString()[2];
+        let año = ''+year.toString()[3];
+  
+        year = decada+año;
+        if(day.toString().length < 2){
+          day = '0'+day;
         }
-      }
-
-      for(dias in capacitaciones){
-        if(dateCompairable == capacitaciones[dias]){
-          return {
-            style:{
-              backgroundColor: '#17176B',
-            },
-            textStyle: {
-              color: '#fff',
-              fontWeight: 'bold',
-            }
-          };
+        
+  
+        let dateCompairable = day+'/'+(month+1)+'/'+year;
+        if (asesorias=='' && capacitaciones=='' && visitas=='' )
+          return
+  
+        for( dias in asesorias){
+          if(dateCompairable == asesorias[dias]){
+            return {
+              style:{
+                backgroundColor: '#988C0C',
+              },
+              textStyle: {
+                color: '#fff',
+                fontWeight: 'bold',
+              }
+            };
+          }
         }
-      }
-
-      for(dias in visitas){
-        if(dateCompairable == visitas[dias]){
-          return {
-            style:{
-              backgroundColor: '#157D0A',
-            },
-            textStyle: {
-              color: '#fff',
-              fontWeight: 'bold',
-            }
-          };
+  
+        for(dias in capacitaciones){
+          if(dateCompairable == capacitaciones[dias]){
+            return {
+              style:{
+                backgroundColor: '#17176B',
+              },
+              textStyle: {
+                color: '#fff',
+                fontWeight: 'bold',
+              }
+            };
+          }
         }
-      }
+  
+        for(dias in visitas){
+          if(dateCompairable == visitas[dias]){
+            return {
+              style:{
+                backgroundColor: '#157D0A',
+              },
+              textStyle: {
+                color: '#fff',
+                fontWeight: 'bold',
+              }
+            };
+          }
+        }
+      })
+  
     }
   
     const onDateChange = (date, type) => {
@@ -244,6 +240,7 @@ const ActividadesForm = (props) => {
             todayBackgroundColor="#e6ffe6"
             selectedDayColor="#66ff33"
             selectedDayTextColor="#000000"
+            selectedDayStyle={{}}
             previousComponent={ <Ionicons name="md-arrow-dropleft" size={24} color="black" />}
             nextComponent = {  <Ionicons name="md-arrow-dropright" size={24} color="black" />}
             scaleFactor={375}
@@ -270,6 +267,7 @@ const ActividadesForm = (props) => {
         </View>
         <Text></Text>
         <Text></Text>
+        <Button title="Actualizar" onPress={getAsesorias}/>
         <View style={{}}>
           {
             selectedStartDate != null? 

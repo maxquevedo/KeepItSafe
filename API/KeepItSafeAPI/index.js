@@ -252,15 +252,69 @@ app.patch('/update/email',async(req,res)=>{
     res.json(JSON.stringify({result}));
 })
 
-app.get('/actividades/:userId/:tipoUsuario/:id2',async function(req,res){
-    console.log("Body: ",req.body);
-    console.log("Params: ",req.params);
-    console.log("Query: ",req.query);
+app.get('/actividades/:userId/:tipoUsuario/:id2/:tipoActividad',async function(req,res){
+    // console.log("Body: ",req.body);
+    // console.log("Params: ",req.params);
+    // console.log("Query: ",req.query);
     let id = req.params.userId;
     let tipoUsuario = req.params.tipoUsuario;
-    let id2 = req.params.id2
+    let rut = req.params.rut;
+    let id2 = req.params.id2;
+    var asesorias = [];
+    var capacitaciones = [];
+    var visitas = [];
+    
+    let connection;
 
-    res.json("Wena wena los k")
+    let query = `select * from usuarios`
+    //where usr_username= :username and usr_password = :password
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        switch (tipoUsuario) {
+            case 'Cliente':
+                query = `select to_char(ase_fecha,'DD/MM/YYYY') from asesorias where ase_id_usuario = :id2` ;    
+                result = await connection.execute(query,[id2],{});
+                asesorias.push(result.rows);
+                query = `select to_char(cap_fecha,'DD/MM/YY') from capacitaciones where cap_id_cli = :id2`; 
+                result = await connection.execute(query,[id2],{});
+                capacitaciones.push(result.rows);
+                query = `select to_char(vis_fcita,'DD/MM/YY') from visitas where vis_id_cli = :id2`;
+                result = await connection.execute(query,[id2],{});
+                visitas.push(result.rows);
+                break;
+
+            case 'Profesional':
+                query = `select to_char(ase_fecha,'DD/MM/YYYY') from asesorias where ase_id_pro = :id2` ;    
+                result = await connection.execute(query,[id2],{});
+                asesorias.push(result.rows);
+                query = `select to_char(cap_fecha,'DD/MM/YY') from capacitaciones where cap_id_pro = :id2`; 
+                result = await connection.execute(query,[id2],{});
+                //console.log(result.rows);
+                capacitaciones.push(result.rows);
+                query = `select to_char(vis_fcita,'DD/MM/YY') from visitas where vis_id_pro = :id2`;
+                result = await connection.execute(query,[id2],{});
+                visitas.push(result.rows);
+                break;
+
+            default:
+                break;
+        }
+
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+                console.log("Asesorias: "+asesorias,"Capacitaciones: "+capacitaciones,"Visitas: "+visitas);
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    let respuesta = new Array();
+    respuesta.push(asesorias,capacitaciones,visitas);
+    res.json(respuesta);
 });
 
 
