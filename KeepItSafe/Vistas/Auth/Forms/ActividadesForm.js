@@ -49,7 +49,7 @@ const ActividadesForm = (props) => {
         }
   
         for(dias in capacitaciones){
-          console.log("dateCompairable: "+dateCompairable,"capacitaciones[dias]: "+capacitaciones[dias]);
+          //console.log("dateCompairable: "+dateCompairable,"capacitaciones[dias]: "+capacitaciones[dias]);
           if(dateCompairable == capacitaciones[dias] || dateCompairableFull == capacitaciones[dias]){
             return {
               style:{
