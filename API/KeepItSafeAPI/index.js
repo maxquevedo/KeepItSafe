@@ -310,8 +310,68 @@ app.get('/actividades/:userId/:tipoUsuario/:id2',async function(req,res){
     res.json(respuesta);
 });
 
+app.get('/clientes/:id',async function(req,res){
+    let id = req.params.id;
+    let connection;
+    let query = `select * from clientes where cli_id = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(result.rows[0])
+})
 
+app.get('/profesionales/:id',async function(req,res){
+    let id = req.params.id;
+    let connection;
+    let query = `select * from pro where pro_id = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(result.rows[0])
+});
 
+app.get('/usuarios_clientes/:id',async function(req,res){
+    let id = req.params.id;
+    let connection;
+    let query = `select * from usuarios where usr_tipoUsuario='Cliente' and usr_idperfil = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(result.rows[0])
+});
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}..`));
