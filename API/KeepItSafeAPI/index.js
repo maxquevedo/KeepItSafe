@@ -51,7 +51,6 @@ async function logIn(req,res,username,password){
             }
         }
     }
-    console.log("Enviando desde api: ",result.rows)
     return res.send(result.rows);
 }
  
@@ -252,10 +251,7 @@ app.patch('/update/email',async(req,res)=>{
     res.json(JSON.stringify({result}));
 })
 
-app.get('/actividades/:userId/:tipoUsuario/:id2/:tipoActividad',async function(req,res){
-    // console.log("Body: ",req.body);
-    // console.log("Params: ",req.params);
-    // console.log("Query: ",req.query);
+app.get('/actividades/:userId/:tipoUsuario/:id2',async function(req,res){
     let id = req.params.userId;
     let tipoUsuario = req.params.tipoUsuario;
     let rut = req.params.rut;
@@ -267,7 +263,6 @@ app.get('/actividades/:userId/:tipoUsuario/:id2/:tipoActividad',async function(r
     let connection;
 
     let query = `select * from usuarios`
-    //where usr_username= :username and usr_password = :password
     try{    
         connection = await oracledb.getConnection(connectionInfo);
         switch (tipoUsuario) {
@@ -289,7 +284,6 @@ app.get('/actividades/:userId/:tipoUsuario/:id2/:tipoActividad',async function(r
                 asesorias.push(result.rows);
                 query = `select to_char(cap_fecha,'DD/MM/YY') from capacitaciones where cap_id_pro = :id2`; 
                 result = await connection.execute(query,[id2],{});
-                //console.log(result.rows);
                 capacitaciones.push(result.rows);
                 query = `select to_char(vis_fcita,'DD/MM/YY') from visitas where vis_id_pro = :id2`;
                 result = await connection.execute(query,[id2],{});
@@ -306,7 +300,6 @@ app.get('/actividades/:userId/:tipoUsuario/:id2/:tipoActividad',async function(r
         if(connection){
             try{
                 await connection.close();
-                console.log("Asesorias: "+asesorias,"Capacitaciones: "+capacitaciones,"Visitas: "+visitas);
             }catch(e){
                 console.log(e);
             }

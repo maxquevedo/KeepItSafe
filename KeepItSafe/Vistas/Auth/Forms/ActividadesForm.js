@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component,useState,useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Button} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Button, ActivityIndicator } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
@@ -9,61 +9,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // create a component
 const ActividadesForm = (props) => {
+    const asesorias = props.asesorias;
+    const visitas = props.visitas;
+    const capacitaciones = props.capacitaciones;
+    console.log("Ase: "+asesorias,"Visi: "+visitas,"Capa: "+capacitaciones);
     const [selectedStartDate, setSelectedStartDate] = useState('');
     const [selectedEndDate, setSelectedEndDate] = useState('');
-    const [capacitaciones,setCapacitaciones]  = useState('');
-    const [visitas,setVisitas] = useState('');
-    const [asesorias,setAsesorias ] = useState('');
-    // const [capacitaciones,setCapacitaciones]  = useState(['01/11/20','11/11/20','18/11/20','30/11/20','03/12/20']);
-    // const [visitas,setVisitas] = useState(['03/11/20','13/11/20','22/11/20','25/11/20','10/12/20']);
-    // const [asesorias,setAsesorias ] = useState(['08/11/20','10/11/20','19/11/20','03/11/20','22/12/20']);
-    const [id,setId] = useState(null);
-    const [tipoUsuario,setTipoUsuario] = useState(null);
-    const [id2,setId2] = useState(null);
 
-    // useEffect( () => {
-    //   getVariables().then(getAsesorias());
-      
-    //   return async function cleanup(){
-    //     setVisitas(null);
-    //     setAsesorias(null);
-    //     setCapacitaciones(null);
-    //     setId(null);
-    //     setTipoUsuario(null);
-    //     setId2(null);
-    //   }
-
-    // },[]);
-
-    const getVariables = async()=>{
-      let aidi = await AsyncStorage.getItem("id");
-      let usuario = await AsyncStorage.getItem("tipoUsuario")
-      let aidi2 = await AsyncStorage.getItem("id2");
-      setId(aidi);
-      setTipoUsuario(usuario);
-      setId2(aidi2);
-    }
-
-    const getAsesorias = async () => {
-      let param1 = id;
-      let param2 = tipoUsuario;
-      let param3 = id2;
-      let param4 = "asesoria";
-      let resp = await fetch(`http://10.0.2.2:8080/actividades/${param1}/${param2}/${param3}/${param4}`);
-      let respJson = await resp.json();
-      let aux = await respJson[0];
-      console.log('Aux: '+aux);
-      setAsesorias(aux);
-      aux = await respJson[1];
-      console.log('Aux: '+aux);
-      setCapacitaciones(aux);
-      aux = await respJson[2];
-      setVisitas(aux);
-    };
-
-    const customDatesStylesCallback = date => {
-      getVariables().then((date )=>{
-        console.log("Visitas xD: "+visitas,'Capacitaciones xd: '+capacitaciones,'Visitas Xd: '+visitas);
+    const customDatesStylesCallback = (date,props) => {
         let deit = new Date(date);
         deit.setHours(12,0,0,0);
         let day = deit.getDate();
@@ -77,13 +30,12 @@ const ActividadesForm = (props) => {
           day = '0'+day;
         }
         
-  
         let dateCompairable = day+'/'+(month+1)+'/'+year;
-        if (asesorias=='' && capacitaciones=='' && visitas=='' )
-          return
-  
+
+        let dateCompairableFull = day+'/'+(month+1)+'/'+deit.getFullYear();
+
         for( dias in asesorias){
-          if(dateCompairable == asesorias[dias]){
+          if(dateCompairable == asesorias[dias] || dateCompairableFull == asesorias[dias]){
             return {
               style:{
                 backgroundColor: '#988C0C',
@@ -97,7 +49,8 @@ const ActividadesForm = (props) => {
         }
   
         for(dias in capacitaciones){
-          if(dateCompairable == capacitaciones[dias]){
+          console.log("dateCompairable: "+dateCompairable,"capacitaciones[dias]: "+capacitaciones[dias]);
+          if(dateCompairable == capacitaciones[dias] || dateCompairableFull == capacitaciones[dias]){
             return {
               style:{
                 backgroundColor: '#17176B',
@@ -111,7 +64,7 @@ const ActividadesForm = (props) => {
         }
   
         for(dias in visitas){
-          if(dateCompairable == visitas[dias]){
+          if(dateCompairable == visitas[dias] || dateCompairableFull == visitas[dias]){
             return {
               style:{
                 backgroundColor: '#157D0A',
@@ -123,7 +76,7 @@ const ActividadesForm = (props) => {
             };
           }
         }
-      })
+
   
     }
   
@@ -171,25 +124,27 @@ const ActividadesForm = (props) => {
       let mes = deit[0]+deit[1];
       let dia = deit[3]+deit[4];
       let año = deit[6]+deit[7];
+      let añoCompleto = new Date(selectedStartDate).getFullYear();
       let fecha = dia+'/'+mes+'/'+año;
+      let fechaFull = dia+'/'+mes+'/'+añoCompleto;
       let evento = "";
 
       for( dias in asesorias){
-        if(fecha == asesorias[dias]){
+        if(fecha == asesorias[dias] || fechaFull == asesorias[dias]){
           evento = "Asesoría"
           break;
         }
       }
 
       for(dias in capacitaciones){
-        if(fecha == capacitaciones[dias]){
+        if(fecha == capacitaciones[dias] || fechaFull == capacitaciones[dias]){
           evento = "Capacitación"
           break;
         }
       }
 
       for(dias in visitas){
-        if(fecha == visitas[dias]){
+        if(fecha == visitas[dias]  || fechaFull == visitas[dias]){
           evento = "Visita"
           break;
         }
@@ -203,8 +158,7 @@ const ActividadesForm = (props) => {
     const cnahgeMonth = (date ) => {
       setSelectedStartDate(null);
     }
-  
-  
+
     return (
       <SafeAreaView style={{}}>
         <View style={{}}>
@@ -267,7 +221,6 @@ const ActividadesForm = (props) => {
         </View>
         <Text></Text>
         <Text></Text>
-        <Button title="Actualizar" onPress={getAsesorias}/>
         <View style={{}}>
           {
             selectedStartDate != null? 
