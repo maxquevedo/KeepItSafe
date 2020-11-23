@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet,Button, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, Alert ,Button, TextInput, TouchableOpacity } from 'react-native';
 import styles from '../styles'; 
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -24,6 +24,10 @@ class Asesorias extends Component {
     }
 
     updateDate = (event,date) =>{
+        console.log("DATE: "+date.toLocaleDateString());
+        let año = ''+date.getFullYear();
+        let formatedDate = date.getDate()+'/'+((date.getMonth())+1)+'/'+año.substr(0,2);
+        //console.log(formatedDate);
         let showDatePicker = this.state.showDatePicker;
         this.setState({fecha:date,showDatePicker:!showDatePicker});
         //console.log("Cambiando fecha")
@@ -57,6 +61,7 @@ class Asesorias extends Component {
                             
                             { showDatePicker?
                                 <DateTimePicker mode="date"
+                                    minimumDate={new Date()}
                                     onConfirm={()=>{console.log("confirma3")}}  onChange={(event,date)=> this.updateDate(event,date)} onCancel={()=>{}} value={fecha}/>:
                                     <View></View>
                             }
@@ -64,7 +69,7 @@ class Asesorias extends Component {
                             <View style={styles.FieldSeparator}></View>
                             <Text></Text>
                             <Button color="#095813" title="Solicitar fiscalizacion" onPress={()=>{
-                                console.log("Fecha: ",fecha);
+                                console.log("Fecha: ",fecha.toLocaleDateString());
                                 console.log("showDatePicker: ",showDatePicker)
                             }}/>
                         </View>)}

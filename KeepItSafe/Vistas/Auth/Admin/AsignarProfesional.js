@@ -1,36 +1,30 @@
 //import liraries
-import React, { Component, useState } from 'react';
-import { View, Text, StyleSheet,Button, Animated,SafeAreaView,ActivityIndicator } from 'react-native';
-import AsignarProForm from '../Forms/AsignarProForm';
+import React, { Component } from 'react';
+import { View, Text,Button, TouchableOpacity,SafeAreaView,ActivityIndicator,Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import {Picker} from '@react-native-community/picker';
 import styles from '../../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import DatePicker from 'react-native-datepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // create a component
 class AsignarProfesional extends Component {
     constructor(props){
       super(props)
         this.state = {
-            date:new Date(),
-            cliente:[],
-            fecha:'',
+            fecha:new Date(),
+            clientes:[],
+            clienteElecto: '',
             evento:'asesoria',
-            profesional:'',
+            profesionales:[],
+            profesionalElecto:'',
             loading: true,
+            showDatePicker: false,
+            showPro: false,
+            idCliente: '',
         }
   }
-  /*
-    <DateTimePicker 
-        value={ date }
-        mode='default'
-        display='calendar'
-        minimumDate={new Date()}
-    onChange={ date => this.setState({ date }) } />
-
-
-    
-*/  /*
+ 
     componentDidMount = async()=> {
         let resp = await fetch('http://10.0.2.2:8080/clientes');
         let respJson = await resp.json();
@@ -38,50 +32,148 @@ class AsignarProfesional extends Component {
         //console.log(respJson);
         respJson.map((data)=>{
             clientos.push(data[3]);
-            this.setState({clientes: clientos});
+            this.setState({clientes: clientos,clienteElecto:clientos[0]});
         });
         this.setState({loading:!this.state.loading})
 
     }
-    */
+    
+    updateDate = (event,date) =>{
+        // console.log("DATE: "+date.toLocaleDateString());
+        let año = ''+date.getFullYear();
+        let formatedDate = date.getDate()+'/'+((date.getMonth())+1)+'/'+año.substr(0,2);
+        //console.log(formatedDate);
+        let showDatePicker = this.state.showDatePicker;
+        this.setState({fecha:date,showDatePicker:!showDatePicker});
+        //console.log("Cambiando fecha")
+    }
 
-    renderClientes = () => {
-        const { cliente } = this.state;
-        console.log('Mapeado :',cliente);
-        cliente.map((data)=>{
-            console.log('Mapeado :',data);
-            return (
-                <Picker.Item label={data} value={"data"}/>
-            )
-        })
+    updatePro = async() => {
+        const {clienteElecto,fecha,evento } = this.state;
+        const fechosa = fecha.toLocaleDateString().replace("/","-").replace("/","-");
+        let resp = await fetch(`http://10.0.2.2:8080/asignarPro/${clienteElecto}/${fechosa}/${evento}`);
+        let respJson = await resp.json();
+        let idCli = respJson.idCliente;
+        respJson = respJson.profesionalesLibres;
+        console.log(idCli);
+        if(respJson == -1){
+            Alert.alert("Lo sentimos","No hay profesionales disponibles para esa fecha",[{
+                text:'Confirmar',
+                onPress: ()=> {}
+            }])
+            this.setState({showPro:false});
+        }else{
+            let primero = respJson[0][2]+' '+respJson[0][3];
+            this.setState({profesionales:respJson,showPro:true,profesionalElecto:primero,idCliente:idCli});
+        }
+    }
+
+    updateEvento = async(idCli,idPro,fecha,evento) => {
+        let deit = fecha.toLocaleDateString()
+        let jeison = {
+            idCli:idCli,idPro:idPro,fecha:deit,evento:evento
+        }
+        let resp = await fetch(`http://10.0.2.2:8080/asignarPro`,{
+            method: "PATCH",
+            headers: {
+                'Content-Type':'application/json; charset="UTF-8"'
+            },
+            body: JSON.stringify({jeison})
+        });
+        let respJson = await resp.json();
+        console.log(respJson);
     }
 
     render() {
-        const { cliente, date, evento, profesional,loading } = this.state;
-        console.log(this.state);
+        const { fecha,loading,showDatePicker,showPro,evento,idCliente,profesionales,profesionalElecto } = this.state;
         return (
-        <SafeAreaView  style={styles.container}>
+        <SafeAreaView  style={{alignItems:'center',justifyContent:'space-around',marginTop:80}}>
             {
                 loading? <ActivityIndicator animating={true} size="large" color="#095813"/>:
                 (<View>
+                    <Text style={styles.titleForm}>Cliente</Text>
                     <Picker
-                        selectedValue={this.state.cliente}
+                        selectedValue={this.state.clienteElecto}
                         style={{height: 50, width: 200}}
                         onValueChange={(itemValue, itemIndex) =>
-                            this.setState({cliente: itemValue})
+                            this.setState({clienteElecto: itemValue})
                         }>
-                      
-                        <Picker.Item label="Java" value="java" />
-                        <Picker.Item label="JavaScript" value="js" />
-                    </Picker>
-                    {
-                        /*
-                            cliente.map((item,key)=>{
-                                console.log("item: ",item);
-                               return(<Text>{item}</Text>);
-                                //<Picker.Item label={item} value={item} key={key} />
-                            */
+                        {
+                        
+                            this.state.clientes.map((item,key)=>{
+                               return( <Picker.Item label={item} value={item} key={key} />);
+                            })
                         }
+                    </Picker>
+                    <Text style={styles.titleForm}>Fecha</Text>
+                    <View style={{flexDirection:'row', marginLeft:18}}>
+                    <Text>{fecha.getDate()}/{fecha.getMonth()+1}/{fecha.getFullYear()}</Text>
+                    <Text>                  </Text>
+                    <TouchableOpacity onPress={()=>{
+                                    let showDatePickerCurrent = this.state.showDatePicker;
+                                    this.setState({showDatePicker:!showDatePickerCurrent})
+                                    //this.forceUpdate()
+                                }}>
+                                    <Ionicons name="md-calendar" size={24} color="black" />
+                                </TouchableOpacity>
+                    </View>        
+                    <View style={styles.FieldSeparator}></View>
+
+                                
+                    {
+                        showDatePicker? <DateTimePicker 
+                        value={ fecha }
+                        mode='default'
+                        display='calendar'
+                        minimumDate={new Date()}
+                        onChange={(event,date)=>{  this.updateDate(event,date) } } />:<Text></Text>
+                    }
+                    
+                    <Text style={styles.titleForm}>Evento</Text>
+                    <Picker
+                        selectedValue={this.state.evento}
+                        style={{height: 50, width: 200}}
+                        onValueChange={(itemValue, itemIndex) =>{
+                            //console.log("itemValue: "+itemValue);
+                            this.setState({evento: itemValue})
+                        }
+                        }>
+                         <Picker.Item label="Asesoría" value="asesoria" />
+                         <Picker.Item label="Capacitación" value="capacitacion" />
+                         <Picker.Item label="Visita" value="visita" />
+                    </Picker>
+                    <Button title="Consultar" color="#095813" onPress={this.updatePro}/>
+                    <Text style={styles.titleForm}>Profesional</Text>
+                    {
+                        showPro? <View>
+                        <Picker
+                            selectedValue={this.state.profesionalElecto}
+                            style={{height: 50, width: 200}}
+                            onValueChange={(itemValue, itemIndex) =>
+                                this.setState({profesionalElecto: itemValue})
+                            }>
+                            {
+                                
+                                 this.state.profesionales.map((item,key)=>{
+                                     let pro = (item[2]+' '+item[3]);
+                                    return( <Picker.Item label={pro} value={pro} key={key} />);
+                                 })
+                            }
+                        </Picker>
+                        <Button title="Asignar" color="#095813" onPress={async ()=>{
+                            let idPro = '';
+                            profesionales.forEach((pro)=>{
+                                let nombre = pro[2]+' '+pro[3];
+                                if(nombre == profesionalElecto){
+                                    idPro = pro[5];
+                                }
+                                console.log(idPro);
+                            });
+                            this.updateEvento(idCliente,idPro,fecha,evento);
+                            }
+                    }/>
+                        </View>:<Text></Text>
+                    }            
                 </View>)
                 }
             </SafeAreaView>
@@ -89,86 +181,6 @@ class AsignarProfesional extends Component {
         );
     }
 }
-/*
- <Text style={styles.text}>Cliente</Text>
-                    <Picker
-                        selectedValue={this.state.cliente}
-                        style={{height: 50, width: 200}}
-                        onValueChange={(itemValue, itemIndex) =>
-                            this.setState({cliente: itemValue})
-                        }>
-
-                        <Picker.Item label="Java" value="java" />
-                        <Picker.Item label="JavaScript" value="js" />
-                    </Picker>
-                    <Text style={styles.text}>Fecha</Text>
-            
-                    <DatePicker
-                        style={styles.datePickerStyle}
-                        date={date} // Initial date from state
-                        mode="date" // The enum of date, datetime and time
-                        placeholder="select date"
-                        format="DD-MM-YYYY"
-                        locale={"es"}
-                        minDate={new Date()}
-                        confirmBtnText="Confirm"
-                        cancelBtnText="Cancel"
-                        customStyles={{
-                            dateIcon: {
-                            //display: 'none',
-                            position: 'absolute',
-                            left: 0,
-                            top: 4,
-                            marginLeft: 0,
-                        },
-                            dateInput: {
-                            marginLeft: 36,
-                            },
-                        }}
-                        onDateChange={(date) => {
-                            this.setState({date});
-                        }}
-                    />
-
-                    <Text style={styles.text}>Evento</Text>
-                    <Picker
-                        selectedValue={this.state.evento}
-                        style={{height: 50, width: 200}}
-                        onValueChange={(itemValue, itemIndex) =>
-                            this.setState({evento: itemValue})
-                        }>
-                        <Picker.Item label="Visita" value="visita" />
-                        <Picker.Item label="Asesoria" value="asesoria" />
-                    </Picker>
-
-                    <Button color="#095813" title="Consultar" onPressonPress={()=>{
-                        console.log(this.state);
-                        alert("HERMANO QUE WEAAAAAAAAA")
-                    }}
-                    />
-
-                    <Text style={styles.text}>Profesional</Text>
-                    <Picker
-                        selectedValue={this.state.profesional}
-                        style={{height: 50, width: 200}}
-                        onValueChange={(itemValue, itemIndex) =>
-                            this.setState({profesional: itemValue})
-                        }>
-                        <Picker.Item label="Java" value="java" />
-                        <Picker.Item label="JavaScript" value="js" />
-                    </Picker>
-                    <Button color="#095813" title="Asignar" onPress={()=>{}}/>)
-
-
-*/
-// define your styles
-const stylo = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-});
 
 //make this component available to the app
 export default AsignarProfesional;

@@ -372,6 +372,141 @@ app.get('/usuarios_clientes/:id',async function(req,res){
     }
     res.json(result.rows[0])
 });
+
+app.get('/asignarPro/:cli_electo/:fecha/:evento',async function(req,res){
+    let cli_electo = req.params.cli_electo;
+    let fecha = req.params.fecha;
+    let fechaFormateada = fecha[3]+fecha[4]+'/'+fecha[0]+fecha[1]+'/'+fecha[6]+fecha[7];
+    let evento = req.params.evento;
+    let fechasOcupadas = [];
+    let profesionalesLibres = [];
+    let idCliente= '';
+    let proAsignado = '';
+    let cont = 0;
+    //console.log("Cliente: "+cli_electo,"Fecha: ",fechaFormateada,"Evento: "+evento);
+    let connection;
+    let query = `select * from usuarios where usr_nombrecompleto = :cli_electo`;
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[cli_electo],{});
+        idCliente = result.rows[0][6];
+        query = `select * from pro`
+        result = await connection.execute(query,[],{});
+        profesionalesLibres = result.rows;
+        for(pro in profesionalesLibres){
+            //Visitas
+            query  = `select to_char(vis_fcita,'DD/MM/YY'),vis_id_pro from visitas where vis_id_pro = ${profesionalesLibres[pro][1]}`;
+            result = await connection.execute(query,[],{});
+            if(result.rows[0]!= undefined){
+                for(days in result.rows){
+                   if( fechaFormateada == result.rows[days][0]){
+                       profesionalesLibres.splice(pro,1);
+                   }
+                }
+            }
+            console.log("profesionalesLibres visita: ",profesionalesLibres)
+            if(profesionalesLibres.length == 0 ){
+                break;
+            }
+
+            //Capacitaciones
+            query  = `select to_char(cap_fecha,'DD/MM/YY'),cap_id_pro from capacitaciones where cap_id_pro = ${profesionalesLibres[pro][1]}`;
+            result = await connection.execute(query,[],{});
+            console.log("Capacitaciones: ",result.rows)
+            if(result.rows[0]!= undefined){
+                for(days in result.rows){
+                    console.log(fechaFormateada , result.rows[days][0])
+                   if( fechaFormateada == result.rows[days][0]){
+                       profesionalesLibres.splice(pro,1);
+                   }
+                }
+            }
+            
+            console.log("profesionalesLibres capacitacion: ",profesionalesLibres)
+            if(profesionalesLibres.length == 0 ){
+                break;
+            }
+            //Asesorias
+            query  = `select to_char(ase_fecha,'DD/MM/YY'),ase_id_pro from asesorias where ase_id_pro = ${profesionalesLibres[pro][1]}`;
+            result = await connection.execute(query,[],{});
+            if(result.rows[0]!= undefined){
+                for(days in result.rows){
+                    console.log(fechaFormateada , result.rows[days][0])
+                   if( fechaFormateada == result.rows[days][0]){
+                       profesionalesLibres.splice(pro,1);
+                   }
+                }
+            }
+            console.log("profesionalesLibres asesoria: ",profesionalesLibres)
+        }
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    if(profesionalesLibres.length == 0){
+        res.json("-1");
+    }else{
+        console.log(profesionalesLibres);
+        res.json({profesionalesLibres,idCliente})
+    }
+});
+
+app.patch('/asignarPro',async function(req,res){
+    let info = req.body.jeison;
+    let idCliente = info.idCli;
+    let idPro = info.idPro;
+    let fecha = info.fecha;
+    let evento = info.evento;
+    let query = "";
+    let fechaFormat = fecha[3]+fecha[4]+'/'+fecha[0]+fecha[1]+'/'+fecha[6]+fecha[7];
+    console.log(fechaFormat);
+    switch(evento){
+        case 'asesoria':
+            console.log("asesoria")
+            query = `update asesorias set ase_id_pro = :idPro where ase_fecha = to_date(':fechaFormat','DD/MM/YY') and ase_id_usuario = :idCliente`;
+            break;
+        case 'capacitacion':
+            console.log("Capacitacion")
+            query = `update capacitaciones set cap_id_pro =:idPro where cap_fecha = to_date(':fechaFormat','DD/MM/YY')  and cap_id_cli = :idCliente`;
+            break;
+        case 'visita': 
+            console.log('Visita')
+            query = `update visitas set vis_id_pro = :idPro where vis_id_cli = :idCliente and vis_fcita = to_date(':fechaFormat','DD/MM/YY');`;
+            break;
+        default: break;
+    }
+    let connection;
+    
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        console.log(query);
+        result = await connection.execute(query,[idCliente,idPro,fechaFormat],{})
+        console.log(result);
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        console.log(result);
+        return res.send(result.rows);
+    }
+  
+    res.status(200).json("Wena: ")//,idCli,idPro,fecha,evento);
+});
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}..`));
