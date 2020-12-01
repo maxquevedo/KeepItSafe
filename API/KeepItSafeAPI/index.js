@@ -10,6 +10,7 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 const mypw = '1234';
 const connectionInfo = { user: "c##max2330",password: mypw, connectString: "localhost:1521" }
 
+
 async function getUsuarios(req,res){
     let connection;
     let query = "SELECT * FROM USUARIOS";
@@ -54,6 +55,9 @@ async function logIn(req,res,username,password){
     return res.send(result.rows);
 }
  
+
+//MOVIL
+
 app.get('/', async function(req,res){
     res.send('KeepItSafe Api');
 })
@@ -103,12 +107,8 @@ app.get('/profesionales', async(req,res) => {
 })
 
 app.get('/login/:username/:password', (req,res)=> {
-    // console.log("Body: ",req.body);
-    // console.log("Params: ",req.params);
-    // console.log("Query: ",req.query);
     let username = req.params.username;
     let password = req.params.password;
-
 
    logIn(req,res,username,password)
 });
@@ -199,11 +199,6 @@ app.post('/create/cliente',async(req,res)=>{
         
         result = await connection.execute(query2,[],{});
         result = await connection.execute(query3,[],{});
-
-       // console.log(result);
-
-      
-       
     }catch(err){
         console.log(err)
         res.send(err);
@@ -471,6 +466,7 @@ app.patch('/asignarPro',async function(req,res){
         case 'asesoria':
             console.log("asesoria")
             query = `update asesorias set ase_id_pro = :idPro where ase_fecha = to_date(':fechaFormat','DD/MM/YY') and ase_id_usuario = :idCliente`;
+            console.log(query)
             break;
         case 'capacitacion':
             console.log("Capacitacion")
@@ -479,6 +475,7 @@ app.patch('/asignarPro',async function(req,res){
         case 'visita': 
             console.log('Visita')
             query = `update visitas set vis_id_pro = :idPro where vis_id_cli = :idCliente and vis_fcita = to_date(':fechaFormat','DD/MM/YY');`;
+            console.log(query)
             break;
         default: break;
     }
@@ -507,6 +504,52 @@ app.patch('/asignarPro',async function(req,res){
   
     res.status(200).json("Wena: ")//,idCli,idPro,fecha,evento);
 });
+
+app.get('/accidentes/:id',async function(req,res){
+    let id_cli = req.params.id;
+    let connection;
+    let query = `select * from accidentes where acc_id = 1`;
+    let possibleAccidents = [];
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query)
+        possibleAccidents.push(result.rows[0]);
+        query = `select * from accidentes where acc_id_cliente = :id_cli`;
+        result = await connection.execute(query,[id_cli],{})
+        for (var i=0;i< result.rows.length; i++) {
+            possibleAccidents.push(result.rows[i]);
+        }
+        //console.log("Accidentes: ",possibleAccidents);
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        //console.log(result);
+        return res.json(possibleAccidents);
+    }
+});
+
+
+
+//WEB
+app.get('/prueba',async(req,res) => {
+    console.log("llege a la api")
+    res.send("Wena desde la api");
+})
+
+
+
+
+
+
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}..`));
