@@ -1,10 +1,12 @@
 const express = require('express');
+var cors = require('cors');
 const app = express();
 const oracledb = require('oracledb');
 oracledb.autoCommit = true;
 var bodyParser = require('body-parser');
 //app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
 
 oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 const mypw = '1234';
