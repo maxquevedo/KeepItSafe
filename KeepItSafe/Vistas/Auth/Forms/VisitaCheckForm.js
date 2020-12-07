@@ -68,11 +68,13 @@ const renderItem = (data) => {
 
 const VisitaCheckForm = (props) => {
     let checks = props.checks;
-    console.log("checks1: ",checks);
+    //console.log("checks1: ", props);
     const [texto,updateTexto] = React.useState('');
     const [items,updateItems] = React.useState(checks);
     const [colorHook,updateColorH]  = React.useState("black");
-
+    for(var i =0;i<props.estados.length; i++){
+        console.log(props.estados[i]);
+    }
     console.log("checks2: ",items);
     //<View style={{alignItems:'stretch',justifyContent:'flex-end'}}>
     //<Field name="correo" component={checkList} ph={props.correo} nm="Correo" check={props.check}/>    

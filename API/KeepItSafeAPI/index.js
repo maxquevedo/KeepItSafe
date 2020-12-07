@@ -11,6 +11,10 @@ const mypw = '1234';
 const connectionInfo = { user: "c##max2330",password: mypw, connectString: "localhost:1521" }
 
 
+function mapResult(arreglo){
+    console.log(arreglo);
+}
+
 async function getUsuarios(req,res){
     let connection;
     let query = "SELECT * FROM USUARIOS";
@@ -55,7 +59,6 @@ async function logIn(req,res,username,password){
     return res.send(result.rows);
 }
  
-
 //MOVIL
 
 app.get('/', async function(req,res){
@@ -537,12 +540,141 @@ app.get('/accidentes/:id',async function(req,res){
     }
 });
 
+app.get('/reportes/:id', async function(req,res){
+    let id = req.params.id;
+    let connection;
+    let reportDays = [] ;
+    let query = `select to_char(con_finicio,'DD/MM/YY') from contratos where con_id_usu = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id],{});
+        let inicio = result.rows[0][0];
+        let inicioFormat = inicio[3]+inicio[4]+'-'+inicio[0]+inicio[1]+'-'+inicio[6]+inicio[7]
+        let dateInicio = new Date(inicioFormat);
+        let now = new Date();
+        let monthsBetween  = 0;
+        console.log("Date Inicio: ",dateInicio.toLocaleDateString())
+        if( dateInicio.getFullYear() != now.getFullYear()){
+            console.log("año distinto");
+        }else{
+            monthsBetween = (now.getMonth()+1)-(dateInicio.getMonth()+1);
+        }
+        console.log("Months Between: "+ monthsBetween);
+        for(var i = 0; i < monthsBetween; i++){
+            let aux = "";
+            if(dateInicio.getDate() < 10 ){
+                aux = "0"+dateInicio.getDate();
+                reportDays.push((aux+'/'+((dateInicio.getMonth()+2)+i)+'/'+dateInicio.getFullYear()));
+            }else{
+                reportDays.push((dateInicio.getDate() +'/'+((dateInicio.getMonth()+2)+i)+'/'+dateInicio.getFullYear()));
+            }
+        }
 
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(reportDays)
+});
+
+app.get('/checks/:id_pro/:id_cli/',async function(req,res){
+    let id_pro = req.params.id_pro;
+    let id_cli = req.params.id_cli;
+    let connection;
+    let query = `select acc_descripcion, acc_estado,acc_id from accidentes where acc_id_pro = :id_pro and acc_id_cliente = :id_cli`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id_pro,id_cli],{});
+        //console.log(result.rows);
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rows);
+})
+
+app.patch('/checkFail',async function(req,res){
+    let id = req.body.jeison.id;
+    let connection;
+    let query = `update accidentes set acc_estado = 1 where acc_id = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id],{});
+        console.log(result);
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rowsAffected);
+});
+
+app.patch('/checkSuccess',async function(req,res){
+    let id = req.body.jeison.id;
+    let connection;
+    let query = `update accidentes set acc_estado = 0 where acc_id = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id],{});
+        console.log(query, id);
+        console.log(result.rowsAffected);
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rowsAffected);
+})
 
 //WEB
 app.get('/prueba',async(req,res) => {
-    console.log("llege a la api")
-    res.send("Wena desde la api");
+    let connection;
+    let query = "SELECT * FROM USUARIOS";
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query)
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        console.log("Resultado: "+result);
+        console.log("Mapeada: "+ mapResult(result));
+        return res.send(result.rows);
+    }
 })
 
 

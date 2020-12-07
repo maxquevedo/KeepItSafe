@@ -10,7 +10,7 @@ class VerReportes extends Component {
     constructor(props){
         super(props);
         this.state = {
-            reportes: ['11/10/20','12/10/20','13/10/20','14/10/20','14/10/20','14/10/20','14/10/20','14/10/20','14/10/20'],
+            reportes: [],
             loading: false,
             tipoUsuario: ''
         }
@@ -18,21 +18,20 @@ class VerReportes extends Component {
 
     async componentDidMount(){
         let tipoUsuario = await AsyncStorage.getItem('tipoUsuario');
-        this.setState({tipoUsuario})
+        let id_usuario = await AsyncStorage.getItem('id');
+        let resp = await fetch(`http://10.0.2.2:8080/reportes/${id_usuario}`);
+        let respJson = await resp.json();
+        this.setState({tipoUsuario,reportes: respJson});        
     }
     
 
-    downloadReport = async (fecha,idUsuario) => {
-        //fetch();
-        //try{
-            //alert("Holi");
-            //const resp = await fetch('http://10.0.2.2:80/api/public/api/habitacion/');
-            //const habitacion = await resp.json();
-            //this.setState({habitaciones: habitacion.habitaciones , loading:false, refreshing:false});
-        //}catch(e){
-          //  console.log('Error: '+e);
-        //}
+    getDateReport = async () => {
+        let id_usuario = await AsyncStorage.getItem('id');
+
+        console.log(respJson);
+
     }
+
     renderItem(data){
         var color = "white";
         if(data.index%2==0){
@@ -42,17 +41,10 @@ class VerReportes extends Component {
 
         return <TouchableOpacity style={{flex:1,}}>
             <View style={{flexDirection:'row', width:"100%", padding:35, backgroundColor:color,}}>
-                {
-                    ((data.index+1)%2==0?
-                    <Text></Text>
-                    :<Text></Text>
-                        )
-                }
-                <Text style={{}}>{data.item}</Text>        
+                <Text style={{fontSize:25}}>               {data.item}              </Text>        
                 <View style={{}}>
-                    <Ionicons name="md-download" size={25} color={'#000'} />
+                    <Ionicons name="md-download" size={35} color={'#000'} />
                 </View>
-
             <View>
             </View>
             </View>
@@ -70,8 +62,8 @@ class VerReportes extends Component {
                 <View><Text></Text></View>
                 <View><Text></Text></View>
                 {
-                    tipoUsuario === "Admin"?  <Button title="Generar reporte" color="#095813" onPress={()=> { console.log("generar reporte")}} />:
-                     <Button title="Solicitar reporte" color="#095813" onPress={()=> { console.log(this.state.tipoUsuario)}} />
+                    tipoUsuario === "Admin"?  <Button title="Generar reporte" color="#095813" onPress={()=>{}} />:
+                     <Button title="Solicitar reporte" color="#095813" onPress={()=>{}} />
                 }
                
                 <View><Text></Text></View>

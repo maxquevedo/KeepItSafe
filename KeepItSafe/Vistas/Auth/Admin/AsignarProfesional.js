@@ -177,7 +177,6 @@ class AsignarProfesional extends Component {
                 </View>)
                 }
             </SafeAreaView>
-         
         );
     }
 }
