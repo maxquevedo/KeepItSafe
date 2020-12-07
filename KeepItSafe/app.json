@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "KeepItSafe",
+    "slug": "KeepItSafe",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "",
+    "splash": {
+      "image": "",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "favicon": ""
+    }
+  }
+}
