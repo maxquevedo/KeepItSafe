@@ -10,7 +10,9 @@ app.use(cors());
 
 oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 const mypw = '1234';
+const mypw2 = 'Aa123456';
 const connectionInfo = { user: "c##max2330",password: mypw, connectString: "localhost:1521" }
+const connectionInfo2 = { user: "c##dba_desarrollo",password: mypw2, connectString: "localhost:1521" }
 
 
 function mapResult(arreglo){
@@ -659,7 +661,7 @@ app.get('/prueba',async(req,res) => {
     let connection;
     let query = "SELECT * FROM USUARIOS";
     try{
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query)
     }catch(err){
         console.log(err)
@@ -679,7 +681,30 @@ app.get('/prueba',async(req,res) => {
     }
 })
 
+app.get('/web/login/:password/:username', async(req,res) => {
+    
+    let password = req.params.password;
+    let username = req.params.username;
+    
+    let connection;
+    let query = `select * from usuarios where usr_username= :username and usr_password = :password`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[username,password],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.send(result.rows);
 
+})
 
 
 
