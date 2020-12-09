@@ -15,7 +15,6 @@ const connectionInfo = { user: "c##max2330",password: mypw, connectString: "loca
 
 
 function mapResult(arreglo){
-    console.log(arreglo.rows[0]);
     var resJson = { };
     for(var i=0;i<arreglo.metaData.length;i++){
         var nombre = arreglo.metaData[i].name;
@@ -23,6 +22,23 @@ function mapResult(arreglo){
         resJson = {...resJson,[nombre]:value };
     }
     return resJson;
+}
+
+function mapMultipleResult(arreglo){
+    console.log(arreglo.rows.length);
+    var respJson = { };
+    var resJson = { };
+    //for()
+    for(var j=0;j<arreglo.rows.length;j++){
+        for(var i=0;i<arreglo.metaData.length;i++){
+            var nombre = arreglo.metaData[i].name;
+            var value = arreglo.rows[j][i];
+            resJson = {...resJson,[nombre]:value };
+        }
+        respJson = { ...respJson, [j]:resJson};
+    }
+    
+    return respJson;
 }
 
 async function getUsuarios(req,res){
@@ -665,7 +681,7 @@ app.patch('/checkSuccess',async function(req,res){
 //WEB
 app.get('/prueba',async(req,res) => {
     let connection;
-    let query = "SELECT * FROM USUARIOS where usr_username= 'Brett' ";
+    let query = "SELECT * FROM USUARIOS where usr_username= 'Brett'";
     try{
         connection = await oracledb.getConnection(connectionInfo);
         result = await connection.execute(query)
@@ -681,7 +697,8 @@ app.get('/prueba',async(req,res) => {
                 console.log(err);
             }
         }
-        return res.send(mapResult(result));
+        console.log(result);
+    return res.send(mapMultipleResult(result));
     }
 })
 
