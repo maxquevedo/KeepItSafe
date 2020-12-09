@@ -683,7 +683,7 @@ app.patch('/checkSuccess',async function(req,res){
 //WEB
 app.get('/prueba',async(req,res) => {
     let connection;
-    let query = "SELECT * FROM USUARIOS where usr_username= 'Brett'";
+    let query = "SELECT * FROM USUARIOS";
     try{
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query)
@@ -700,11 +700,11 @@ app.get('/prueba',async(req,res) => {
             }
         }
         console.log(result);
-    return res.send(mapMultipleResult(result));
+    return res.send(result.rows);
     }
 })
 
-app.get('/web/login/:password/:username', async(req,res) => {
+app.get('/web/login/:username/:password', async(req,res) => {
     
     let password = req.params.password;
     let username = req.params.username;
