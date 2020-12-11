@@ -1,0 +1,36 @@
+<br>
+<div class="card border-primary mb-3">
+    <div class="card-header">Clientes</div>
+    <div class="card-body text-primary">
+        <h5 class="card-title">Lista de clientes</h5>
+        <div class="my-2 text-left">
+            <button class="botonAdminCrear" [routerLink]="[ '/clientes/form']">Crear nuevo cliente</button>
+        </div>
+
+        <table class="table table-bordered table-striped" style="font-size: 12px">
+            <thead>
+                <tr>
+                    <th>ID USUARIO</th>
+                    <th>NOMBRE DE USUARIO</th>
+                    <th>CORREO</th>
+                    <th>NOMBRE COMPLETO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let usuario of usuarios">
+                    <td>{{ usuario.USR_ID }}</td>
+                    <td>{{ usuario.USR_USERNAME }}</td>
+                    <td>{{ usuario.USR_CORREO }}</td>
+                    <td>{{ usuario.USR_NOMBRECOMPLETO }}</td>
+                    <TD>
+                        <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/clientes/form']"> Editar </BUTTON>
+                    </TD>
+                    <TD>
+                        <BUTTON class="botonEliminar" name="eliminar" (click)='delete(usuario)'> Eliminar </BUTTON>
+                    </TD>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-outline-success" [routerLink]="['/administrador']">volver</button>
+    </div>
+</div>

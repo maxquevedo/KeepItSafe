@@ -1,0 +1,96 @@
+<br>
+<div class="card bg-aqua text-dark text-center col-sm-12">
+    <div class="card-header"> Crear nuevo Cliente
+        <div class="card-body text-center">
+
+
+            <form>
+                <div class="form-group row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                            <span for="rut_cliente" class="input-group-text" >Rut</span>
+                        </div>
+                            <input type="text" class="form-control" [(ngModel)]="cliente.CLI_RUT" name="rut_cliente">
+                    </div>
+                    </div>  
+                    <div class="col-mb-4">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span for="rut_cliente" class="input-group-text" >Usuario</span>
+                            </div>
+                                <input type="text" class="form-control"  name="username">
+                        </div>
+                        </div>  
+
+                    
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                            <span for="rut_cliente" class="input-group-text" >Razón Social</span>
+                        </div>
+                            <input type="text" class="form-control" [(ngModel)]="cliente.CLI_RAZONSOCIAL" name="razon_social">
+                    </div>
+                    </div>  
+                    <div class="col-mb-4">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span for="rut_cliente" class="input-group-text" >E-Mail</span>
+                            </div>
+                                <input type="text" class="form-control" [(ngModel)]="Usuario.USR_CORREO" name="mail_usuario">
+                        </div>
+                        </div>  
+
+                    
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span for="tipo_contrato" class="input-group-text">Tipo Contrato</span>
+                            </div>
+                                    <select class="form-control" [(ngModel)]="cliente.PLANES_PLA_IDPLAN" name="tipo_contrato">
+                                        <option value="1">Standard</option>
+                                    </select>
+                        </div>
+                    </div>          
+                </div>
+
+                <div class="form-group row">
+                    <label for="status_cliente" class="col-form-label col-sm-2">Status Cliente</label>
+                    <div class="col-sm-6">
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" [(ngModel)]=" cliente.CLI_STATUS" name="able"  value="able" > Deshabilitado
+                                <input class="form-check-input" type="radio" [(ngModel)]=" cliente.CLI_STATUS" name="disable" value="disable"> Habilidato
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <button class="btn btn-primary" role="button" (click)='create()' *ngIf="!cliente.id_cliente else esleBlock">Crear</button>
+                        <ng-template #esleBlock>
+                            <button class="btn btn-primary" role="button" (click)="update()">Editar</button>
+                        </ng-template>
+                        <button class="btn btn-outline-success" style="margin-left: 10%;" [routerLink]="[ '/Admin']" role="button">Volver</button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+
+        </div>
+
+    </div>
+</div>

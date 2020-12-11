@@ -1,0 +1,49 @@
+<br>
+<div class="card text-center">
+    <div class="card-header">
+        Crear Nueva Visita
+    </div>
+    <div class="card-body text-center">
+        
+        <div class="card bg-aqua text-dark text-center col-sm-12">
+    
+                <div class="card-body text-center">
+
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group col-sm-4">
+                                <label for="my-in col-sm-6put">Fecha Cita</label>
+                                <input id="my-input" class="form-control" type="date" name="">
+                            </div>
+                            <div class="form-group col-sm-4">
+                            <label for="">Seleccione Profesional</label>
+                            <select class="form-control" name="Profesionales" id="">
+                                <option>Brett Hodge</option>
+                                <option>Gavin Love</option>
+                            </select>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="">Seleccione Cliente</label>
+                                <select class="form-control" name="" id="">
+                                    <option>Adam Acosta</option>
+                                    <option>Renee Briggs</option>
+                                    <option>Maximiliano Quevedo</option>
+                                </select>
+                            </div> 
+                        </div>  
+                        <div class="row">
+                            <div class=" form-group col-sm-12">
+                                <button class="btn btn-success">Guardar</button>
+                                
+                            </div>
+                        </div>                     
+                    </form>
+
+                </div>
+        </div>
+
+    </div>
+    <div class="card-footer text-muted">
+        <button class="btn btn-outline-success" [routerLink]="['/Admin']">Volver</button>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<br><br><br>
+<div class="container" style="width: 400px;">
+    <form class="form-signin" style="text-align: center;">
+        <h2 class="titulo animated fadeIn fast"><small>Para entrar al sistema ingrese lo siguiente:</small></h2>
+                <br>
+        <input type="text" id="inputEmail" class="form-control" placeholder="Usuario" required #usuario>
+        <br>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required #contrasena>
+        <br>
+        <input type="submit" class="btn btn-success" (click)="getLogin(usuario.value,contrasena.value)" value="Ingresar">
+    
+    </form>
+</div>

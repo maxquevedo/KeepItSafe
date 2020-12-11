@@ -1,0 +1,11 @@
+export class Usuario {
+
+    USR_ID?;
+    USR_USERNAME?;
+    USR_CORREO;
+    USR_NOMBRECOMPLETO;
+    USR_PASSWORD;
+    USR_TIPOUSUARIO;
+    USR_IDPERFIL;
+
+}

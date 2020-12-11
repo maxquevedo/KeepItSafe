@@ -1,0 +1,37 @@
+<br>
+<div class="card border-primary mb-3">
+    <div class="card-header">Profesionales</div>
+    <div class="card-body text-primary">
+        <h5 class="card-title">Lista de Profesionales</h5>
+        <div class="my-2 text-left">
+            <button class="botonAdminCrear" [routerLink]="[ '/profesionales/form-prof']">Crear nuevo profesional</button>
+        </div>
+
+        <table class="table table-bordered table-striped" style="font-size: 12px">
+            <thead>
+                <tr>
+                    <th>ID USUARIO</th>
+                    <th>NOMBRE DE USUARIO</th>
+                    <th>CORREO</th>
+                    <th>NOMBRE COMPLETO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let Profesional of profesionales">
+                    <td>{{ Profesional.USR_ID }}</td>
+                    <td>{{ Profesional.USR_USERNAME }}</td>
+                    <td>{{ Profesional.USR_CORREO }}</td>
+                    <td>{{ Profesional.USR_NOMBRECOMPLETO }}</td>
+
+                    <TD>
+                        <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/profesionales/form-prof', Profesional.id_profesional]"> Editar </BUTTON>
+                    </TD>
+                    <TD>
+                        <BUTTON class="botonEliminar" name="eliminar" (click)='delete(Profesional)'> Eliminar </BUTTON>
+                    </TD>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-outline-success" [routerLink]="['/administrador']">volver</button>
+    </div>
+</div>

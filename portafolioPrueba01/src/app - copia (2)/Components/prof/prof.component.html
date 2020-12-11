@@ -1,0 +1,23 @@
+<br>
+<div class="card text-center">
+    <div class="card-header">
+        Panel de control Profesional
+    </div>
+    <div class="card-body">
+        <div>
+            <button class="botonAdmin" [routerLink]="['/crearcapacitacion']" >Crear capacitación</button>
+            <button class="botonAdmin" [routerLink]="['/planificarvisita']" >Planificar visita</button>
+        </div>
+        <div>
+            <button class="botonAdmin" [routerLink]="['/revisarcliente']" >Revisar cliente</button>
+            <button class="botonAdmin" [routerLink]="['/ingresarmejora']" >Ingresar propuesta de mejora</button>
+        </div>
+        <div>
+            <button class="botonAdmin">Crear checkList</button>
+            <button class="botonAdmin">Responder checkList</button>
+        </div>
+    </div>
+    <div class="card-footer text-muted">
+        <button class="btn btn-outline-success" [routerLink]="['/home']">Salir</button>
+    </div>
+</div>

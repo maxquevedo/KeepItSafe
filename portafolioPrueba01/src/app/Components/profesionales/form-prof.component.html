@@ -1,0 +1,70 @@
+<br>
+<div class="card bg-aqua text-dark text-center">
+    <div class="card-header"> Crear nuevo Profesional
+        <div class="card-body text-center">
+
+
+            <form>
+
+                <div class="form-group row">
+                    <label for="rut_profesional" class="col-form-label col-sm-2">RUT_PROFESIONAL</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" [(ngModel)]="profesional.rut_profesional" name="rut_profesional">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="dv_rut_profesional" class="col-form-label col-sm-2">DV PROFESIONAL</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" [(ngModel)]="profesional.dv_rut_profesional" name="vd_rut_profesional">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="nombres_profesional" class="col-form-label col-sm-2">NOMBRE PROFESIONAL</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" [(ngModel)]="profesional.nombres_profesional" name="nombres_profesional">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="ap_paterno_prof" class="col-form-label col-sm-2">APELLIDO PATERNO</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" [(ngModel)]="profesional.ap_paterno_prof" name="ap_paterno_prof">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="ap_materno_prof" class="col-form-label col-sm-2">APELLIDO MATERNO</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" [(ngModel)]="profesional.ap_materno_prof" name="ap_materno_prof">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="fec_ingreso_prof" class="col-form-label col-sm-2">FECHA INGRESO</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" [(ngModel)]="profesional.fec_ingreso_prof" name="fec_ingreso_prof">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <button class="btn btn-primary" role="button" (click)='create()' *ngIf="!profesional.id_profesional else esleBlock">Crear</button>
+                        <ng-template #esleBlock>
+                            <button class="btn btn-primary" role="button" (click)="update()">Editar</button>
+                        </ng-template>
+                        <button class="btn btn-warning" style="margin-left: 10%;" [routerLink]="[ '/profesionales']" role="button">Volver</button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+
+
+        </div>
+
+    </div>
+</div>

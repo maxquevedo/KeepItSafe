@@ -28,7 +28,7 @@ function mapResult(arreglo){
 
 function mapMultipleResult(arreglo){
     console.log(arreglo.rows.length);
-    var respJson = { };
+    var respJson = [];
     var resJson = { };
     //for()
     for(var j=0;j<arreglo.rows.length;j++){
@@ -37,7 +37,7 @@ function mapMultipleResult(arreglo){
             var value = arreglo.rows[j][i];
             resJson = {...resJson,[nombre]:value };
         }
-        respJson = { ...respJson, [j]:resJson};
+        respJson = [ ...respJson,resJson]; 
     }
     
     return respJson;
@@ -337,6 +337,7 @@ app.get('/actividades/:userId/:tipoUsuario/:id2',async function(req,res){
 });
 
 app.get('/clientes/:id',async function(req,res){
+
     let id = req.params.id;
     let connection;
     let query = `select * from clientes where cli_id = :id`
@@ -728,6 +729,166 @@ app.get('/web/login/:username/:password', async(req,res) => {
     return res.send(result.rows);
 
 })
+
+app.get('/web/clientes', async(req,res) => {
+    let connection;
+    let query = `select * from usuarios where usr_tipousuario = 'Cliente'`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+
+app.get('/web/rev/clientes', async(req,res) => {
+    let connection;
+    let query = `select * from clientes`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+
+
+app.get('/web/cliente/:id',async function(req,res){
+
+    let id = req.params.id;
+
+    let connection;
+    let query = `select * from clientes where cli_id = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+
+app.post('/web/create/cliente',async(req,res)=>{
+    console.log("Body: ",req.body);
+    console.log("Params: ",req.params);
+    console.log("Query: ",req.query);
+    let username = req.body.username;
+    let password = req.body.password;
+    let email= req.body.email;
+    let rut = req.body.rut;
+    let name = req.body.name;
+    let razonSocial = req.body.razonSocial;
+    let status = 'Disabled';
+    let plan = 1;
+    let tipoUsuario = 'Cliente';
+
+    let connection;
+    let userId = 0;
+    let query1 = `select count(*) from usuarios`;
+    let query3 =  `insert into clientes (CLI_RUT,CLI_RAZONSOCIAL,CLI_STATUS, PLANES_PLA_IDPLAN) values('${rut}','${razonSocial}','${status}',${plan})`;
+    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
+    try{
+        //console.log("Query 3:",query3);
+
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query1,[],{})
+        
+        userId = (result.rows[0][0])+1;
+        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}',${userId}) `;
+        
+        result = await connection.execute(query2,[],{});
+        result = await connection.execute(query3,[],{});
+    }catch(err){
+        console.log(err)
+        res.send(err);
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        //console.log(result);
+        //return res.send(result.rows);
+        return res.json(JSON.stringify({result}));
+    }
+  
+
+});
+
+app.get('/web/profesional', async(req,res) => {
+    let connection;
+    let query = `select * from usuarios where usr_tipousuario = 'Profesional'`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+
+app.delete('/web/usuario/:id',async function(req,res){
+    
+    let id = req.params.id;
+
+    let connection;
+    let query = `delete from usuarios where usr_id = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(result.rowsAffected)
+
+
+});
 
 
 
