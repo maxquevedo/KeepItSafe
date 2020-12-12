@@ -2,17 +2,17 @@
 <div class="card text-center">
     <div class="card-header">
         Panel de control Administrador
-        <h4><small>Bienvenido {{ usuario }}</small></h4>
+        <h4><small>Bienvenido Prueba {{ usuario }}</small></h4>
     </div>
     <div class="card-body">
         <div>
             <button class="botonAdmin" [routerLink]="[ '/profesionales']">Mantener información profesional</button>
-            <button class="botonAdmin" [routerLink]="['/crearcapacitacion']" >Crear capacitación</button>
+            <button class="botonAdmin" [routerLink]="['/crearcapacitacion']">Crear capacitación</button>
         </div>
         <div>
             <button class="botonAdmin" [routerLink]="[ '/clientes']">Mantener información cliente</button>
-            <button class="botonAdmin" [routerLink]="['/planificarvisita']" >Planificar visita</button>
-            
+            <button class="botonAdmin" [routerLink]="['/planificarvisita']">Planificar visita</button>
+
         </div>
         <div>
             <button class="botonAdmin">Generar reporte cliente</button>
@@ -24,6 +24,6 @@
         </div>
     </div>
     <div class="card-footer text-muted">
-        <button class="btn btn-outline-success" (click)="logout()" >Salir</button>
+        <button class="btn btn-outline-success" (click)="logout()">Salir</button>
     </div>
 </div>
