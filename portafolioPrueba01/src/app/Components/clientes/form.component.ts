@@ -14,14 +14,6 @@ import { Usuario } from './usuario';
 export class FormComponent implements OnInit {
 
   cliente: Cliente ={
-    CLI_RUT: '',
-    CLI_RAZONSOCIAL: '',
-    CLI_STATUS: '',
-    CLI_ID_PRO: '',
-    PLANES_PLA_IDPLAN: ''
-  };
-
-  usuario: Usuario ={
     USR_ID:'',
     USR_USERNAME:'',
     USR_CORREO:'',
@@ -29,7 +21,12 @@ export class FormComponent implements OnInit {
     USR_PASSWORD:'',
     USR_TIPOUSUARIO:'',
     USR_IDPERFIL:'',
-  }
+    CLI_RUT: '',
+    CLI_RAZONSOCIAL: '',
+    CLI_STATUS: '',
+    CLI_ID_PRO: '',
+    PLANES_PLA_IDPLAN: ''
+  };
 
   constructor( private clienteService: ClienteService, private router: Router, private activateRoute: ActivatedRoute) { }
 

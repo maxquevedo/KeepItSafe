@@ -5,8 +5,8 @@ export class Profesional {
     USR_CORREO;
     USR_NOMBRECOMPLETO;
     USR_PASSWORD;
-    USR_TIPOUSUARIO;
-    USR_IDPERFIL;
+    USR_TIPOUSUARIO?;
+    USR_IDPERFIL?;
 
     PRO_RUT?;
     PRO_ID?;

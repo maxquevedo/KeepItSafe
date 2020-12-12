@@ -25,7 +25,7 @@ export class ClienteService {
   }
 
   getCliente(USR_ID){
-    return this.http.get(`${this.env.apiUrl}/web/clientes/${USR_ID}`);
+    return this.http.get(`${this.env.apiUrl}/web/clientes${USR_ID}`);
   }
 
   update(USR_ID:string,cliente: Cliente){
