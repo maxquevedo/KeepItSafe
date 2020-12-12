@@ -6,8 +6,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  usuario = sessionStorage.getItem('USR_USERNAME');
-  perfil = sessionStorage.getItem('USR_TIPOUSUARIO');
 
   constructor() { }
 

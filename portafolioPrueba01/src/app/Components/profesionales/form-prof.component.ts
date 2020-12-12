@@ -15,7 +15,8 @@ import swal from 'sweetalert2';
 
 export class FormProfComponent implements OnInit {
 
-  public profesional: Profesional = new Profesional();
+  
+  profesional = Profesional;
   constructor(private profesionalService: ProfesionalService, private router: Router, private activateRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
