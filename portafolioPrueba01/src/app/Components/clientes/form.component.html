@@ -12,7 +12,7 @@
                         <div class="input-group-prepend">
                             <span for="rut_cliente" class="input-group-text" >Rut</span>
                         </div>
-                            <input type="text" class="form-control" [(ngModel)]="cliente.CLI_RUT" name="rut_cliente">
+                            <input type="text" class="form-control"  name="rut_cliente">
                     </div>
                     </div>  
                     <div class="col-mb-4">
@@ -34,7 +34,7 @@
                         <div class="input-group-prepend">
                             <span for="rut_cliente" class="input-group-text" >Razón Social</span>
                         </div>
-                            <input type="text" class="form-control" [(ngModel)]="cliente.CLI_RAZONSOCIAL" name="razon_social">
+                            <input type="text" class="form-control"  name="razon_social">
                     </div>
                     </div>  
                     <div class="col-mb-4">
@@ -56,7 +56,7 @@
                             <div class="input-group-prepend">
                                 <span for="tipo_contrato" class="input-group-text">Tipo Contrato</span>
                             </div>
-                                    <select class="form-control" [(ngModel)]="cliente.PLANES_PLA_IDPLAN" name="tipo_contrato">
+                                    <select class="form-control"  name="tipo_contrato">
                                         <option value="1">Standard</option>
                                     </select>
                         </div>
@@ -68,8 +68,8 @@
                     <div class="col-sm-6">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" [(ngModel)]=" cliente.CLI_STATUS" name="able"  value="able" > Deshabilitado
-                                <input class="form-check-input" type="radio" [(ngModel)]=" cliente.CLI_STATUS" name="disable" value="disable"> Habilidato
+                                <input class="form-check-input" type="radio"  name="able"  value="able" > Deshabilitado
+                                <input class="form-check-input" type="radio"  name="disable" value="disable"> Habilidato
                             </label>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                         <ng-template #esleBlock>
                             <button class="btn btn-primary" role="button" (click)="update()">Editar</button>
                         </ng-template>
-                        <button class="btn btn-outline-success" style="margin-left: 10%;" [routerLink]="[ '/Admin']" role="button">Volver</button>
+                        <button class="btn btn-outline-success" style="margin-left: 10%;"  role="button">Volver</button>
 
                     </div>
 
