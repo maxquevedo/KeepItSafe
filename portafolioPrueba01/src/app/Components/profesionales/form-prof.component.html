@@ -1,57 +1,62 @@
 <br>
-<div class="card bg-aqua text-dark text-center">
+<div class="card bg-aqua text-dark text-center col-sm-12">
     <div class="card-header"> Crear nuevo Profesional
         <div class="card-body text-center">
 
 
             <form>
-
                 <div class="form-group row">
-                    <label for="rut_profesional" class="col-form-label col-sm-2">RUT_PROFESIONAL</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control"  name="rut_profesional">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span for="rut_profesional" class="input-group-text">Rut</span>
+                            </div>
+                            <input type="text" class="form-control" name="rut_profesional">
+                        </div>
+                    </div>
+                    <div class="col-mb-4">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span for="rut_profesional" class="input-group-text">Fecha cita</span>
+                                <input id="my-input" class="form-control" type="date" name="">
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                
                 <div class="form-group row">
-                    <label for="nombres_profesional" class="col-form-label col-sm-2">NOMBRE PROFESIONAL</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control"  name="nombres_profesional">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span for="rut_cliente" class="input-group-text">Nombre Profesional</span>
+                            </div>
+                            <input type="text" class="form-control" name="nombres_profesional">
+                        </div>
+                    </div>
+                    <div class="col-mb-4">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span for="rut_cliente" class="input-group-text">Apellido Profesional</span>
+                            </div>
+                            <input type="text" class="form-control" name="ap_paterno_prof">
+                        </div>
                     </div>
                 </div>
-
-                <div class="form-group row">
-                    <label for="ap_paterno_prof" class="col-form-label col-sm-2">APELLIDO</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control"  name="ap_paterno_prof">
-                    </div>
-                </div>
-
-                
-
-                <div class="form-group row">
-                    <label for="fec_ingreso_prof" class="col-form-label col-sm-2">FECHA INGRESO</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control"  name="fec_ingreso_prof">
-                    </div>
-                </div>
-
                 <div class="form-group row">
                     <div class="col-sm-6">
-                        <button class="btn btn-primary" role="button" (click)='create()' *ngIf="!profesional.id_profesional else esleBlock">Crear</button>
+                        <button class="btn btn-primary" role="button" (click)='create()' *ngIf="!cliente.id_cliente else esleBlock">Crear</button>
                         <ng-template #esleBlock>
                             <button class="btn btn-primary" role="button" (click)="update()">Editar</button>
                         </ng-template>
+                        <button class="btn btn-outline-success" style="margin-left: 10%;" role="button">Guardar</button>
+                        <button class="btn btn-outline-success" style="margin-left: 10%;" role="button">Volver</button>
 
                     </div>
 
                 </div>
 
             </form>
-            <button class="btn btn-warning" style="margin-left: 10%;" role="button" >Volver</button>
-
-
 
 
         </div>
