@@ -48,6 +48,10 @@ export class PlanificarvisitaComponent implements OnInit {
     console.log("desde getCliente",this.cliente);
 
   }
+
+  getagenda(){
+    
+  }
   
 
 
