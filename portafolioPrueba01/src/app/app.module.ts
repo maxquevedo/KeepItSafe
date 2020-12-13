@@ -44,12 +44,7 @@ import { ReporteclienteComponent } from './Components/reportecliente/reporteclie
     HomeComponent,
     AdministradorComponent,
     FormComponent,
-<<<<<<< HEAD
-    ProfesionalesComponent,
     //FormProfComponent,
-=======
-    FormProfComponent,
->>>>>>> 353ac6c2504e05738260914c350e3558bab4b6d9
     CliComponent,
     ProfComponent,
     CrearcapacitacionComponent,
