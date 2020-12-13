@@ -18,9 +18,12 @@ import { SolicitarasesoriaComponent } from './Components/solicitarasesoria/solic
 import { ReportaraccidenteComponent } from './Components/reportaraccidente/reportaraccidente.component';
 import { CrearcheklistComponent } from './Components/crearcheklist/crearcheklist.component';
 import { ResponderchecklistComponent } from './Components/responderchecklist/responderchecklist.component';
+import { ReporteclienteComponent } from './Components/reportecliente/reportecliente.component';
+
 
 const routes: Routes = [
 {path: 'clientes', component: ClientesComponent },
+{path: 'reporteClientes', component: ReporteclienteComponent  },
 {path: 'home', component: HomeComponent },
 {path: 'Admin', component: AdministradorComponent},
 {path: 'clientes/form', component: FormComponent },
