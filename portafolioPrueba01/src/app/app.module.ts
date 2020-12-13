@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -10,11 +9,11 @@ import { ClienteService } from './Components/clientes/cliente.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './Components/home/home.component';
 import { AdministradorComponent } from './Components/administrador/administrador.component';
-//import { FormComponent } from './Components/clientes/form.component';
+import { FormComponent } from './Components/clientes/form.component';
 import { FormsModule } from '@angular/forms';
 import { ProfesionalesComponent } from './Components/profesionales/profesionales.component';
 import { ProfesionalService } from './Components/profesionales/profesional.service';
-//import { FormProfComponent } from './Components/profesionales/form-prof.component';
+import { FormProfComponent } from './Components/profesionales/form-prof.component';
 import { CliComponent } from './Components/cli/cli.component';
 import { ProfComponent } from './Components/prof/prof.component';
 import { CrearcapacitacionComponent } from './Components/crearcapacitacion/crearcapacitacion.component';
@@ -38,13 +37,13 @@ import { from } from 'rxjs';
   declarations: [
     AppComponent,
     HeaderComponent,
+    ProfesionalesComponent,
     FooterComponent,
     ClientesComponent,
     HomeComponent,
     AdministradorComponent,
-    //FormComponent,
-    ProfesionalesComponent,
-    //FormProfComponent,
+    FormComponent,
+    FormProfComponent,
     CliComponent,
     ProfComponent,
     CrearcapacitacionComponent,

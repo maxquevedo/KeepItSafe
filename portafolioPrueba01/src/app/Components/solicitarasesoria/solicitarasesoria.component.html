@@ -52,10 +52,6 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-6">
-                        <button class="btn btn-primary" role="button" (click)='create()' *ngIf="!cliente.id_cliente else esleBlock">Crear</button>
-                        <ng-template #esleBlock>
-                            <button class="btn btn-primary" role="button" (click)="update()">Editar</button>
-                        </ng-template>
                         <button class="btn btn-outline-success" style="margin-left: 10%;" role="button">Guardar</button>
                         <button class="btn btn-outline-success" style="margin-left: 10%;" role="button">Volver</button>
 
