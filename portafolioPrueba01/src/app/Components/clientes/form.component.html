@@ -114,15 +114,17 @@
                         <ng-template #esleBlock>
                             <button class="btn btn-primary" role="button" (click)="update()">Editar</button>
                         </ng-template> -->
-                        <button class="btn btn-outline-success" style="margin-left: 10%;" role="button" (click)="guardarCliente()">Guardar</button>
-                        <button class="btn btn-outline-success" style="margin-left: 10%;" role="button">Volver</button>
-
+                        
                     </div>
 
                 </div>
 
             </form>
 
+            <button class="btn btn-outline-success" style="margin-left: 10%;" role="button" (click)="guardarCliente()">Guardar</button>
+            <div class="my-2 text-left">
+                <button class="btn btn-outline-success" style="margin-left: 10%;" role="button" [routerLink]="['/clientes']" >Volver</button>
+            </div>  
 
         </div>
 
