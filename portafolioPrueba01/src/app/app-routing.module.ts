@@ -19,11 +19,8 @@ import { ReportaraccidenteComponent } from './Components/reportaraccidente/repor
 import { CrearcheklistComponent } from './Components/crearcheklist/crearcheklist.component';
 import { ResponderchecklistComponent } from './Components/responderchecklist/responderchecklist.component';
 import { ReporteclienteComponent } from './Components/reportecliente/reportecliente.component';
-<<<<<<< HEAD
 import { ReporteglobalComponent } from './Components/reporteglobal/reporteglobal.component';
-=======
 import { AsignarComponent} from './Components/asignar/asignar.component';
->>>>>>> f4698c45b4aa1cceb61a7f2f44f2bc013dcc407b
 
 
 const routes: Routes = [

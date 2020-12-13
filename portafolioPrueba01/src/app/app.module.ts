@@ -30,11 +30,8 @@ import { LoginService } from './services/login.service';
 import { PlanificarvisitaService } from './Components/planificarvisita/planificarvisita.service'
 import { from } from 'rxjs';
 import { ReporteclienteComponent } from './Components/reportecliente/reportecliente.component';
-<<<<<<< HEAD
 import { ReporteglobalComponent } from './Components/reporteglobal/reporteglobal.component';
-=======
 import { AsignarComponent } from './Components/asignar/asignar.component';
->>>>>>> f4698c45b4aa1cceb61a7f2f44f2bc013dcc407b
 
 
 
@@ -63,11 +60,8 @@ import { AsignarComponent } from './Components/asignar/asignar.component';
     CrearcheklistComponent,
     ResponderchecklistComponent,
     ReporteclienteComponent,
-<<<<<<< HEAD
-    ReporteglobalComponent
-=======
+    ReporteglobalComponent,
     AsignarComponent
->>>>>>> f4698c45b4aa1cceb61a7f2f44f2bc013dcc407b
   ],
   imports: [
     BrowserModule,
