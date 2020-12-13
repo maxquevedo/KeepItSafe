@@ -20,7 +20,7 @@ export class ClienteService {
     return this.http.get(`${this.env.apiUrl}/web/clientes`)
   }
 
-  create(cliente: Cliente){
+  create(cliente){
     return this.http.post(`${this.env.apiUrl}/web/cliente`,cliente)
   }
 
