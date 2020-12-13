@@ -794,7 +794,7 @@ app.get('/web/cliente/:id',async function(req,res){
     res.json(mapMultipleResult(result))
 })
 
-app.post('/web/create/cliente',async(req,res)=>{
+app.post('/web/cliente',async(req,res)=>{
     console.log("Body: ",req.body);
     console.log("Params: ",req.params);
     console.log("Query: ",req.query);

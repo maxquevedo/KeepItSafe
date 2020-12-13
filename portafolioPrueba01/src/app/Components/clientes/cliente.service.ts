@@ -21,7 +21,7 @@ export class ClienteService {
   }
 
   create(cliente: Cliente){
-    return this.http.post(`${this.env.apiUrl}/web/clientes`,cliente)
+    return this.http.post(`${this.env.apiUrl}/web/cliente`,cliente)
   }
 
   getCliente(USR_ID){

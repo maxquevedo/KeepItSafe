@@ -19,7 +19,7 @@ export class FormComponent implements OnInit {
     USR_CORREO:'',
     USR_NOMBRECOMPLETO:'',
     USR_PASSWORD:'',
-    USR_TIPOUSUARIO:'',
+    USR_TIPOUSUARIO:'Cliente',
     USR_IDPERFIL:'',
     CLI_RUT: '',
     CLI_RAZONSOCIAL: '',
@@ -33,52 +33,9 @@ export class FormComponent implements OnInit {
   ngOnInit(): void {
 
   }
-    cargarCliente(res){ 
-      this.clienteService.getCliente(this.cliente.CLI_ID).subscribe(
-        res => console.log(res),
-        err => console.error(err)
-      );
 
-    }
-
-/*
-    cargarCliente(): void {
-      this.activateRoute.params.subscribe(params => {
-        let id_cliente = params['CLI_ID']
-        if (id_cliente){
-          this.clienteService.getCliente(id_cliente).subscribe( (cliente) => this.cliente = cliente);
-        }
-      });
-    }
-*/
-
-
-    create(): void{
-      
-      this.clienteService.create(this.cliente).subscribe(
-        res => {
-          console.log(this.cliente);
-        },
-        err => console.error(err)
-      );
-      /*
-    this.clienteService.create(this.cliente)
-    .subscribe( cliente => {
-      this.router.navigate(['/clientes']);
-      swal.fire('Nuevo cliente', `cliente ${cliente.USR_NOMBRECOMPLETO} creado con exito!`, 'success');
-    }
-    );*/
+  guardarCliente(){
+    console.log(this.cliente);
+    this.clienteService.create(this.cliente);
   }
-
-  update(): void{
-    /*
-    this.clienteService.update(this.cliente).subscribe( 
-      cliente => {
-        this.router.navigate(['/clientes'])
-        swal.fire('Cliente', `Cliente ${cliente.razon_social} actualizado con exito!`, 'success');
-      }
-    )
-      */
-}
-
 }

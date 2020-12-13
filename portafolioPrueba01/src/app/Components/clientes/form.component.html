@@ -12,7 +12,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">Rut</span>
                             </div>
-                            <input type="text" class="form-control" name="rut_cliente">
+                            <input type="text" class="form-control" name="rut_cliente" [(ngModel)]="cliente.CLI_RUT">
                         </div>
                     </div>
                     <div class="col-mb-4">
@@ -20,7 +20,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">Usuario</span>
                             </div>
-                            <input type="text" class="form-control" name="username">
+                            <input type="text" class="form-control" name="username"[(ngModel)]="cliente.USR_USERNAME">
                         </div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                             <div class="input-group-prepend">
                                 <span for="tipo_contrato" class="input-group-text">Tipo Contrato</span>
                             </div>
-                            <select class="form-control" name="tipo_contrato">
+                            <select class="form-control" name="tipo_contrato" [(ngModel)]="cliente.PLANES_PLA_IDPLAN">
                                         <option value="1">Standard</option>
                                     </select>
                         </div>
@@ -43,7 +43,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">Nombre</span>
                             </div>
-                            <input type="text" class="form-control" name="username">
+                            <input type="text" class="form-control" name="username"[(ngModel)]="cliente.USR_NOMBRECOMPLETO">
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">Razón Social</span>
                             </div>
-                            <input type="text" class="form-control" name="razon_social">
+                            <input type="text" class="form-control" name="razon_social"[(ngModel)]="cliente.CLI_RAZONSOCIAL">
                         </div>
                     </div>
                     <div class="col-mb-4">
@@ -62,7 +62,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">E-Mail</span>
                             </div>
-                            <input type="text" class="form-control" name="mail_usuario">
+                            <input type="text" class="form-control" name="mail_usuario"[(ngModel)]="cliente.USR_CORREO">
                         </div>
                     </div>
 
@@ -75,7 +75,7 @@
                             <div class="input-group-prepend">
                                 <span for="nombre_profesional" class="input-group-text">Nueva contraseña</span>
                             </div>
-                            <input type="text" class="form-control" name="user_password_prof">
+                            <input type="password" class="form-control" name="user_password_prof">
                         </div>
                     </div>
                     <div class="col-mb-4">
@@ -83,7 +83,7 @@
                             <div class="input-group-prepend">
                                 <span for="user_email_profesional" class="input-group-text">Confirmar contraseña</span>
                             </div>
-                            <input type="text" class="form-control" name="user_password_prof">
+                            <input type="password" class="form-control" name="user_password_prof" [(ngModel)]="cliente.USR_PASSWORD">
                         </div>
                     </div>
                 </div>
@@ -110,11 +110,11 @@
 
                 <div class="form-group row">
                     <div class="col-sm-6">
-                        <button class="btn btn-primary" role="button" (click)='create()' *ngIf="!cliente.id_cliente else esleBlock">Crear</button>
+                        <!-- <button class="btn btn-primary" role="button" (click)='create()' *ngIf="!cliente.id_cliente else esleBlock">Crear</button>
                         <ng-template #esleBlock>
                             <button class="btn btn-primary" role="button" (click)="update()">Editar</button>
-                        </ng-template>
-                        <button class="btn btn-outline-success" style="margin-left: 10%;" role="button">Guardar</button>
+                        </ng-template> -->
+                        <button class="btn btn-outline-success" style="margin-left: 10%;" role="button" (click)="guardarCliente()">Guardar</button>
                         <button class="btn btn-outline-success" style="margin-left: 10%;" role="button">Volver</button>
 
                     </div>

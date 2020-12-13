@@ -10,7 +10,7 @@ import { ClienteService } from './Components/clientes/cliente.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './Components/home/home.component';
 import { AdministradorComponent } from './Components/administrador/administrador.component';
-//import { FormComponent } from './Components/clientes/form.component';
+import { FormComponent } from './Components/clientes/form.component';
 import { FormsModule } from '@angular/forms';
 import { ProfesionalesComponent } from './Components/profesionales/profesionales.component';
 import { ProfesionalService } from './Components/profesionales/profesional.service';
@@ -42,7 +42,7 @@ import { from } from 'rxjs';
     ClientesComponent,
     HomeComponent,
     AdministradorComponent,
-    //FormComponent,
+    FormComponent,
     ProfesionalesComponent,
     //FormProfComponent,
     CliComponent,
