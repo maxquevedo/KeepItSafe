@@ -10,14 +10,14 @@
                             <div class="input-group-prepend">
                                 <span for="rut_profesional" class="input-group-text">Rut</span>
                             </div>
-                            <input type="text" class="form-control" name="rut_profesional">
+                            <input type="text" class="form-control" [(ngModel)]="pro.PRO_RUT" name="rut_profesional">
                         </div>
                     </div>
                     <div class="col-mb-4">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
-                                <span for="fecha_cita" class="input-group-text">Fecha cita</span>
-                                <input id="my-input" class="form-control" type="date" name="">
+                                <span for="fecha_cita" class="input-group-text">Fecha Ingreso</span>   
+                                <input id="my-input" class="form-control" type="date" [(ngModel)]="pro.PRO_FINGRESO" name="fechaIngresp">
                             </div>
                         </div>
                     </div>
@@ -29,7 +29,7 @@
                             <div class="input-group-prepend">
                                 <span for="nombre_profesional" class="input-group-text">Nombre Profesional</span>
                             </div>
-                            <input type="text" class="form-control" name="nombres_profesional">
+                            <input type="text" class="form-control" [(ngModel)]="pro.PRO_NOMBRE" name="nombres_profesional">
                         </div>
                     </div>
                     <div class="col-mb-4">
@@ -37,7 +37,7 @@
                             <div class="input-group-prepend">
                                 <span for="nombre_profesional" class="input-group-text">Apellido Profesional</span>
                             </div>
-                            <input type="text" class="form-control" name="ap_paterno_prof">
+                            <input type="text" class="form-control" [(ngModel)]="pro.PRO_APELLIDO" name="ap_prof">
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                             <div class="input-group-prepend">
                                 <span for="nombre_profesional" class="input-group-text">Username</span>
                             </div>
-                            <input type="text" class="form-control" name="user_prof">
+                            <input type="text" class="form-control" [(ngModel)]="pro.USR_USERNAME" name="user_prof">
                         </div>
                     </div>
                     <div class="col-mb-4">
@@ -56,7 +56,7 @@
                             <div class="input-group-prepend">
                                 <span for="user_email_profesional" class="input-group-text">Email</span>
                             </div>
-                            <input type="text" class="form-control" name="user_email_prof">
+                            <input type="text" class="form-control" [(ngModel)]="pro.USR_CORREO" name="user_email_prof">
                         </div>
                     </div>
                 </div>
@@ -73,9 +73,9 @@
                     <div class="col-mb-4">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
-                                <span for="user_email_profesional" class="input-group-text">Confirmar contraseña</span>
+                                <span for="user_email_profesional"  class="input-group-text">Confirmar contraseña</span>
                             </div>
-                            <input type="text" class="form-control" name="user_password_prof">
+                            <input type="text" class="form-control" [(ngModel)]="pro.USR_PASSWORD" name="user_password_prof">
                         </div>
                     </div>
                 </div>
@@ -83,9 +83,13 @@
 
 
         </div>
-        <button class="btn btn-outline-success" style="margin-left: 10%;" role="button">Guardar</button>
+        <button class="btn btn-outline-success" style="margin-left: 10%;" role="button" (click)="GuardarProfesional()" >Guardar</button>
         <div class="my-2 text-left">
+<<<<<<< HEAD
             <button class="btn btn-outline-success" [routerLink]="['/administrador']">volver</button>
+=======
+            <button class="btn btn-outline-success" [routerLink]="['/profesionales']">Volver</button>
+>>>>>>> f4698c45b4aa1cceb61a7f2f44f2bc013dcc407b
         </div>
     </div>
 

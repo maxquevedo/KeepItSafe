@@ -10,48 +10,43 @@ import swal from 'sweetalert2';
   selector: 'app-form-prof',
   templateUrl: './form-prof.component.html'
 })
-
-
-
 export class FormProfComponent implements OnInit {
 
-  
-  profesional = Profesional;
+  pro: Profesional={
+
+    PRO_RUT:'',
+    PRO_ID:'',
+    PRO_NOMBRE:'',
+    PRO_APELLIDO:'',
+    PRO_FINGRESO:'',
+    PRO_CLI_ID:'',
+
+    USR_ID:'',
+    USR_USERNAME:'',
+    USR_CORREO:'',
+    USR_NOMBRECOMPLETO:'',
+    USR_PASSWORD:'',
+    USR_TIPOUSUARIO:'',
+    USR_IDPERFIL:'',
+
+    
+
+  };
   constructor(private profesionalService: ProfesionalService, private router: Router, private activateRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
 
-    this.cargarProfesional();
   }
 
-  cargarProfesional(): void {
-    this.activateRoute.params.subscribe(params => {
-      const id_profesional = params[ 'id_profesional']
-      if (id_profesional){
-        //this.profesionalService.getCliente(id_profesional).subscribe( (profesional) => this.profesional = profesional);
-      }
-    });
-  }
-
-/*
-
-  create(): void{
-  this.profesionalService.create(this.profesional)
-  .subscribe( profesional => {
-    this.router.navigate(['/profesionales']);
-    swal.fire('Nuevo Profesional', `Profesional ${profesional.nombres_profesional} ${profesional.ap_paterno_prof} creado con exito!`, 'success');
-  }
-  );
+  GuardarProfesional(){
+  var formato = JSON.stringify({
+      "username":this.pro.USR_USERNAME,
+      "password":this.pro.USR_PASSWORD,
+      "email":this.pro.USR_CORREO,
+      "rut":this.pro.PRO_RUT,
+      "name":this.pro.USR_NOMBRECOMPLETO,
+  });
+  console.log(formato);
 }
 
-update(): void{
-  this.profesionalService.update(this.profesional).subscribe(
-    profesional => {
-      this.router.navigate(['/profesionales']);
-      swal.fire('Profesional', `profesional ${profesional.nombres_profesional} ${profesional.ap_paterno_prof} actualizado con exito!`, 'success');
-    }
-  );
-
-}
-*/
 }

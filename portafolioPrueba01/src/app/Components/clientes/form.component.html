@@ -98,8 +98,8 @@
                             <div class="col-md-4">
                                 <div class="form-check form-check-inline">
                                     <label class="form-check-label">
-                                    <input class="form-check-input" type="radio"  name="disable" value="disable"> Habilidato
-                                    <input class="form-check-input" type="radio"  name="able"  value="able" > Deshabilitado
+                                    <input class="form-check-input" type="radio"  name="btn_status" value="disable"> Habilidato
+                                    <input class="form-check-input" type="radio"  name="btn_status"  value="able" > Deshabilitado
                                 </label>
                                 </div>
                             </div>
@@ -114,15 +114,17 @@
                         <ng-template #esleBlock>
                             <button class="btn btn-primary" role="button" (click)="update()">Editar</button>
                         </ng-template> -->
-                        <button class="btn btn-outline-success" style="margin-left: 10%;" role="button" (click)="guardarCliente()">Guardar</button>
-                        <button class="btn btn-outline-success" style="margin-left: 10%;" role="button">Volver</button>
-
+                        
                     </div>
 
                 </div>
 
             </form>
 
+            <button class="btn btn-outline-success" style="margin-left: 10%;" role="button" (click)="guardarCliente()">Guardar</button>
+            <div class="my-2 text-left">
+                <button class="btn btn-outline-success" style="margin-left: 10%;" role="button" [routerLink]="['/clientes']" >Volver</button>
+            </div>  
 
         </div>
 
