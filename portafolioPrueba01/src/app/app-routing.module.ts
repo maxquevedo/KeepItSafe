@@ -19,6 +19,7 @@ import { ReportaraccidenteComponent } from './Components/reportaraccidente/repor
 import { CrearcheklistComponent } from './Components/crearcheklist/crearcheklist.component';
 import { ResponderchecklistComponent } from './Components/responderchecklist/responderchecklist.component';
 import { ReporteclienteComponent } from './Components/reportecliente/reportecliente.component';
+import { AsignarComponent} from './Components/asignar/asignar.component';
 
 
 const routes: Routes = [
@@ -43,6 +44,7 @@ const routes: Routes = [
 {path: 'reportaraccidente', component: ReportaraccidenteComponent},
 {path: 'crearchecklist', component: CrearcheklistComponent},
 {path: 'responderchecklist', component: ResponderchecklistComponent},
+{path: 'asignar', component: AsignarComponent},
 {path: '', redirectTo: '/home', pathMatch: 'full'},
 {path: '**', redirectTo: '/home', pathMatch: 'full'}
 
