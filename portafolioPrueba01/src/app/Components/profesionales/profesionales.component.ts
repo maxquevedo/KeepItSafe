@@ -30,7 +30,12 @@ export class ProfesionalesComponent implements OnInit {
 
   getProfesional(res){
     this.profesionales = res;
-    console.log("desde getcliente",this.profesionales);
+    //console.log("desde getcliente",this.profesionales);
+  }
+
+  asignarpro(profesional: Profesional){
+    console.log(`desde asignarpro: ${profesional.USR_ID}`);
+    this.router.navigate([`/asignar/${profesional.USR_NOMBRECOMPLETO}`]);
   }
 
 

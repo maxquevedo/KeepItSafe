@@ -47,6 +47,7 @@ const routes: Routes = [
 {path: 'crearchecklist', component: CrearcheklistComponent},
 {path: 'responderchecklist', component: ResponderchecklistComponent},
 {path: 'asignar', component: AsignarComponent},
+{path: 'asignar/:id', component: AsignarComponent},
 {path: '', redirectTo: '/home', pathMatch: 'full'},
 {path: '**', redirectTo: '/home', pathMatch: 'full'}
 

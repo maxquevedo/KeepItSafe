@@ -17,22 +17,22 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let Profesional of profesionales">
+                <tr *ngFor="let cliente of clientes">
                     <td>{{ Profesional.USR_ID }}</td>
                     <td>{{ Profesional.USR_USERNAME }}</td>
                     <td>{{ Profesional.USR_CORREO }}</td>
                     <td>{{ Profesional.USR_NOMBRECOMPLETO }}</td>
 
-                    <TD>
-                        <BUTTON class="botonCrear" style="margin-left: 5px;"> Asignar </BUTTON>
-                    </TD>
+                    <td>
+                        <BUTTON class="botonCrear" style="margin-left: 5px;" (click)='asignarpro(Profesional)'> Asignar </BUTTON>
+                    </td>
 
-                    <TD>
-                        <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/profesionales/form-prof', Profesional.id_profesional]"> Editar </BUTTON>
-                    </TD>
-                    <TD>
+                    <td>
+                        <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/profesionales/form-prof', Profesional.USR_ID]"> Editar </BUTTON>
+                    </td>
+                    <td>
                         <BUTTON class="botonEliminar" name="eliminar" (click)='delete(Profesional)'> Eliminar </BUTTON>
-                    </TD>
+                    </td>
                 </tr>
             </tbody>
         </table>
