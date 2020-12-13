@@ -19,9 +19,11 @@ import { ReportaraccidenteComponent } from './Components/reportaraccidente/repor
 import { CrearcheklistComponent } from './Components/crearcheklist/crearcheklist.component';
 import { ResponderchecklistComponent } from './Components/responderchecklist/responderchecklist.component';
 import { ReporteclienteComponent } from './Components/reportecliente/reportecliente.component';
+import { ReporteglobalComponent } from './Components/reporteglobal/reporteglobal.component';
 
 
 const routes: Routes = [
+{path: 'reporteGlobal', component: ReporteglobalComponent },
 {path: 'clientes', component: ClientesComponent },
 {path: 'reporteClientes', component: ReporteclienteComponent  },
 {path: 'home', component: HomeComponent },

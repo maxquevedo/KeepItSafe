@@ -30,6 +30,7 @@ import { LoginService } from './services/login.service';
 import { PlanificarvisitaService } from './Components/planificarvisita/planificarvisita.service'
 import { from } from 'rxjs';
 import { ReporteclienteComponent } from './Components/reportecliente/reportecliente.component';
+import { ReporteglobalComponent } from './Components/reporteglobal/reporteglobal.component';
 
 
 
@@ -57,7 +58,8 @@ import { ReporteclienteComponent } from './Components/reportecliente/reporteclie
     ReportaraccidenteComponent,
     CrearcheklistComponent,
     ResponderchecklistComponent,
-    ReporteclienteComponent
+    ReporteclienteComponent,
+    ReporteglobalComponent
   ],
   imports: [
     BrowserModule,
