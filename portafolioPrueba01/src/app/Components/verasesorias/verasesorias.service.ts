@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Asesorias } from './asesorias';
+import { Asesoria } from './verasesorias';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment'
 
