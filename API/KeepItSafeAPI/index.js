@@ -794,6 +794,29 @@ app.get('/web/cliente/:id',async function(req,res){
     res.json(mapMultipleResult(result))
 })
 
+app.get('/web/usuario/:id',async function(req,res){
+
+    let id = req.params.id;
+
+    let connection;
+    let query = `select * from usuario where usr_id = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+
 app.post('/web/cliente',async(req,res)=>{
     console.log("Body: ",req.body);
     console.log("Params: ",req.params);
@@ -889,6 +912,26 @@ app.delete('/web/usuario/:id',async function(req,res){
 
 
 });
+
+app.get('/web/reporteglobal', async(req,res) => {
+    let connection;
+    let query = `select * from Reporte_global'`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
 
 
 
