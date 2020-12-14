@@ -1,13 +1,10 @@
 const express = require('express');
-var cors = require('cors');
 const app = express();
 const oracledb = require('oracledb');
 var bodyParser = require('body-parser');
 
 oracledb.autoCommit = true;
-//app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
 
 oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 const mypw = '1234';
@@ -28,7 +25,7 @@ function mapResult(arreglo){
 
 function mapMultipleResult(arreglo){
     console.log(arreglo.rows.length);
-    var respJson = [];
+    var respJson = { };
     var resJson = { };
     //for()
     for(var j=0;j<arreglo.rows.length;j++){
@@ -37,7 +34,7 @@ function mapMultipleResult(arreglo){
             var value = arreglo.rows[j][i];
             resJson = {...resJson,[nombre]:value };
         }
-        respJson = [ ...respJson,resJson]; 
+        respJson = { ...respJson, [j]:resJson};
     }
     
     return respJson;
@@ -166,7 +163,7 @@ app.post('/create/profesional', async(req,res)=>{
     let connection;
     let userId = 0;
     let query1 = `select count(*) from usuarios`;
-    let query3 =  `insert into pro values('${rut}','${name}','${lastName}',TO_DATE('${formatted_date}','dd-mm-yyyy'))`;
+    let query3 =  `insert into pro values('${rut}','${name}','${lastName}',TO_DATE('${formatted_date}','dd-mm-yyyy'),0)`;
     let query4 = `select count(*) from usuarios where usr_tipousuario = 'Profesional' `
     try{
         //console.log("Query 3:",query3);
@@ -176,7 +173,7 @@ app.post('/create/profesional', async(req,res)=>{
         result = await connection.execute(query1,[],{})
         
         userId = (result.rows[0][0])+1;
-        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}',${userId}) `;
+        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}',${userId},0) `;
         
         result = await connection.execute(query2,[],{});
         result = await connection.execute(query3,[],{});
@@ -337,7 +334,6 @@ app.get('/actividades/:userId/:tipoUsuario/:id2',async function(req,res){
 });
 
 app.get('/clientes/:id',async function(req,res){
-
     let id = req.params.id;
     let connection;
     let query = `select * from clientes where cli_id = :id`
@@ -417,8 +413,8 @@ app.get('/asignarPro/:cli_electo/:fecha/:evento',async function(req,res){
         connection = await oracledb.getConnection(connectionInfo);
         result = await connection.execute(query,[cli_electo],{});
         idCliente = result.rows[0][6];
-        query = `select * from pro`
-        result = await connection.execute(query,[],{});
+        query = `select * from pro where pro_cli_asignado = :idCli`
+        result = await connection.execute(query,[idCliente],{});
         profesionalesLibres = result.rows;
         for(pro in profesionalesLibres){
             //Visitas
@@ -480,44 +476,56 @@ app.get('/asignarPro/:cli_electo/:fecha/:evento',async function(req,res){
     if(profesionalesLibres.length == 0){
         res.json("-1");
     }else{
-        console.log(profesionalesLibres);
         res.json({profesionalesLibres,idCliente})
     }
 });
 
-app.patch('/asignarPro',async function(req,res){
+app.post('/asignarPro',async function(req,res){
     let info = req.body.jeison;
+    console.log("INFO: ",info);
     let idCliente = info.idCli;
     let idPro = info.idPro;
     let fecha = info.fecha;
     let evento = info.evento;
     let query = "";
     let fechaFormat = fecha[3]+fecha[4]+'/'+fecha[0]+fecha[1]+'/'+fecha[6]+fecha[7];
-    console.log(fechaFormat);
-    switch(evento){
-        case 'asesoria':
-            console.log("asesoria")
-            query = `update asesorias set ase_id_pro = :idPro where ase_fecha = to_date(':fechaFormat','DD/MM/YY') and ase_id_usuario = :idCliente`;
-            console.log(query)
-            break;
-        case 'capacitacion':
-            console.log("Capacitacion")
-            query = `update capacitaciones set cap_id_pro =:idPro where cap_fecha = to_date(':fechaFormat','DD/MM/YY')  and cap_id_cli = :idCliente`;
-            break;
-        case 'visita': 
-            console.log('Visita')
-            query = `update visitas set vis_id_pro = :idPro where vis_id_cli = :idCliente and vis_fcita = to_date(':fechaFormat','DD/MM/YY');`;
-            console.log(query)
-            break;
-        default: break;
-    }
-    let connection;
-    
+    var connection = await oracledb.getConnection(connectionInfo);;
+    let result;
+    console.log("Fecha asignarPro:",fechaFormat);
+   //to_date(:fechaFormat,'DD/MM/YY')
     try{
-        connection = await oracledb.getConnection(connectionInfo);
-        console.log(query);
-        result = await connection.execute(query,[idCliente,idPro,fechaFormat],{})
-        console.log(result);
+        switch(evento){
+            case 'asesoria':
+                console.log("asesoria")
+                query = `select distinct count(*) from asesorias`;
+                result = await connection.execute(query,[],{});
+                let idAse = (result.rows[0][0]+1);
+                query = `select count(*) from asesorias where ase_id_usuario =:idCliente and ase_fecha between trunc(sysdate, 'MM') and last_day(sysdate)` ;
+                result = await connection.execute(query,[idCliente],{})
+                let cant = (result.rows[0][0]+1);
+                let disp = 2 - cant;
+                if(disp < 0 ){
+                    disp = 0;
+                }
+                query = `insert into asesorias values(:idAse,:cant,:disp,'visita',:idCliente,:idPro,to_date(:fechaFormat,'DD/MM/YY'))`;
+                result = await connection.execute(query,[idAse,cant,disp,idCliente,idPro,fechaFormat],{})
+                console.log(result)
+                break;
+            case 'visita': 
+                console.log('Visita')
+                query = `select distinct count(*) from visitas`;
+                connection = await oracledb.getConnection(connectionInfo);
+                result = await connection.execute(query,[],{})
+                let idVisita = (result.rows[0][0])+1;
+                query = `insert into visitas values(:idVisita,sysdate,to_date(:fechaFormat,'DD/MM/YY'),:idCliente,:idPro)`;
+                console.log(query);
+                console.log("Query params: ",idVisita,fechaFormat,idCliente,idPro);
+                console.log("idPro: "+idPro);
+                result = await connection.execute(query,[idVisita,fechaFormat,idCliente,idPro],{})
+                console.log("Resulta2: ",result);
+                break;
+            default: break;
+        }
     }catch(err){
         console.log(err)
     }
@@ -530,8 +538,7 @@ app.patch('/asignarPro',async function(req,res){
                 console.log(err);
             }
         }
-        console.log(result);
-        return res.send(result.rows);
+        return res.send("Wena");
     }
   
     res.status(200).json("Wena: ")//,idCli,idPro,fecha,evento);
@@ -569,35 +576,82 @@ app.get('/accidentes/:id',async function(req,res){
     }
 });
 
-app.get('/reportes/:id', async function(req,res){
-    let id = req.params.id;
+app.get('/reportes', async function(req,res){
     let connection;
-    let reportDays = [] ;
-    let query = `select to_char(con_finicio,'DD/MM/YY') from contratos where con_id_usu = :id`
+    let id = req.params.id;
+    console.log(id);
+    let query = `select * from reportes_global `;
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[],{});
+        console.log(result);
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rows);
+});
+
+app.get('/reportesG/:id', async function(req,res){
+    let connection;
+    let id = req.params.id;
+    let query = `select * from reportes_global where rep_id = :id`;
     try{    
         connection = await oracledb.getConnection(connectionInfo);
         result = await connection.execute(query,[id],{});
-        let inicio = result.rows[0][0];
-        let inicioFormat = inicio[3]+inicio[4]+'-'+inicio[0]+inicio[1]+'-'+inicio[6]+inicio[7]
-        let dateInicio = new Date(inicioFormat);
-        let now = new Date();
-        let monthsBetween  = 0;
-        console.log("Date Inicio: ",dateInicio.toLocaleDateString())
-        if( dateInicio.getFullYear() != now.getFullYear()){
-            console.log("año distinto");
-        }else{
-            monthsBetween = (now.getMonth()+1)-(dateInicio.getMonth()+1);
-        }
-        console.log("Months Between: "+ monthsBetween);
-        for(var i = 0; i < monthsBetween; i++){
-            let aux = "";
-            if(dateInicio.getDate() < 10 ){
-                aux = "0"+dateInicio.getDate();
-                reportDays.push((aux+'/'+((dateInicio.getMonth()+2)+i)+'/'+dateInicio.getFullYear()));
-            }else{
-                reportDays.push((dateInicio.getDate() +'/'+((dateInicio.getMonth()+2)+i)+'/'+dateInicio.getFullYear()));
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
             }
         }
+    }
+    return res.json(result.rows);
+});
+
+app.get('/generateGlobalReport', async function(req,res){
+    let connection;
+    let query = `select distinct count(*) from reportes_global `;
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[],{});
+        let id = 0;
+        id = 1+ parseInt(result.rows[0]);
+        console.log(id);
+        query = `insert into reportes_global values(:id,sysdate,1,1,1,1,1,1)`; 
+        result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result);
+});
+
+app.get('/reportesCli/:id', async function(req,res){
+    let id = req.params.id;
+    let connection;
+    let query = `select * from reportes_cli where rep_id_cli = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id],{});
 
     }catch(e){
         console.log(e);
@@ -610,14 +664,88 @@ app.get('/reportes/:id', async function(req,res){
             }
         }
     }
-    return res.json(reportDays)
+    return res.json(result.rows)
 });
+
+app.get('/reportesPro/:id', async function(req,res){
+    let id = req.params.id;
+    let connection;
+    let query = `select * from reportes_pro where rep_id_pro = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rows);
+});
+
+app.get('/propuestas/:id/:user',async function(req,res){
+    let id = req.params.id;
+    let usu = req.params.user;
+    let connection;
+    if(usu == "Cliente"){
+        var query = `select * from mejoras where mej_idCli = :id`
+    }else{
+        var query = `select * from mejoras where mej_idPro = :id`
+    }
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rows);
+    res.json("Wena");
+})
+
+app.get('/checks/:id/:user',async function(req,res){
+    let id = req.params.id;
+    let tipoUsuario = req.params.user;
+    let connection;
+    if(tipoUsuario == "Cliente"){
+        var query = `select * from accidentes where acc_id_cliente = :id`;
+    }else{
+        var query = `select * from accidentes where acc_id_pro = :id`;
+    }
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rows);
+})
 
 app.get('/checks/:id_pro/:id_cli/',async function(req,res){
     let id_pro = req.params.id_pro;
     let id_cli = req.params.id_cli;
     let connection;
-    let query = `select acc_descripcion, acc_estado,acc_id from accidentes where acc_id_pro = :id_pro and acc_id_cliente = :id_cli`
+    let query = `select acc_id,acc_descripcion, acc_estado from accidentes where acc_id_pro = :id_pro and acc_id_cliente = :id_cli`
     try{    
         connection = await oracledb.getConnection(connectionInfo);
         result = await connection.execute(query,[id_pro,id_cli],{});
@@ -643,7 +771,6 @@ app.patch('/checkFail',async function(req,res){
     try{    
         connection = await oracledb.getConnection(connectionInfo);
         result = await connection.execute(query,[id],{});
-        console.log(result);
     }catch(e){
         console.log(e);
     }finally{
@@ -664,9 +791,7 @@ app.patch('/checkSuccess',async function(req,res){
     let query = `update accidentes set acc_estado = 0 where acc_id = :id`
     try{    
         connection = await oracledb.getConnection(connectionInfo);
-        result = await connection.execute(query,[id],{});
-        console.log(query, id);
-        console.log(result.rowsAffected);
+        var result = await connection.execute(query,[id],{});
     }catch(e){
         console.log(e);
     }finally{
@@ -681,409 +806,7 @@ app.patch('/checkSuccess',async function(req,res){
     return res.json(result.rowsAffected);
 })
 
-//WEB
-app.get('/prueba',async(req,res) => {
-    let connection;
-    let query = "SELECT * FROM USUARIOS";
-    try{
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query)
-    }catch(err){
-        console.log(err)
-    }
-    finally{
-        if(connection){
-            try{
-                await connection.close();
-               
-            }catch(err){
-                console.log(err);
-            }
-        }
-        console.log(result);
-    return res.send(result.rows);
-    }
-})
-
-app.get('/web/login/:username/:password', async(req,res) => {
-    
-    let password = req.params.password;
-    let username = req.params.username;
-    
-    let connection;
-    let query = `select * from usuarios where usr_username= :username and usr_password = :password`
-    try{    
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query,[username,password],{});
-    }catch(e){
-        console.log(e);
-    }finally{
-        if(connection){
-            try{
-                await connection.close();
-            }catch(e){
-                console.log(e);
-            }
-        }
-    }
-    return res.send(result.rows);
-
-})
-
-app.get('/web/clientes', async(req,res) => {
-    let connection;
-    let query = `select * from usuarios where usr_tipousuario = 'Cliente'`
-    try{    
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query,[],{});
-    }catch(e){
-        console.log(e);
-    }finally{
-        if(connection){
-            try{
-                await connection.close();
-            }catch(e){
-                console.log(e);
-            }
-        }
-    }
-    res.json(mapMultipleResult(result))
-})
-
-app.get('/web/rev/clientes', async(req,res) => {
-    let connection;
-    let query = `select * from clientes`
-    try{    
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query,[],{});
-    }catch(e){
-        console.log(e);
-    }finally{
-        if(connection){
-            try{
-                await connection.close();
-            }catch(e){
-                console.log(e);
-            }
-        }
-    }
-    res.json(mapMultipleResult(result))
-})
-
-
-app.get('/web/cliente/:id',async function(req,res){
-
-    let id = req.params.id;
-
-    let connection;
-    let query = `select * from clientes where cli_id = :id`
-    try{    
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query,[id],{});
-    }catch(e){
-        console.log(e);
-    }finally{
-        if(connection){
-            try{
-                await connection.close();
-            }catch(e){
-                console.log(e);
-            }
-        }
-    }
-    res.json(mapMultipleResult(result))
-})
-
-
-
-app.get('/web/usuario/:id',async function(req,res){
-
-    let id = req.params.id;
-
-    let connection;
-    let query = `select * from usuario where usr_id = :id`
-    try{    
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query,[id],{});
-    }catch(e){
-        console.log(e);
-    }finally{
-        if(connection){
-            try{
-                await connection.close();
-            }catch(e){
-                console.log(e);
-            }
-        }
-    }
-    res.json(mapMultipleResult(result))
-})
-
-app.post('/web/cliente',async(req,res)=>{
-    console.log("Body: ",req.body);
-    console.log("Params: ",req.params);
-    console.log("Query: ",req.query);
-    let username = req.body.username;
-    let password = req.body.password;
-    let email= req.body.email;
-    let rut = req.body.rut;
-    let name = req.body.name;
-    let razonSocial = req.body.razonSocial;
-    let status = 'Disabled';
-    let plan = 1;
-    let tipoUsuario = 'Cliente';
-    let estadousuario ='1';
-    
-    let connection;
-    let userId = 0;
-    let query1 = `select count(*) from usuarios`;
-    let query3 =  `insert into clientes(CLI_RUT, CLI_ID, CLI_RAZONSOCIAL, CLI_STATUS, PLANES_PLA_IDPLAN) values('${rut}','${userId}','${razonSocial}','${status}',${plan})`;
-    console.log("query3 -> ",query3);
-    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
-    try{
-        //console.log("Query 3:",query3);
-
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query1,[],{})
-        
-        userId = (result.rows[0][0])+1;
-        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}','${userId}',${estadousuario}) `;
-        console.log("query2 -> ",query2);
-        
-        result = await connection.execute(query2,[],{});
-        result = await connection.execute(query3,[],{});
-    }catch(err){
-        console.log(err)
-        res.send(err);
-    }
-    finally{
-        if(connection){
-            try{
-                await connection.close();
-               
-            }catch(err){
-                console.log(err);
-            }
-        }
-        //console.log(result);
-        //return res.send(result.rows);
-        return res.json(JSON.stringify({result}));
-    }
-  
-
-});
-
-app.post('/web/profesional',async(req,res)=>{
-    console.log("Body: ",req.body);
-    console.log("Params: ",req.params);
-    console.log("Query: ",req.query);
-    let username = req.body.username;
-    let password = req.body.password;
-    let email= req.body.email;
-    let rut = req.body.rut;
-    let name = req.body.name;
-    let apellido = req.body.apellido;
-    let fechaingreso = req.body.fechaingreso;
-    let razonSocial = req.body.razonSocial;
-    let status = 'Disabled';
-    let plan = 1;
-    let tipoUsuario = 'Profesional';
-    let estadousuario ='1';
-    
-    let connection;
-    let userId = 0;
-    let query1 = `select count(*) from usuarios`;
-    let query3 =  `insert into pro (PRO_RUT,PRO_ID,PRO_NOMBRE,PRO_APELLIDO,PRO_FINGRESO) values('${rut}',${userId},'${name}','${apellido}','${fechaingreso}')`;
-    console.log("query3 -> ",query3);
-    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
-    try{
-        //console.log("Query 3:",query3);
-
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query1,[],{})
-        
-        userId = (result.rows[0][0])+1;
-        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name} ${apellido}','${password}','${tipoUsuario}','${userId}',${estadousuario}) `;
-        console.log("query2 -> ",query2);
-        
-        result = await connection.execute(query2,[],{});
-        result = await connection.execute(query3,[],{});
-    }catch(err){
-        console.log(err)
-        res.send(err);
-    }
-    finally{
-        if(connection){
-            try{
-                await connection.close();
-               
-            }catch(err){
-                console.log(err);
-            }
-        }
-        //console.log(result);
-        //return res.send(result.rows);
-        return res.json(JSON.stringify({result}));
-    }
-  
-
-});
-
-app.get('/web/profesional', async(req,res) => {
-    let connection;
-    let query = `select * from usuarios where usr_tipousuario = 'Profesional'`
-    try{    
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query,[],{});
-    }catch(e){
-        console.log(e);
-    }finally{
-        if(connection){
-            try{
-                await connection.close();
-            }catch(e){
-                console.log(e);
-            }
-        }
-    }
-    res.json(mapMultipleResult(result))
-})
-
-app.delete('/web/usuario/:id',async function(req,res){
-    
-    let id = req.params.id;
-
-    let connection;
-    let query = `delete from usuarios where usr_id = :id`
-    try{    
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query,[id],{});
-    }catch(e){
-        console.log(e);
-    }finally{
-        if(connection){
-            try{
-                await connection.close();
-            }catch(e){
-                console.log(e);
-            }
-        }
-    }
-    res.json(result.rowsAffected)
-
-
-});
-
-app.get('/web/reporteglobal', async(req,res) => {
-    let connection;
-    let query = "SELECT * FROM reportes_global";
-    try{
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query)
-    }catch(err){
-        console.log(err)
-    }
-    finally{
-        if(connection){
-            try{
-                await connection.close();
-               
-            }catch(err){
-                console.log(err);
-            }
-        }
-        console.log(result);
-    return res.json(mapMultipleResult(result))
-    }
-})
-
-app.get('/web/reporteclientes/:id', async(req,res) => {
-    
-    let id = req.params.id;
-    let connection;
-    let query = "SELECT * FROM reportes_global";
-    try{
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query)
-    }catch(err){
-        console.log(err)
-    }
-    finally{
-        if(connection){
-            try{
-                await connection.close();
-               
-            }catch(err){
-                console.log(err);
-            }
-        }
-        console.log(result);
-    return res.json(mapMultipleResult(result))
-    }
-})
-
-app.get('/web/reportecliente', async(req,res) => {
-    let connection;
-    let query = `select * from Reporte_cliente' where REP_ID_CLIENTE = :id`
-    try{    
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query,[],{});
-    }catch(e){
-        console.log(e);
-    }finally{
-        if(connection){
-            try{
-                await connection.close();
-            }catch(e){
-                console.log(e);
-            }
-        }
-    }
-    res.json(mapMultipleResult(result))
-})
-
-app.get('/web/profesionalclientes', async(req,res) => {
-    let connection;
-    let query = `select * from clientes INNER JOIN pro on PRO_CLI_ASIGNADO = CLI_ID`
-    try{    
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query,[],{});
-    }catch(e){
-        console.log(e);
-    }finally{
-        if(connection){
-            try{
-                await connection.close();
-            }catch(e){
-                console.log(e);
-            }
-        }
-    }
-    res.json(mapMultipleResult(result))
-})
-
-app.get('/web/asesorias', async(req,res) => {
-    let connection;
-    let query = `select * from asesorias INNER JOIN pro on asesorias.ASE_ID_PRO = PRO_ID INNER JOIN clientes on asesorias.ase_id_usuario=CLI_ID`
-    try{    
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query,[],{});
-    }catch(e){
-        console.log(e);
-    }finally{
-        if(connection){
-            try{
-                await connection.close();
-            }catch(e){
-                console.log(e);
-            }
-        }
-    }
-    res.json(mapMultipleResult(result))
-})
-
-
 
 //PORT ENVIRONMENT VARIABLE
-const port = process.env.PORT || 8081;
+const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}..`));

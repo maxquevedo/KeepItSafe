@@ -22,6 +22,7 @@ class AsignarProfesional extends Component {
             showDatePicker: false,
             showPro: false,
             idCliente: '',
+            idPro:'',
         }
   }
  
@@ -54,8 +55,7 @@ class AsignarProfesional extends Component {
         let resp = await fetch(`http://10.0.2.2:8080/asignarPro/${clienteElecto}/${fechosa}/${evento}`);
         let respJson = await resp.json();
         let idCli = respJson.idCliente;
-        respJson = respJson.profesionalesLibres;
-        console.log(idCli);
+        console.log(respJson);
         if(respJson == -1){
             Alert.alert("Lo sentimos","No hay profesionales disponibles para esa fecha",[{
                 text:'Confirmar',
@@ -63,8 +63,11 @@ class AsignarProfesional extends Component {
             }])
             this.setState({showPro:false});
         }else{
-            let primero = respJson[0][2]+' '+respJson[0][3];
-            this.setState({profesionales:respJson,showPro:true,profesionalElecto:primero,idCliente:idCli});
+            respJson = respJson.profesionalesLibres;
+            let primero =respJson[0][2]+ respJson[0][3];
+            let idPro = respJson[0][1];
+            console.log("Primero: ",primero);
+            this.setState({profesionales:respJson,showPro:true,profesionalElecto:primero,idCliente:idCli,idPro:idPro});
         }
     }
 
@@ -74,7 +77,7 @@ class AsignarProfesional extends Component {
             idCli:idCli,idPro:idPro,fecha:deit,evento:evento
         }
         let resp = await fetch(`http://10.0.2.2:8080/asignarPro`,{
-            method: "PATCH",
+            method: "POST",
             headers: {
                 'Content-Type':'application/json; charset="UTF-8"'
             },
@@ -85,7 +88,7 @@ class AsignarProfesional extends Component {
     }
 
     render() {
-        const { fecha,loading,showDatePicker,showPro,evento,idCliente,profesionales,profesionalElecto } = this.state;
+        const { fecha,loading,showDatePicker,showPro,evento,idCliente,profesionales,profesionalElecto,idPro } = this.state;
         return (
         <SafeAreaView  style={{alignItems:'center',justifyContent:'space-around',marginTop:80}}>
             {
@@ -139,7 +142,6 @@ class AsignarProfesional extends Component {
                         }
                         }>
                          <Picker.Item label="Asesoría" value="asesoria" />
-                         <Picker.Item label="Capacitación" value="capacitacion" />
                          <Picker.Item label="Visita" value="visita" />
                     </Picker>
                     <Button title="Consultar" color="#095813" onPress={this.updatePro}/>
@@ -161,14 +163,6 @@ class AsignarProfesional extends Component {
                             }
                         </Picker>
                         <Button title="Asignar" color="#095813" onPress={async ()=>{
-                            let idPro = '';
-                            profesionales.forEach((pro)=>{
-                                let nombre = pro[2]+' '+pro[3];
-                                if(nombre == profesionalElecto){
-                                    idPro = pro[5];
-                                }
-                                console.log(idPro);
-                            });
                             this.updateEvento(idCliente,idPro,fecha,evento);
                             }
                     }/>

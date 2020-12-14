@@ -52,7 +52,7 @@ class Accidentes extends Component {
         return (
             <View style={{marginTop:35}}>
                 {
-                    loading? <View style={{justifyContent:'center',alignContent:'center'}}><ActivityIndicator size="large" color="#095813"/></View>: <FlatList data={accidentes} renderItem={this.renderItem.bind(this)} keyExtractor={ item => item.id } />
+                    loading? <View style={{justifyContent:'center',alignContent:'center'}}><ActivityIndicator size="large" color="#095813"/></View>: <FlatList data={accidentes} renderItem={this.renderItem.bind(this)} keyExtractor={ (index,item) => index.toString() } />
                 }
             </View>
         );

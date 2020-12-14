@@ -24,6 +24,7 @@ const fieldCrearUsuario = (props) => {
 };
 
 const validate = (values) =>{
+    
     const errors = {};
     //console.log("validate:",values)
     //usuario

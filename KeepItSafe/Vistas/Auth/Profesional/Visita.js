@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, Button, ActivityIndicator,FlatList,TouchableOpacity } from 'react-native';
+import { View, Text, Button, ActivityIndicator,FlatList,TouchableOpacity,Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import VisitaCheckForm from '../Forms/VisitaCheckForm';
 import { Ionicons } from '@expo/vector-icons';
@@ -30,17 +30,20 @@ class Visita extends Component {
         id_cli = respJson[5];
         resp = await fetch(`http://10.0.2.2:8080/checks/${id}/${id_cli}`);
         respJson = await resp.json();
+        console.log(respJson[0])
         for(var i =0 ; i<respJson.length ; i++){
-            nombres.push(respJson[i][0]);
-            estados.push(respJson[i][1]);
+            nombres.push(respJson[i][1]);
+            estados.push(respJson[i][2]);
         }
         this.setState({nombresChecks:nombres,estadoChecks:estados,loading:false,checks:respJson})
     }
 
-    async _checkFailed(item)  {
-        console.log(item);
+    async _checkFailed(data)  {
+        var item = data.item;
+        var estadoChecks = this.state.estadoChecks;
+        estadoChecks[data.index] = 1;
         let jeison = {
-            id:item[1]
+            id:item[0]
         }
         let resp = await fetch(`http://10.0.2.2:8080/checkFail`,{
             method: "PATCH",
@@ -50,21 +53,15 @@ class Visita extends Component {
             body: JSON.stringify({jeison})
         });
         let respJson = await resp.json();
-        console.log(respJson);
-        if(respJson == 1 ){
-            console.log("Entó en el 1")
-         for(var i =0;i<this.state.estadoChecks;i++){
-            console.log("Entro en el for: ",this.state.estadoChecks[i])
-            let subItem = this.state.estadoChecks[i][0];
-            console.log(subItem);
-         }   
-        }
+        this.setState({estadoChecks})
     }
 
-    async _checkSuecceded(item) {
-        console.log(item);
+    async _checkSuecceded(data) {
+        var item = data.item;
+        var estadoChecks = this.state.estadoChecks;
+        estadoChecks[data.index] = 0;
         let jeison = {
-            id:item[1]
+            id:item[0]
         }
         let resp = await fetch(`http://10.0.2.2:8080/checkSuccess`,{
             method: "PATCH",
@@ -73,38 +70,31 @@ class Visita extends Component {
             },
             body: JSON.stringify({jeison})
         });
-        let respJson = await resp.json();
-        console.log(respJson);
-        if(respJson == 1 ){
-            console.log("Entó en el 1")
-            for(var i =0;i<this.state.estadoChecks;i++){
-                console.log("Entro en el for: ",this.state.estadoChecks[i])
-                let subItem = this.state.estadoChecks[i][0];
-                console.log(subItem);
-             }  
-        }
+        this.setState({estadoChecks})
     }
 
     renderItem = (data) => {
         //console.log("DATA: ",data.item);
-        var color = "black";
-        let color1 = "black";
-        let color2 = "black";
+        var estado = this.state.estadoChecks[data.index];
+        var color1 = "black";
+        var color2 = "black";
+        var itemToUpdate = data.item;
 
-        let itemToUpdate = data.item;
-        
-        if(data.item[1] == 1){
+        if(estado == "1" ){
             color1 = "red";
-        }else if(data.item[1] == 0 ){
+            color2 = "black";
+        }else{
+            color1 = "black";
             color2 = "green";
         }
+
        return(<View  style={{justifyContent:'space-around',padding:30}}>
                         <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-around'}}>
-                            <Text style={{fontSize:25}}>{data.item[0]} </Text>
-                            <TouchableOpacity onPress={()=> this._checkFailed(data.item)}>
+                            <Text style={{fontSize:25}}>{((data.index)+1)+" - " +data.item[1]} </Text>
+                            <TouchableOpacity onPress={()=> this._checkFailed(data)}>
                                 <Ionicons name="md-close-circle" size={25} color={color1}/>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={()=> this._checkSuecceded(data.item)}>
+                            <TouchableOpacity onPress={()=> this._checkSuecceded(data)}>
                                 <Ionicons name="md-checkmark-circle" size={25} color={ color2} />
                             </TouchableOpacity>
                         </View>
@@ -112,12 +102,23 @@ class Visita extends Component {
                     </View>);
     }
     
+    async _generarInforme(){
+        const { estadoChecks,nombresChecks } = this.state;
+        var template =`\n Visita finalizada.\n `;
+        for(var i=0;i<estadoChecks.length;i++){
+            if(estadoChecks[i] == 0){
+                template += `\n ${nombresChecks[i]}: Aprobado `;    
+            }else{
+                template += `\n ${nombresChecks[i]}: Fallado `;
+            }
+        }
+        Alert.alert("Informe",template,[{text:'Ok'}]);
+    }
 
 
     render() {
         const { checks,nombresChecks,estadoChecks,loading } = this.state;
-        
-        console.log(checks);
+
         return (
             <View style={{flex:1}}>
                 <View style={styles.orderScreen}>
@@ -126,14 +127,14 @@ class Visita extends Component {
                         <View><Text></Text></View>
                         {
                             loading? <ActivityIndicator size="large" color="#095813"/>:
-                            <FlatList data={checks} renderItem={this.renderItem} keyExtractor={item => item.index}/>
+                            <FlatList data={checks} extraData={estadoChecks} renderItem={this.renderItem} keyExtractor={(item,index) => index.toString()}/>
                         }
                         
                         <View>
                             <View>
                                 <Button color="#095813" onPress={()=>{console.log(checks)}} title="capacitacion"/>
                                 <View><Text></Text><Text></Text></View>
-                                <Button color="#095813" onPress={(data)=>{this.forceUpdate();}} title="generar informe"/>
+                                <Button color="#095813" onPress={ ()=> this._generarInforme() } title="generar informe"/>
                             </View>
                         </View>
                     </View>

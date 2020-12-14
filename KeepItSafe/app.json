@@ -4,7 +4,6 @@
     "slug": "KeepItSafe",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "",
     "splash": {
       "image": "",
       "resizeMode": "contain",
@@ -13,14 +12,15 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
       "supportsTablet": true
     },
     "web": {
       "favicon": ""
+    },
+    "android": {
+      "package": "com.keepitsafe.nomasaccidentes",
+      "versionCode": 1
     }
   }
 }
