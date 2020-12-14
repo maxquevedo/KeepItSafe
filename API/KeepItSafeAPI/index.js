@@ -913,6 +913,26 @@ app.delete('/web/usuario/:id',async function(req,res){
 
 });
 
+app.get('/web/reporteglobal', async(req,res) => {
+    let connection;
+    let query = `select * from Reporte_global'`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+
 
 
 
