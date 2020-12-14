@@ -15,6 +15,7 @@ export class SolicitarasesoriaComponent implements OnInit {
   profesionales: Profesional;
   clientes: Cliente;
   params = this.activedRoute.snapshot.params;
+  usuario = sessionStorage.getItem('USR_NOMBRECOMPLETO');
   constructor(private clienteService: ClienteService, private profesionalService: ProfesionalService, private activedRoute: ActivatedRoute, private router:Router) { }
 
   ngOnInit(): void {

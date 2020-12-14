@@ -34,6 +34,7 @@ import { ReporteglobalComponent } from './Components/reporteglobal/reporteglobal
 import { ReporteclienteService } from './Components/reportecliente/reportecliente.service';
 import { ReporteclienteComponent } from './Components/reportecliente/reportecliente.component';
 import { AsignarComponent } from './Components/asignar/asignar.component';
+import { VerasesoriasComponent } from './Components/verasesorias/verasesorias.component';
 
 
 
@@ -63,7 +64,8 @@ import { AsignarComponent } from './Components/asignar/asignar.component';
     ResponderchecklistComponent,
     ReporteclienteComponent,
     ReporteglobalComponent,
-    AsignarComponent
+    AsignarComponent,
+    VerasesoriasComponent
   ],
   imports: [
     BrowserModule,
