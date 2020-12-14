@@ -28,11 +28,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let Profesional of profesionales">
-                    <td>{{ Profesional.USR_ID }}</td>
-                    <td>{{ Profesional.USR_USERNAME }}</td>
-                    <td>{{ Profesional.USR_CORREO }}</td>
-                    <td>{{ Profesional.USR_NOMBRECOMPLETO }}</td>
+                <tr *ngFor="let reportecliente of reportecliente">
+                    <td>{{ reportecliente.REP_CLI_ID }}</td>
+                    <td>{{ reportecliente.REP_ID_CLI }}</td>
+                    <td>{{ reportecliente.REP_FECHA }}</td>
+                    <td>{{ reportecliente.REP_VISITAS }}</td>
+                    <td>{{ reportecliente.REP_ASESORIAS}}</td>
+                    <td>{{ reportecliente.REP_PROPUESTAS}}</td>
+                    <td>{{ reportecliente.REP_ACCIDENTES}}</td>
+                    <td>{{ reportecliente.REP_PROFESIONAL}}</td>
+                    <td>{{ reportecliente.REP_CAPACITACIONES}}</td>
 
                     <TD>
                         <BUTTON class="botonCrear" style="margin-left: 5px;"> Asignar </BUTTON>
