@@ -794,6 +794,8 @@ app.get('/web/cliente/:id',async function(req,res){
     res.json(mapMultipleResult(result))
 })
 
+
+
 app.get('/web/usuario/:id',async function(req,res){
 
     let id = req.params.id;
@@ -964,6 +966,46 @@ app.get('/web/reporteclientes/:id', async(req,res) => {
 app.get('/web/reportecliente', async(req,res) => {
     let connection;
     let query = `select * from Reporte_cliente' where REP_ID_CLIENTE = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+
+app.get('/web/profesionalclientes', async(req,res) => {
+    let connection;
+    let query = `select * from usuarios where usr_tipousuario = 'Profesional'`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+
+app.get('/web/asesorias', async(req,res) => {
+    let connection;
+    let query = `select * from asesorias;`
     try{    
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query,[],{});
