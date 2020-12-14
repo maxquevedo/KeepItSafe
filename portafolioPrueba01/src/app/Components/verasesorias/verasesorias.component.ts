@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Asesoria } from './verasesorias'
+import { VerasesoriasService } from './verasesorias.service'
 
 @Component({
   selector: 'app-verasesorias',
@@ -7,9 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VerasesoriasComponent implements OnInit {
 
-  constructor() { }
+  asesoria : Asesoria;
+
+  constructor( private verasesoriaService: VerasesoriasService ) { }
 
   ngOnInit(): void {
+    this.verasesoriaService.getAsesorias().subscribe( 
+      res => this.getAsesorias(res),
+      err => console.error(err)
+    );
+  }
+
+  getAsesorias(res){
+    this.asesoria = res;
+    console.log("desde getAsesoria",this.asesoria);
   }
 
 }
