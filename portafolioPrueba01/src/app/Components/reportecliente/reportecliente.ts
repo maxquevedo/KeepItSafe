@@ -1,4 +1,4 @@
-export class reportecliente {
+export class Reportecliente {
     
     USR_ID?;
     USR_USERNAME?;
