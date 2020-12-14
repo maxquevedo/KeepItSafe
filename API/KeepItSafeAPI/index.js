@@ -933,6 +933,45 @@ app.get('/web/reporteglobal', async(req,res) => {
     res.json(mapMultipleResult(result))
 })
 
+app.get('/web/reporteclientes', async(req,res) => {
+    let connection;
+    let query = `select * from Reporte_cliente'`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+
+app.get('/web/reportecliente', async(req,res) => {
+    let connection;
+    let query = `select * from Reporte_cliente' where REP_ID_CLIENTE = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query,[],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
 
 
 
