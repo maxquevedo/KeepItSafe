@@ -5,18 +5,18 @@
         <h5 class="card-title">Lista de Asesorias</h5>
         <div class="my-2 text-left">
 
-            <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                    <span for="rut_cliente" class="input-group-text">Rut cliente</span>
-                </div>
-                <input type="text" class="form-control" name="rut_cliente">
-            </div>
+            <div class="form-group col-sm-4">
+                <label for="">Seleccione Cliente</label>
+                <select class="form-control" name="clientes" >
+                    <option *ngFor="let ase of asesoria" >{{ase.CLI_RAZONSOCIAL}}</option>
+                </select>
+            </div> 
 
         </div>
 
         <table class="table table-bordered table-striped" style="font-size: 12px">
             <thead>
-                <tr>
+                <tr >
                     <th>ID ASESORIA</th>
                     <th>CANTIDAD DE ASESORIAS</th>
                     <th>ASESORIAS DISPONIBLES</th>
@@ -27,8 +27,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
+                <tr *ngFor="let ase of asesoria">
+                    <td>{{ase.ASE_ID}}</td>
+                    <td>{{ase.ASE_CANTIDAD}}</td>
+                    <td>{{ase.ASE_DISP}}</td>
+                    <td>{{ase.ASE_TIPOP}}</td>
+                    <td>{{ase.CLI_RAZONSOCIAL}}</td>
+                    <td>{{ase.PRO_NOMBRE}} {{ase.PRO_APELLIDO}}</td>
+                    <td>{{ase.ASE_FECHA}}</td>
 
                 </tr>
             </tbody>

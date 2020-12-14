@@ -1005,7 +1005,7 @@ app.get('/web/profesionalclientes', async(req,res) => {
 
 app.get('/web/asesorias', async(req,res) => {
     let connection;
-    let query = `select * from asesorias;`
+    let query = `select * from asesorias INNER JOIN pro on asesorias.ASE_ID_PRO = PRO_ID INNER JOIN clientes on asesorias.ase_id_usuario=CLI_ID`
     try{    
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query,[],{});

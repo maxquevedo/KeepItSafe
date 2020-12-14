@@ -23,15 +23,15 @@ export class SolicitarasesoriaComponent implements OnInit {
     console.log(this.params);
   }
   getClientes(){
-    this.clienteService.getClientes().subscribe( 
-      res => this.getCliente(res),
+    this.profesionalService.getProfCli().subscribe( 
+      res => this.getpro(res),
       err => console.error(err)
     );
 
   };
-  getCliente(res){
-    this.clientes = res;
-    console.log("desde getcliente",this.clientes);
+  getpro(res){
+    this.profesionales = res;
+    console.log("desde getcliente",this.profesionales);
   };
 
 }
