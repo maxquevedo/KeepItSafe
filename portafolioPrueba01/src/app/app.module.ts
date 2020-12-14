@@ -27,10 +27,12 @@ import { ReportaraccidenteComponent } from './Components/reportaraccidente/repor
 import { CrearcheklistComponent } from './Components/crearcheklist/crearcheklist.component';
 import { ResponderchecklistComponent } from './Components/responderchecklist/responderchecklist.component';
 import { LoginService } from './services/login.service';
-import { PlanificarvisitaService } from './Components/planificarvisita/planificarvisita.service'
+import { PlanificarvisitaService } from './Components/planificarvisita/planificarvisita.service';
 import { from } from 'rxjs';
-import { ReporteclienteComponent } from './Components/reportecliente/reportecliente.component';
+import { ReporteglobalService } from './Components/reporteglobal/reporteglobal.service';
 import { ReporteglobalComponent } from './Components/reporteglobal/reporteglobal.component';
+import { ReporteclienteService } from './Components/reportecliente/reportecliente.service';
+import { ReporteclienteComponent } from './Components/reportecliente/reportecliente.component';
 import { AsignarComponent } from './Components/asignar/asignar.component';
 
 
@@ -69,8 +71,7 @@ import { AsignarComponent } from './Components/asignar/asignar.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [ClienteService, LoginService , ProfesionalService, PlanificarvisitaService],
+  providers: [ClienteService, LoginService , ProfesionalService, PlanificarvisitaService, ReporteglobalService, ReporteclienteService],
   bootstrap: [AppComponent],
-  
 })
 export class AppModule { }
