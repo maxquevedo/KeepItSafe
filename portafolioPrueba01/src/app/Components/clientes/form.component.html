@@ -12,7 +12,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">Rut</span>
                             </div>
-                            <input type="text" class="form-control" name="rut_cliente" [(ngModel)]="cliente.CLI_RUT">
+                            <input type="text" class="form-control" name="rut_cliente" [(ngModel)]="cliente.CLI_RUT" required>
                         </div>
                     </div>
                     <div class="col-mb-4">
@@ -20,7 +20,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">Usuario</span>
                             </div>
-                            <input type="text" class="form-control" name="username"[(ngModel)]="cliente.USR_USERNAME">
+                            <input type="text" class="form-control" name="username"[(ngModel)]="cliente.USR_USERNAME" required>
                         </div>
                     </div>
                 </div>

@@ -832,11 +832,13 @@ app.post('/web/cliente',async(req,res)=>{
     let status = 'Disabled';
     let plan = 1;
     let tipoUsuario = 'Cliente';
-
+    let estadousuario ='1';
+    
     let connection;
     let userId = 0;
     let query1 = `select count(*) from usuarios`;
-    let query3 =  `insert into clientes (CLI_RUT,CLI_RAZONSOCIAL,CLI_STATUS, PLANES_PLA_IDPLAN) values('${rut}','${razonSocial}','${status}',${plan})`;
+    let query3 =  `insert into clientes(CLI_RUT, CLI_ID, CLI_RAZONSOCIAL, CLI_STATUS, PLANES_PLA_IDPLAN) values('${rut}','${userId}','${razonSocial}','${status}',${plan})`;
+    console.log("query3 -> ",query3);
     let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
     try{
         //console.log("Query 3:",query3);
@@ -845,7 +847,64 @@ app.post('/web/cliente',async(req,res)=>{
         result = await connection.execute(query1,[],{})
         
         userId = (result.rows[0][0])+1;
-        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}',${userId}) `;
+        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}','${userId}',${estadousuario}) `;
+        console.log("query2 -> ",query2);
+        
+        result = await connection.execute(query2,[],{});
+        result = await connection.execute(query3,[],{});
+    }catch(err){
+        console.log(err)
+        res.send(err);
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        //console.log(result);
+        //return res.send(result.rows);
+        return res.json(JSON.stringify({result}));
+    }
+  
+
+});
+
+app.post('/web/profesional',async(req,res)=>{
+    console.log("Body: ",req.body);
+    console.log("Params: ",req.params);
+    console.log("Query: ",req.query);
+    let username = req.body.username;
+    let password = req.body.password;
+    let email= req.body.email;
+    let rut = req.body.rut;
+    let name = req.body.name;
+    let apellido = req.body.apellido;
+    let fechaingreso = req.body.fechaingreso;
+    let razonSocial = req.body.razonSocial;
+    let status = 'Disabled';
+    let plan = 1;
+    let tipoUsuario = 'Profesional';
+    let estadousuario ='1';
+    
+    let connection;
+    let userId = 0;
+    let query1 = `select count(*) from usuarios`;
+    let query3 =  `insert into pro (PRO_RUT,PRO_ID,PRO_NOMBRE,PRO_APELLIDO,PRO_FINGRESO,PRO_CLI_ASIGNADO) values('${rut}',${userId},'${name}','${apellido}','${fechaingreso}')`;
+    console.log("query3 -> ",query3);
+    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
+    try{
+        //console.log("Query 3:",query3);
+
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query1,[],{})
+        
+        userId = (result.rows[0][0])+1;
+        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}','${userId}',${estadousuario}) `;
+        console.log("query2 -> ",query2);
         
         result = await connection.execute(query2,[],{});
         result = await connection.execute(query3,[],{});

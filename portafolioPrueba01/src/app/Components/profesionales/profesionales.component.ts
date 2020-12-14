@@ -19,6 +19,10 @@ export class ProfesionalesComponent implements OnInit {
   constructor(private profesionalService: ProfesionalService, private router: Router) { }
 
   ngOnInit(): void {
+   this.importProfesionales();
+  }
+
+  importProfesionales(){
     this.profesionalService.getProfesionales().subscribe( 
       /*(res:Cliente[]) => {
         this.clientes = res;
@@ -37,9 +41,13 @@ export class ProfesionalesComponent implements OnInit {
     console.log(`desde asignarpro: ${profesional.USR_ID}`);
     this.router.navigate([`/asignar/${profesional.USR_NOMBRECOMPLETO}`]);
   }
-  editar(profesional: Profesional){
-    console.log(`desde asignarpro: ${profesional.PRO_ID}`);
-    this.router.navigate([`profesionales/form-prof/${Profesional}`]);
+  editar(id:string){
+    console.log(`desde asignarpro:`,id);
+    this.router.navigate([`profesionales/form-prof/${id}`]);
+  }
+
+  crear(){
+    
   }
 
 

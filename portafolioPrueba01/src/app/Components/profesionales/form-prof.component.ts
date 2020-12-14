@@ -38,6 +38,8 @@ export class FormProfComponent implements OnInit {
 
   params = this.activedRoute.snapshot.params;
   id = this.params.USR_ID;
+  
+  
 
 
   ngOnInit(): void {
@@ -50,7 +52,7 @@ export class FormProfComponent implements OnInit {
     );
 
     console.log("desde init:" + this.params);
-
+    console.log("desde id",this.id);
   }
 
   getProfesional(res){
@@ -59,14 +61,17 @@ export class FormProfComponent implements OnInit {
   }
 
   GuardarProfesional(){
-  var formato = JSON.stringify({
+  var formateado = JSON.stringify({
       "username":this.pro.USR_USERNAME,
       "password":this.pro.USR_PASSWORD,
       "email":this.pro.USR_CORREO,
       "rut":this.pro.PRO_RUT,
       "name":this.pro.USR_NOMBRECOMPLETO,
+      
   });
-  console.log(formato);
+  console.log(formateado);
+  //this.profesionalService.create(formateado);
+
 }
 
 }

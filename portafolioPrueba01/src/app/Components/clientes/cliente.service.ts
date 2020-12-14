@@ -20,15 +20,15 @@ export class ClienteService {
     return this.http.get(`${this.env.apiUrl}/web/clientes`)
   }
 
-  create(cliente){
-    return this.http.post(`${this.env.apiUrl}/web/cliente`,cliente)
+  create(formateado){
+    return this.http.post(`${this.env.apiUrl}/web/cliente`,formateado, {headers: this.httpHeaders})
   }
 
   getCliente(USR_ID){
     return this.http.get(`${this.env.apiUrl}/web/clientes${USR_ID}`);
   }
 
-  update(USR_ID:string,cliente: Cliente){
+  update(USR_ID:string,cliente){
     return this.http.put(`${this.env.apiUrl}/web/Clienes/${USR_ID}`,Cliente);
   }
 

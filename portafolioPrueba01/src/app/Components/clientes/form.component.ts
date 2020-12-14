@@ -50,6 +50,6 @@ export class FormComponent implements OnInit {
     });
     
     console.log(formateado);
-    //this.clienteService.create(this.formateado);
+    this.clienteService.create(formateado);
   }
 }
