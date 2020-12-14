@@ -1,5 +1,4 @@
-
-export class reporteglobal{
+export class Reporteglobal{
     
 REP_ID?;
 REP_FECHA?;
