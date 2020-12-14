@@ -33,7 +33,7 @@ const routes: Routes = [
 {path: 'clientes/form/:id_cliente', component: FormComponent },
 {path: 'profesionales', component: ProfesionalesComponent },
 {path: 'profesionales/form-prof', component: FormProfComponent },
-{path: 'profesionales/form-prof/:id_profesional', component: FormProfComponent },
+{path: 'profesionales/form-prof/:Profesional', component: FormProfComponent },
 {path: 'Cliente', component: CliComponent},
 {path: 'Profesional', component: ProfComponent},
 {path: 'crearcapacitacion', component: CrearcapacitacionComponent},

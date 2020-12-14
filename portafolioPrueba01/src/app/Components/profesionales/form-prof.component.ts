@@ -12,6 +12,8 @@ import swal from 'sweetalert2';
 })
 export class FormProfComponent implements OnInit {
 
+  profesionales : Profesional;
+
   pro: Profesional={
 
     PRO_RUT:'',
@@ -32,10 +34,28 @@ export class FormProfComponent implements OnInit {
     
 
   };
-  constructor(private profesionalService: ProfesionalService, private router: Router, private activateRoute: ActivatedRoute) { }
+  constructor(private activedRoute: ActivatedRoute, private profesionalService: ProfesionalService, private router: Router, private activateRoute: ActivatedRoute) { }
+
+  params = this.activedRoute.snapshot.params;
+  id = this.params.USR_ID;
+
 
   ngOnInit(): void {
+    this.profesionalService.getProfesionales().subscribe( 
+      /*(res:Cliente[]) => {
+        this.clientes = res;
+      },*/
+      res => this.getProfesional(res),
+      err => console.error(err)
+    );
 
+    console.log("desde init:" + this.params);
+
+  }
+
+  getProfesional(res){
+    this.profesionales = res;
+    //console.log("desde getcliente",this.profesionales);
   }
 
   GuardarProfesional(){

@@ -37,6 +37,10 @@ export class ProfesionalesComponent implements OnInit {
     console.log(`desde asignarpro: ${profesional.USR_ID}`);
     this.router.navigate([`/asignar/${profesional.USR_NOMBRECOMPLETO}`]);
   }
+  editar(profesional: Profesional){
+    console.log(`desde asignarpro: ${profesional.PRO_ID}`);
+    this.router.navigate([`profesionales/form-prof/${Profesional}`]);
+  }
 
 
 
