@@ -22,6 +22,7 @@ export class ReporteclienteComponent implements OnInit {
 
     getReportecli(res){ 
         this.getReportecli = res;
+        console.log("desde getreportecli",res);
      }
 
   }

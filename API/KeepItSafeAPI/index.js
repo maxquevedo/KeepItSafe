@@ -915,22 +915,25 @@ app.delete('/web/usuario/:id',async function(req,res){
 
 app.get('/web/reporteglobal', async(req,res) => {
     let connection;
-    let query = `select * from Reporte_global'`
-    try{    
+    let query = "SELECT * FROM reportes_global";
+    try{
         connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query,[],{});
-    }catch(e){
-        console.log(e);
-    }finally{
+        result = await connection.execute(query)
+    }catch(err){
+        console.log(err)
+    }
+    finally{
         if(connection){
             try{
                 await connection.close();
-            }catch(e){
-                console.log(e);
+               
+            }catch(err){
+                console.log(err);
             }
         }
+        console.log(result);
+    return res.json(mapMultipleResult(result))
     }
-    res.json(mapMultipleResult(result))
 })
 
 app.get('/web/reporteclientes', async(req,res) => {

@@ -25,6 +25,6 @@ export class ReporteglobalComponent implements OnInit {
 
   ReporteGlobal(res){
     this.reporteglobal = res;
-    //console.log("desde getcliente",this.profesionales);
+    console.log("desde getcliente",this.reporteglobal);
   }
 }
