@@ -893,7 +893,7 @@ app.post('/web/profesional',async(req,res)=>{
     let connection;
     let userId = 0;
     let query1 = `select count(*) from usuarios`;
-    let query3 =  `insert into pro (PRO_RUT,PRO_ID,PRO_NOMBRE,PRO_APELLIDO,PRO_FINGRESO,PRO_CLI_ASIGNADO) values('${rut}',${userId},'${name}','${apellido}','${fechaingreso}')`;
+    let query3 =  `insert into pro (PRO_RUT,PRO_ID,PRO_NOMBRE,PRO_APELLIDO,PRO_FINGRESO) values('${rut}',${userId},'${name}','${apellido}','${fechaingreso}')`;
     console.log("query3 -> ",query3);
     let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
     try{
@@ -903,7 +903,7 @@ app.post('/web/profesional',async(req,res)=>{
         result = await connection.execute(query1,[],{})
         
         userId = (result.rows[0][0])+1;
-        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}','${userId}',${estadousuario}) `;
+        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name} ${apellido}','${password}','${tipoUsuario}','${userId}',${estadousuario}) `;
         console.log("query2 -> ",query2);
         
         result = await connection.execute(query2,[],{});

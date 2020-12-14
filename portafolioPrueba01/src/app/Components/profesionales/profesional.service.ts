@@ -25,8 +25,8 @@ export class ProfesionalService {
     return this.http.get(`${this.env.apiUrl}/web/profesionalclientes`)
   }
 
-  create(profesional){
-    return this.http.post(`${this.env.apiUrl}/web/create/profesional`,profesional,{headers: this.httpHeaders} )
+  create(formateado){
+    return this.http.post(`${this.env.apiUrl}/web/profesional`, formateado, {headers: this.httpHeaders})
   }
 
   getProfesional(USR_ID){

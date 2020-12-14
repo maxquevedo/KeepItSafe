@@ -31,16 +31,12 @@ export class FormProfComponent implements OnInit {
     USR_TIPOUSUARIO:'',
     USR_IDPERFIL:'',
 
-    
-
   };
   constructor(private activedRoute: ActivatedRoute, private profesionalService: ProfesionalService, private router: Router, private activateRoute: ActivatedRoute) { }
 
   params = this.activedRoute.snapshot.params;
   id = this.params.USR_ID;
   
-  
-
 
   ngOnInit(): void {
     this.profesionalService.getProfesionales().subscribe( 
@@ -66,11 +62,12 @@ export class FormProfComponent implements OnInit {
       "password":this.pro.USR_PASSWORD,
       "email":this.pro.USR_CORREO,
       "rut":this.pro.PRO_RUT,
-      "name":this.pro.USR_NOMBRECOMPLETO,
-      
+      "name":this.pro.PRO_NOMBRE,
+      "apellido":this.pro.PRO_APELLIDO,
+      "fechaingreso":this.pro.PRO_FINGRESO,
   });
   console.log(formateado);
-  //this.profesionalService.create(formateado);
+  this.profesionalService.create(formateado);
 
 }
 
