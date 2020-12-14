@@ -17,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let cliente of clientes">
+                <tr *ngFor="let Profesional of profesionales">
                     <td>{{ Profesional.USR_ID }}</td>
                     <td>{{ Profesional.USR_USERNAME }}</td>
                     <td>{{ Profesional.USR_CORREO }}</td>
@@ -28,14 +28,15 @@
                     </td>
 
                     <td>
-                        <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/profesionales/form-prof', Profesional.USR_ID]"> Editar </BUTTON>
+                        <BUTTON class="botonEditar" style="margin-left: 5px;"(click)='editar(Profesional)'> Editar </BUTTON>
                     </td>
                     <td>
                         <BUTTON class="botonEliminar" name="eliminar" (click)='delete(Profesional)'> Eliminar </BUTTON>
                     </td>
                 </tr>
             </tbody>
+            
         </table>
-        <button class="btn btn-outline-success" [routerLink]="['/Admin']">volver</button>
+        
     </div>
 </div>
