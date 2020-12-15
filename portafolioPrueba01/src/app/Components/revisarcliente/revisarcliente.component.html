@@ -13,24 +13,17 @@
                     <th>RAZON_SOCIAL</th>
                     <th>TIPO_CONTRATO</th>
                     <th>STATUS_CLIENTE</th>
-                    <th>EDITAR</th>
-                    <th>ELIMINAR</th>
                 </tr>
             </thead>
             <tbody>
-                <tr **ngFor="let cli of Cliente" >
+                <tr *ngFor="let cli of cliente" >
                     <td>{{ cli.CLI_ID }}</td>
                     <td>{{ cli.CLI_RUT }}</td>
                     <td>{{ cli.CLI_RAZONSOCIAL }}</td>
                     <td>{{ cli.PLANES_PLA_IDPLAN }}</td>
                     <td>{{ cli.CLI_STATUS }}</td>
 
-                    <TD>
-                        <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/clientes/form', cliente.id_cliente]"> Editar </BUTTON>
-                    </TD>
-                    <TD>
-                        <BUTTON class="botonEliminar" name="eliminar" (click)='delete(cliente)'> Eliminar </BUTTON>
-                    </TD>
+                    
                 </tr>
             </tbody>
         </table>
