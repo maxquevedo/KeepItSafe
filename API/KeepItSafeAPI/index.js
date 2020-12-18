@@ -795,7 +795,6 @@ app.get('/web/cliente/:id',async function(req,res){
 })
 
 
-
 app.get('/web/usuario/:id',async function(req,res){
 
     let id = req.params.id;
@@ -954,7 +953,7 @@ app.delete('/web/usuario/:id',async function(req,res){
     let id = req.params.id;
 
     let connection;
-    let query = `delete from usuarios where usr_id = :id`
+    let query = `UPDATE usuarios SET USR_ESTADO = 0 WHERE USR_ID = :id;`
     try{    
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query,[id],{});
@@ -976,7 +975,7 @@ app.delete('/web/usuario/:id',async function(req,res){
 
 app.get('/web/reporteglobal', async(req,res) => {
     let connection;
-    let query = "SELECT * FROM reportes_global";
+    let query = "DELETE FROM reportes_global;insert into reportes_global VALUES (1,'11-11-11',1,1,1,1,1,1);select * from reportes_global;";
     try{
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query)
