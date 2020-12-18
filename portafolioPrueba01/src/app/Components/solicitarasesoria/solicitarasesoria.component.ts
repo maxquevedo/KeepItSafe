@@ -28,7 +28,6 @@ export class SolicitarasesoriaComponent implements OnInit {
     ASE_ID_USUARIO: sessionStorage.getItem('USR_IDPERFIL'),
     ASE_ID_PRO: "",
     ASE_FECHA:""
-
   };
 
   constructor(private clienteService: ClienteService, private profesionalService: ProfesionalService, private activedRoute: ActivatedRoute, private router:Router) { }

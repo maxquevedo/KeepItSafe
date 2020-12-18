@@ -20,13 +20,13 @@
                             <div class="form-group col-sm-4">
                                 <label for="">Seleccione Cliente</label>
                                 <select class="form-control" name="clientes" >
-                                    <option *ngFor="let cli of clientes" >{{cli.USR_NOMBRECOMPLETO}}</option>
+                                    <option *ngFor="let cli of clientes" value="{{cli.USR_IDPERFIL}}">{{cli.USR_NOMBRECOMPLETO}}</option>
                                 </select>
                             </div> 
                         </div>  
                         <div class="row">
                             <div class=" form-group col-sm-12">
-                                <button class="btn btn-success">Guardar</button>
+                                <button class="btn btn-success" (click)="guardar()" >Guardar</button>
                                 <button class="btn btn-success">Consultar</button>
                                 
                             </div>
