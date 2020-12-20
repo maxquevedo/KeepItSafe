@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { DatePipe } from '@angular/common' ;
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -73,7 +74,7 @@ import { VerasesoriasService } from './Components/verasesorias/verasesorias.serv
     HttpClientModule,
     FormsModule
   ],
-  providers: [ClienteService, LoginService , ProfesionalService, PlanificarvisitaService, ReporteglobalService, ReporteclienteService, VerasesoriasService],
+  providers: [ClienteService, DatePipe, LoginService , ProfesionalService, PlanificarvisitaService, ReporteglobalService, ReporteclienteService, VerasesoriasService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Profesional } from './Profesional';
 import { ProfesionalService } from './profesional.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import swal from 'sweetalert2';
+import { formatDate, DatePipe } from '@angular/common';
 
 
 
@@ -13,6 +13,7 @@ import swal from 'sweetalert2';
 export class FormProfComponent implements OnInit {
 
   profesionales : Profesional;
+  now = Date.now();
 
   pro: Profesional={
 
@@ -32,7 +33,7 @@ export class FormProfComponent implements OnInit {
     USR_IDPERFIL:'',
 
   };
-  constructor(private activedRoute: ActivatedRoute, private profesionalService: ProfesionalService, private router: Router, private activateRoute: ActivatedRoute) { }
+  constructor(public datepipe: DatePipe,private activedRoute: ActivatedRoute, private profesionalService: ProfesionalService, private router: Router, private activateRoute: ActivatedRoute) { }
 
   params = this.activedRoute.snapshot.params;
   id = this.params.USR_ID;
@@ -64,10 +65,10 @@ export class FormProfComponent implements OnInit {
       "rut":this.pro.PRO_RUT,
       "name":this.pro.PRO_NOMBRE,
       "apellido":this.pro.PRO_APELLIDO,
-      "fechaingreso":this.pro.PRO_FINGRESO,
+      "fechaingreso": this.datepipe.transform(this.pro.PRO_FINGRESO, 'dd/MM/yyyy')
   });
   console.log(formateado);
-  this.profesionalService.create(formateado);
+  //this.profesionalService.create(formateado);
 
 }
 
