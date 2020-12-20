@@ -14,7 +14,7 @@ const mypw = '1234';
 const mypw2 = 'Aa123456';
 const connectionInfo = { user: "c##max2330",password: mypw, connectString: "localhost:1521" }
 const connectionInfo2 = { user: "c##dba_desarrollo",password: mypw2, connectString: "localhost:1521" }
-
+//const connectionInfo2 = { user: "system",password: mypw2, connectString: "localhost:1521" }
 
 function mapResult(arreglo){
     var resJson = { };
@@ -732,7 +732,7 @@ app.get('/web/login/:username/:password', async(req,res) => {
 
 app.get('/web/clientes', async(req,res) => {
     let connection;
-    let query = `select * from usuarios where usr_tipousuario = 'Cliente'`
+    let query = `select * from usuarios where usr_tipousuario = 'Cliente' and usr_estado = 'Habilitado'`
     try{    
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query,[],{});

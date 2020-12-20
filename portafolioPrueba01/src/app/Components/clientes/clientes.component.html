@@ -14,6 +14,7 @@
                     <th>NOMBRE DE USUARIO</th>
                     <th>CORREO</th>
                     <th>NOMBRE COMPLETO</th>
+                    <th>ESTADO</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,6 +23,8 @@
                     <td>{{ usuario.USR_USERNAME }}</td>
                     <td>{{ usuario.USR_CORREO }}</td>
                     <td>{{ usuario.USR_NOMBRECOMPLETO }}</td>
+                    <td>{{ usuario.USR_ESTADO }}</td>
+
                     <TD>
                         <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/clientes/form']"> Editar </BUTTON>
                     </TD>
