@@ -1,13 +1,18 @@
-<br><br><br>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+  </head>
 <div class="container" style="width: 400px;">
     <form class="form-signin" style="text-align: center;">
-        <h2 class="titulo animated fadeIn fast"><small>Para entrar al sistema ingrese lo siguiente:</small></h2>
+        <h1 class="titulo animated fadeIn fast"><small>Login de usuario</small></h1>
                 <br>
+        <label id="icon" for="name"><i class="fas fa-user"></i></label>
         <input type="text" id="inputEmail" class="form-control" placeholder="Usuario" required #usuario>
+        
         <br>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" required #contrasena>
         <br>
-        <input type="submit" class="btn btn-success" (click)="getLogin(usuario.value,contrasena.value)" value="Ingresar">
+        <input type="submit" class="botonAdmin btn btn-warning" (click)="getLogin(usuario.value,contrasena.value)" value="Ingresar">
     
     </form>
 </div>

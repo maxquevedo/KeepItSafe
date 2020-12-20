@@ -1,10 +1,10 @@
 <br>
-<div class="card border-primary mb-3">
+<div class="card border-warning mb-3">
     <div class="card-header">Profesionales</div>
-    <div class="card-body text-primary">
+    <div class="card-body text-Dark">
         <h5 class="card-title">Lista de Profesionales</h5>
         <div class="my-2 text-left">
-            <button class="botonAdminCrear" [routerLink]="[ '/profesionales/form-prof']">Crear nuevo profesional</button>
+            <button class="botonAdmin btn-warning " [routerLink]="[ '/profesionales/form-prof']">Crear profesional</button>
         </div>
 
         <table class="table table-bordered table-striped" style="font-size: 12px">
@@ -37,7 +37,7 @@
             </tbody>
             
         </table>
-        <button class="btn btn-outline-success" [routerLink]="['/administrador']">volver</button>
+        <button class="btn btn-outline-secondary" [routerLink]="['/administrador']">volver</button>
         
     </div>
 </div>
