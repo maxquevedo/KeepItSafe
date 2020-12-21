@@ -2,13 +2,15 @@
 <div class="card text-center">
     <div class="card-header">
         Panel de control cliente
+        <h4><small><strong>Bienvenido {{ usuario }}</strong></small></h4>
     </div>
+    
     <div class="card-body">
         <div>
-            <button class="botonAdmin" [routerLink]="['/reportaraccidente']" >Reportar accidente</button>
-            <button class="botonAdmin" [routerLink]="['/solicitarasesoria']" >Solicitar asesoría especial</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="['/reportaraccidente']" >Reportar accidente</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="['/solicitarasesoria']" >Solicitar asesoría especial</button>
         </div>
         <div class="card-footer text-muted">
-            <button class="btn btn-outline-success" (click)="logout()">Salir</button>
+            <button class="btn btn-outline-secondary" (click)="logout()">Salir</button>
         </div>
     </div>

@@ -15,9 +15,7 @@ export class RevisarclienteComponent implements OnInit {
 
   ngOnInit(): void {
     this.clienteService.getClientes().subscribe( 
-      /*(res:Cliente[]) => {
-        this.clientes = res;
-      },*/
+      
       res => this.getClientes(res),
       err => console.error(err)
     );

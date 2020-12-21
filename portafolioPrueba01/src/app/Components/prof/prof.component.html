@@ -2,20 +2,20 @@
 <div class="card text-center">
     <div class="card-header">
         Panel de control Profesional
-        <h4><small>Bienvenido {{ usuario }}</small></h4>
+        <h4><small><strong>Bienvenido {{ usuario }}</strong></small></h4>
     </div>
     <div class="card-body">
         
         <div>
-            <button class="botonAdmin" [routerLink]="['/revisarcliente']" >Revisar cliente</button>
-            <button class="botonAdmin" [routerLink]="['/ingresarmejora']" >Ingresar propuesta de mejora</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="['/revisarcliente']" >Revisar cliente</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="['/ingresarmejora']" >Ingresar propuesta de mejora</button>
         </div>
         <div>
-            <button class="botonAdmin" [routerLink]="['/crearchecklist']" >Crear checkList</button>
-            <button class="botonAdmin" [routerLink]="['/responderchecklist']" >Responder checkList</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="['/crearchecklist']" >Crear checkList</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="['/responderchecklist']" >Responder checkList</button>
         </div>
     </div>
     <div class="card-footer text-muted">
-        <button class="btn btn-outline-success" (click)="logout()" >Salir</button>
+        <button class="btn btn-outline-secondary" (click)="logout()" >Salir</button>
     </div>
 </div>

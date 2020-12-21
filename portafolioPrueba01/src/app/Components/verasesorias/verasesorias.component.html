@@ -1,12 +1,12 @@
 <br>
-<div class="card border-primary mb-3">
+<div class="card border-warning mb-3">
     <div class="card-header">Clientes</div>
-    <div class="card-body text-primary">
+    <div class="card-body text-Dark">
         <h5 class="card-title">Lista de Asesorias</h5>
         <div class="my-2 text-left">
 
             <div class="form-group col-sm-4">
-                <label for="">Seleccione Cliente</label>
+                <label for="" class=" text-primary">Seleccione Cliente</label>
                 <select class="form-control" name="clientes" >
                     <option *ngFor="let ase of asesoria" >{{ase.CLI_RAZONSOCIAL}}</option>
                 </select>
@@ -39,6 +39,6 @@
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-outline-success" [routerLink]="['/administrador']">volver</button>
+        <button class="btn btn-outline-secondary" [routerLink]="['/administrador']">volver</button>
     </div>
 </div>

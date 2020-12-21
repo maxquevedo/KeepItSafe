@@ -14,7 +14,7 @@ const mypw = '1234';
 const mypw2 = 'Aa123456';
 const connectionInfo = { user: "c##max2330",password: mypw, connectString: "localhost:1521" }
 const connectionInfo2 = { user: "c##dba_desarrollo",password: mypw2, connectString: "localhost:1521" }
-
+//const connectionInfo2 = { user: "system",password: mypw2, connectString: "localhost:1521" }
 
 function mapResult(arreglo){
     var resJson = { };
@@ -732,7 +732,7 @@ app.get('/web/login/:username/:password', async(req,res) => {
 
 app.get('/web/clientes', async(req,res) => {
     let connection;
-    let query = `select * from usuarios where usr_tipousuario = 'Cliente'`
+    let query = `select * from usuarios where usr_tipousuario = 'Cliente' and usr_estado = 'Habilitado'`
     try{    
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query,[],{});
@@ -793,7 +793,6 @@ app.get('/web/cliente/:id',async function(req,res){
     }
     res.json(mapMultipleResult(result))
 })
-
 
 
 app.get('/web/usuario/:id',async function(req,res){
@@ -892,18 +891,26 @@ app.post('/web/profesional',async(req,res)=>{
     
     let connection;
     let userId = 0;
-    let query1 = `select count(*) from usuarios`;
-    let query3 =  `insert into pro (PRO_RUT,PRO_ID,PRO_NOMBRE,PRO_APELLIDO,PRO_FINGRESO) values('${rut}',${userId},'${name}','${apellido}','${fechaingreso}')`;
-    console.log("query3 -> ",query3);
+    let query1 = `select max(usr_id) from usuarios`;
+    let querypro = `select max(PRO_ID) from pro`;
     let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
+    
+    connection = await oracledb.getConnection(connectionInfo2);
+    result = await connection.execute(querypro,[],{});
+
+    proId =  (result.rows[0][0])+1;
+
+    let query3 =  `insert into pro (PRO_RUT,PRO_ID,PRO_NOMBRE,PRO_APELLIDO,PRO_FINGRESO) values('${rut}',${proId},'${name}','${apellido}','${fechaingreso}')`;
+    console.log("query3 -> ",query3);
+
     try{
         //console.log("Query 3:",query3);
 
-        connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query1,[],{})
         
         userId = (result.rows[0][0])+1;
         let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name} ${apellido}','${password}','${tipoUsuario}','${userId}',${estadousuario}) `;
+        
         console.log("query2 -> ",query2);
         
         result = await connection.execute(query2,[],{});
@@ -954,7 +961,7 @@ app.delete('/web/usuario/:id',async function(req,res){
     let id = req.params.id;
 
     let connection;
-    let query = `delete from usuarios where usr_id = :id`
+    let query = `UPDATE usuarios SET USR_ESTADO = 0 WHERE USR_ID = :id;`
     try{    
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query,[id],{});
@@ -976,10 +983,10 @@ app.delete('/web/usuario/:id',async function(req,res){
 
 app.get('/web/reporteglobal', async(req,res) => {
     let connection;
-    let query = "SELECT * FROM reportes_global";
+    let query = `select * from reportes_global`;
     try{
         connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query)
+        result = await connection.execute(query);
     }catch(err){
         console.log(err)
     }
@@ -1001,7 +1008,7 @@ app.get('/web/reporteclientes/:id', async(req,res) => {
     
     let id = req.params.id;
     let connection;
-    let query = "SELECT * FROM reportes_global";
+    let query = "SELECT * FROM reportes_global where REP_ID_CLI = :id";
     try{
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query)

@@ -13,6 +13,7 @@ export class VerasesoriasComponent implements OnInit {
 
   constructor( private verasesoriaService: VerasesoriasService ) { }
 
+  
   ngOnInit(): void {
     this.verasesoriaService.getAsesorias().subscribe( 
       res => this.getAsesorias(res),
@@ -21,8 +22,11 @@ export class VerasesoriasComponent implements OnInit {
   }
 
   getAsesorias(res){
+  
     this.asesoria = res;
-    console.log("desde getAsesoria",this.asesoria);
+    //let fecha = new Date (res.ASE_FECHA.toLocaleDateString());
+    //this.asesoria.ASE_FECHA = fecha;
+    console.log("desde getAsesoria",res.ASE_FECHA);
   }
 
 }

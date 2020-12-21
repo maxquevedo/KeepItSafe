@@ -1,10 +1,10 @@
 <br>
-<div class="card border-primary mb-3">
+<div class="card border-warning  mb-3">
     <div class="card-header">Clientes</div>
-    <div class="card-body text-primary">
+    <div class="card-body text-Dark">
         <h5 class="card-title">Lista de clientes</h5>
         <div class="my-2 text-left">
-            <button class="botonAdminCrear" [routerLink]="[ '/clientes/form']">Crear nuevo cliente</button>
+            <button class="botonAdmin btn-warning" [routerLink]="[ '/clientes/form']">Crear cliente</button>
         </div>
 
         <table class="table table-bordered table-striped" style="font-size: 12px">
@@ -14,6 +14,7 @@
                     <th>NOMBRE DE USUARIO</th>
                     <th>CORREO</th>
                     <th>NOMBRE COMPLETO</th>
+                    <th>ESTADO</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,6 +23,8 @@
                     <td>{{ usuario.USR_USERNAME }}</td>
                     <td>{{ usuario.USR_CORREO }}</td>
                     <td>{{ usuario.USR_NOMBRECOMPLETO }}</td>
+                    <td>{{ usuario.USR_ESTADO }}</td>
+
                     <TD>
                         <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/clientes/form']"> Editar </BUTTON>
                     </TD>
@@ -31,6 +34,6 @@
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-outline-success" [routerLink]="['/administrador']">volver</button>
+        <button class="btn btn-outline-secondary" [routerLink]="['/administrador']">volver</button>
     </div>
 </div>

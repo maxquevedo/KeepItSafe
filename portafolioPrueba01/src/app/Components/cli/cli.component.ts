@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
   templateUrl: './cli.component.html'
 })
 export class CliComponent implements OnInit {
+  usuario = sessionStorage.getItem('USR_USERNAME');
 
   constructor(private router: Router) { }
 

@@ -1,11 +1,11 @@
 <br>
-<div class="card border-primary mb-3">
+<div class="card border-warning mb-3">
     <div class="card-header">Profesionales</div>
-    <div class="card-body text-primary">
+    <div class="card-body text-Dark">
         <h5 class="card-title">Reporte de clientes</h5>
         <form action="/action_page.php">
             <div class="col-mb-4">
-                <label class="text-secondary" for="Clientes">Elija un cliente:</label>
+                <label class="text-primary" for="Clientes">Elija un cliente:</label>
             </div>
             <select name="visita" id="visita">
                 <option value="id cliente">Cliente1</option>
@@ -13,7 +13,7 @@
                 <option value="id cliente">Cliente3</option>
             </select>
             <input type="submit" value="Submit">
-            <br><br>
+        
 
         </form>
 
@@ -52,6 +52,6 @@
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-outline-success" [routerLink]="['/admin']">volver</button>
+        <button class="btn btn-outline-secondary" [routerLink]="['/admin']">volver</button>
     </div>
 </div>

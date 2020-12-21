@@ -2,28 +2,28 @@
 <div class="card text-center">
     <div class="card-header">
         Panel de control Administrador
-        <h4><small>Bienvenido {{ usuario }}</small></h4>
+        <h4><small><strong>Bienvenido {{ usuario }}</strong></small></h4>
     </div>
     <div class="card-body">
         <div>
-            <button class="botonAdmin" [routerLink]="[ '/profesionales']">Mantener información profesional</button>
-            <button class="botonAdmin" [routerLink]="['/crearcapacitacion']">Crear capacitación</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="[ '/profesionales']">Mantener información profesional</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="['/crearcapacitacion']">Crear capacitación</button>
         </div>
         <div>
-            <button class="botonAdmin" [routerLink]="[ '/clientes']">Mantener información cliente</button>
-            <button class="botonAdmin" [routerLink]="['/planificarvisita']">Planificar visita</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="[ '/clientes']">Mantener información cliente</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="['/planificarvisita']">Planificar visita</button>
 
         </div>
         <div>
-            <button class="botonAdmin" [routerLink]="['/reporteClientes']">Generar reporte cliente</button>
-            <button class="botonAdmin" [routerLink]="['/reporteGlobal']">Generar reporte global</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="['/reporteClientes']">Generar reporte cliente</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="['/reporteGlobal']">Generar reporte global</button>
         </div>
         <div>
-            <button class="botonAdmin" [routerLink]="['/verasesorias']">Revisar asesorias</button>
+            <button class="botonAdmin btn btn-warning" [routerLink]="['/verasesorias']">Revisar asesorias</button>
         </div>
       
     </div>
     <div class="card-footer text-muted">
-        <button class="btn btn-outline-success" (click)="logout()">Salir</button>
+        <button class="btn btn-outline-danger" (click)="logout()">Salir</button>
     </div>
 </div>
