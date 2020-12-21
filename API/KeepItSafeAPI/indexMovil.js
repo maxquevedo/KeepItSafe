@@ -806,6 +806,72 @@ app.patch('/checkSuccess',async function(req,res){
     return res.json(result.rowsAffected);
 })
 
+app.patch('/aprobarMejoras',async function(req,res){
+    console.log("res,body: ",req.body);
+    let id = req.body.jeison.id;
+    let connection;
+    let query = `update mejoras set mej_estado = 'aprobada' where mej_id = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        var result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rowsAffected);
+});
+
+app.patch('/rechazarMejora',async function(req,res){
+    let id = req.body.jeison.id;
+    let connection;
+    let query = `update mejoras set mej_estado = 'rechazada' where mej_id = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        var result = await connection.execute(query,[id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rowsAffected);
+});
+
+app.patch('/enviarPropuesta',async function(req,res){
+    let id = req.body.jeison.id;
+    let mensaje = req.body.jeison.propuestaMensaje;
+    console.log(mensaje,id);
+    let connection;
+    let query = `update mejoras set mej_resp_cli = :mensaje where mej_id = :id`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        var result = await connection.execute(query,[mensaje,id],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rowsAffected);
+});
+
 
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;
