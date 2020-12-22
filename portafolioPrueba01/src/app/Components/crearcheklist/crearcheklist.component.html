@@ -1,7 +1,7 @@
 <br>
 <div class="card text-center">
     <div class="card-header">
-        Crear Nueva CkeckList
+        CREAR CHECKLIST
     </div>
     <div class="card-body text-center">
         
@@ -12,26 +12,21 @@
                     <table class="table table-bordered table-striped" style="font-size: 12px">
                         <thead>
                             <tr>
-                                <th>ID_ACCIDENTE</th>
-                                <th>MEJORA</th>
                                 <th>DESCRIPCION</th>
-                                <th>ESTADO</th>
+                                <th>ELIMINAR</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr >
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>CHECKLIST1</td>
+                               
             
-                                <TD>
-                                    <BUTTON class="btn btn-success" style="margin-left: 5px;"> Y </BUTTON>
-                                </TD>
                                 
+                                <TD>
+                                    <BUTTON class="btn btn-danger" name="eliminar" > x </BUTTON>
+                                </TD>
                             </tr>
                             <tr>
-                                <td> <div class="btn bg-success"> <label for="">Ingresar nuevo accidente</label> </div> </td>
-                                <td> <input class="form-control" type="text"> </td>
                                 <td> <input class="form-control" type="text"> </td>
                                 
                                 <td colspan="2"> <BUTTON class="btn btn-success" style="margin-left: 5px;"> Guardar </BUTTON> </td>
@@ -44,6 +39,6 @@
 
     </div>
     <div class="card-footer text-muted">
-        <button class="btn btn-outline-success" [routerLink]="['/prof']">Volver</button>
+        <button class="btn btn-outline-dark" [routerLink]="['/prof']">Volver</button>
     </div>
 </div>

@@ -13,8 +13,8 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 const mypw = '1234';
 const mypw2 = 'Aa123456';
 const connectionInfo = { user: "c##max2330",password: mypw, connectString: "localhost:1521" }
-const connectionInfo2 = { user: "c##dba_desarrollo",password: mypw2, connectString: "localhost:1521" }
-//const connectionInfo2 = { user: "system",password: mypw2, connectString: "localhost:1521" }
+//const connectionInfo2 = { user: "c##dba_desarrollo",password: mypw2, connectString: "localhost:1521" }
+const connectionInfo2 = { user: "system",password: mypw2, connectString: "localhost:1521" }
 
 function mapResult(arreglo){
     var resJson = { };
@@ -816,6 +816,29 @@ app.get('/web/usuario/:id',async function(req,res){
         }
     }
     res.json(mapMultipleResult(result))
+})
+
+app.get('/web/responderchecklist/:id_pro/:id_cli/',async function(req,res){
+    let id_pro = req.params.id_pro;
+    let id_cli = req.params.id_cli;
+    let connection;
+    let query = `select acc_descripcion, acc_estado,acc_id from accidentes where acc_id_pro = :id_pro and acc_id_cliente = :id_cli`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[id_pro,id_cli],{});
+        //console.log(result.rows);
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rows);
 })
 
 app.post('/web/cliente',async(req,res)=>{
