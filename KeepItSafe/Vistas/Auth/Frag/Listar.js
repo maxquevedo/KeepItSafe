@@ -31,7 +31,7 @@ const Listar = (props) => {
    // console.log(props);
     return (
         <View style={{flex:1}}>
-            <FlatList data={props.datos} renderItem={renderItem} keyExtractor={item => item.index }/>
+            <FlatList data={props.datos} renderItem={renderItem} keyExtractor={(item,index) =>index.toString() }/>
         </View>
     );
 };
