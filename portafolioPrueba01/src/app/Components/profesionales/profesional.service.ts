@@ -33,7 +33,7 @@ export class ProfesionalService {
     return this.http.get(`${this.env.apiUrl}/web/profesional/${USR_ID}`);
   }
 
-  update(USR_ID:string,profesional: Profesional){
+  update(USR_ID:string,profesional){
     return this.http.put(`${this.env.apiUrl}/web/profesional/${USR_ID}`,profesional);
   }
 

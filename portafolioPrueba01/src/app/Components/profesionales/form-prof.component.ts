@@ -36,19 +36,19 @@ export class FormProfComponent implements OnInit {
   constructor(public datepipe: DatePipe,private activedRoute: ActivatedRoute, private profesionalService: ProfesionalService, private router: Router, private activateRoute: ActivatedRoute) { }
 
   params = this.activedRoute.snapshot.params;
-  id = this.params.USR_ID;
+  id = this.params.Profesional;
   
 
   ngOnInit(): void {
-    this.profesionalService.getProfesionales().subscribe( 
-      /*(res:Cliente[]) => {
-        this.clientes = res;
-      },*/
-      res => this.getProfesional(res),
+    this.profesionalService.getProfesional(this.id).subscribe( 
+      res => {
+        console.log(res)
+        this.pro = res;
+      },
       err => console.error(err)
     );
 
-    console.log("desde init:" + this.params);
+    console.log("desde init:", this.params);
     console.log("desde id",this.id);
   }
 
@@ -58,7 +58,8 @@ export class FormProfComponent implements OnInit {
   }
 
   GuardarProfesional(){
-  var formateado = JSON.stringify({
+
+    var formateado = JSON.stringify({
       "username":this.pro.USR_USERNAME,
       "password":this.pro.USR_PASSWORD,
       "email":this.pro.USR_CORREO,
@@ -67,8 +68,23 @@ export class FormProfComponent implements OnInit {
       "apellido":this.pro.PRO_APELLIDO,
       "fechaingreso": this.datepipe.transform(this.pro.PRO_FINGRESO, 'dd/MM/yyyy')
   });
-  console.log(formateado);
-  //this.profesionalService.create(formateado);
+
+    if (this.pro.PRO_ID) {
+      this.profesionalService.update(this.pro.PRO_ID, formateado).subscribe(
+        res => console.log(res),
+        err => console.error(err)
+      );
+      
+    } else {
+      
+    console.log(formateado);
+    this.profesionalService.create(formateado).subscribe(
+      res => console.log(res),
+      err => console.error(err)
+    );
+      
+    }
+ 
 
 }
 
