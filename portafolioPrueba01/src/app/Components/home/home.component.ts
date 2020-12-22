@@ -30,13 +30,13 @@ ngOnInit(): void {
 
   getUsuarios(res) {
     console.log(res);
-    sessionStorage.setItem('USR_ID', res[0][0]);
-    sessionStorage.setItem('USR_USERNAME', res[0][1]);
-    sessionStorage.setItem('USR_CORREO', res[0][2]);
-    sessionStorage.setItem('USR_NOMBRECOMPLETO', res[0][3]);
-    sessionStorage.setItem('USR_PASSWORD', res[0][4]);
-    sessionStorage.setItem('USR_TIPOUSUARIO', res[0][5]);
-    sessionStorage.setItem('USR_IDPERFIL', res[0][6]);
+    sessionStorage.setItem('USR_ID', res.USR_ID);
+    sessionStorage.setItem('USR_USERNAME', res.USR_USERNAME);
+    sessionStorage.setItem('USR_CORREO', res.USR_CORREO);
+    sessionStorage.setItem('USR_NOMBRECOMPLETO', res.USR_NOMBRECOMPLETO);
+    sessionStorage.setItem('USR_PASSWORD', res.USR_PASSWORD);
+    sessionStorage.setItem('USR_TIPOUSUARIO', res.USR_TIPOUSUARIO);
+    sessionStorage.setItem('USR_IDPERFIL', res.USR_IDPERFIL);
     var session = sessionStorage.getItem('USR_ID');
     var usersession = sessionStorage.getItem('USR_USERNAME');
     this.router.navigate([sessionStorage.getItem("USR_TIPOUSUARIO")]);

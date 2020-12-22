@@ -726,7 +726,7 @@ app.get('/web/login/:username/:password', async(req,res) => {
             }
         }
     }
-    return res.send(result.rows);
+    return res.json(mapResult(result));
 
 })
 
