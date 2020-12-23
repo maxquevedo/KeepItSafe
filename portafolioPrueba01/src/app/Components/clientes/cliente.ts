@@ -16,6 +16,10 @@ export class Cliente {
     CLI_ID_PRO?;
     PLANES_PLA_IDPLAN?;
 
+    constructor() {
+        
+    }
+
 }
 
 
