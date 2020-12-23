@@ -10,19 +10,15 @@ import { HttpClient } from '@angular/common/http';
 export class PlanificarvisitaService {
 
   private env = environment;
-  clientes:[];
-  profesional:[];
 
   constructor(private http: HttpClient) { }
 
-  getClientes(){
-    return this.http.get(`${this.env.apiUrl}/web/clientes`)
-  }
-  
-  getProfesionales(){
-    return this.http.get(`${this.env.apiUrl}/web/profesional`)
+  getCliente(idProfesional){
+    return this.http.get(`${this.env.apiUrl}/web/cliente/${idProfesional}`);
   }
 
-  
+  crearVisita(visita){
+    return this.http.post(`${this.env.apiUrl}/web/visitas`, visita);
+  }
 
 }

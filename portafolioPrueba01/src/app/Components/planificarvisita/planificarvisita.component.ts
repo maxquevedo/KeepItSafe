@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Visitas } from './visitas';
-import { PlanificarvisitaService } from './planificarvisita.service'
-import { Profesional } from './profesional'
-import { Usuario } from './usuario'
+import { PlanificarvisitaService } from './planificarvisita.service';
+import { Profesional } from './profesional';
+import { Cliente } from '../clientes/cliente';
 
 @Component({
   selector: 'app-planificarvisita',
@@ -10,49 +10,45 @@ import { Usuario } from './usuario'
   styleUrls: ['./planificarvisita.component.css']
 })
 export class PlanificarvisitaComponent implements OnInit {
-
-  profesionales: Profesional;
-  cliente: Usuario;
-
-  visita: Visitas ={
-    VIS_ID:'',
-    VIS_FCREACION: new Date(),
-    VIS_FCITA:'',
-    VIS_ID_PRO:'',
-    VIS_ID_CLI:''
-  };
+  cliente: Cliente = new Cliente();
+  visita: Visitas = new Visitas();
+  nombreProfesional = null;
+  mensajeError = null;
+  mensajeExito = null;
+  fechaMinima = new Date();
 
   constructor(private planificarvisitaService : PlanificarvisitaService) { }
 
   ngOnInit(): void {
-    this.planificarvisitaService.getProfesionales().subscribe( 
-      /*(res:Cliente[]) => {
-        this.clientes = res;
-      },*/
-      pres => this.getProfesional(pres),
-      err => console.error(err)),
-      
-      
-      this.planificarvisitaService.getClientes().subscribe(
-        cres => this.getCliente(cres),
-        err => console.error(err))
-  }
+    if (sessionStorage.getItem('USR_IDPERFIL')) {
+      let profesionalId = sessionStorage.getItem('USR_IDPERFIL');
 
-  getProfesional(pres){
-    this.profesionales = pres;
-    console.log("desde getProfesional",this.profesionales);
-  }
+      this.visita.VIS_ID_PRO = parseInt(profesionalId);
 
-  getCliente(cres){
-    this.cliente = cres;
-    console.log("desde getCliente",this.cliente);
+      this.planificarvisitaService.getCliente(profesionalId).subscribe((response) => {
+        this.cliente = response[0];
 
-  }
+        this.visita.VIS_ID_CLI = this.cliente.CLI_ID;
+      }); 
+    }
 
-  getagenda(){
+    if (sessionStorage.getItem('USR_NOMBRECOMPLETO'))
+      this.nombreProfesional = sessionStorage.getItem('USR_NOMBRECOMPLETO');
+
+
     
   }
-  
 
+  crearVisita() {
+    this.mensajeError = null;
+    this.mensajeExito = null;
+    this.planificarvisitaService.crearVisita(this.visita).subscribe((response) => {
+      console.log('crearVisita: ', response);
+      this.mensajeExito = 'Visita creada con éxito';
 
+    }, (error) => {
+      console.log('error: ', error);
+      this.mensajeError = error.error;
+    });
+  }
 }

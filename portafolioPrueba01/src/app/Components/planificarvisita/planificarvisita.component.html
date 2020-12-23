@@ -3,48 +3,43 @@
     <div class="card-header">
         Crear Nueva Visita
     </div>
-    <div class="card-body text-center">
-        
-        <div class="card bg-aqua text-dark text-center col-sm-12">
-    
-                <div class="card-body text-center">
+    <div class="card-body">
 
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group col-sm-4">
-                                <label for="my-in col-sm-6put">Fecha Cita</label>
-                                <input id="my-input" class="form-control" type="date" name="">
-                            </div>
-                            <div class="form-group col-sm-4">
-                            <label for="">Seleccione Profesional</label>
-                            <select class="form-control" name="Profesionales" id="">
-                                <option>Brett Hodge</option>
-                                <option>Gavin Love</option>
-                            </select>
-                            </div>
-                            <div class="form-group col-sm-4">
-                                <label for="">Seleccione Cliente</label>
-                                <select class="form-control" name="" id="">
-                                    <option>Adam Acosta</option>
-                                    <option>Renee Briggs</option>
-                                    <option>Maximiliano Quevedo</option>
-                                </select>
-                            </div> 
-                        </div>  
-                        <div class="row">
-                            <div class=" form-group col-sm-12">
-                                <button class="btn btn-success">Guardar</button>
-                                <button class="btn btn-success">Consultar</button>
-                                
-                            </div>
-                        </div>                     
-                    </form>
+        <div class="card bg-aqua text-dark col-sm-12">
 
-                </div>
+            <div class="card-body">
+
+                <form #form="ngForm">
+                    <div class="form-row">
+                        <div class="form-group col-sm-4">
+                            <label for="col-sm-6">Fecha Cita</label>
+                            <input class="form-control" type="date" #fechaCita="ngModel" name="fechaCita" [(ngModel)]="visita.VIS_FCITA" min="{{fechaMinima | date:'yyyy-MM-dd'}}" required>
+                            <small *ngIf="fechaCita.errors?.required" class="form-text text-muted">El campo es requerido.</small>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label for="">Profesional</label>
+                            <input class="form-control" type="text" name="profesional" [(ngModel)]="nombreProfesional" readonly>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label for="">Cliente</label>
+                            <input class="form-control" type="text" name="cliente" [(ngModel)]="cliente.CLI_RAZONSOCIAL" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class=" form-group col-sm-12">
+                            <button class="btn btn-success" (click)="crearVisita()" [disabled]="!form.valid">Guardar</button>
+                        </div>
+
+                        <span class="text-danger">{{mensajeError}}</span>
+                        <span class="text-success">{{mensajeExito}}</span>
+                    </div>
+                </form>
+
+            </div>
         </div>
 
     </div>
     <div class="card-footer text-muted">
-        <button class="btn btn-outline-success" [routerLink]="['/Admin']">Volver</button>
+        <button class="btn btn-outline-success" [routerLink]="['/Profesional']">Volver</button>
     </div>
 </div>
