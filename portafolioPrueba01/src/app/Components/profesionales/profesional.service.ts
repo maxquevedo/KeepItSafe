@@ -34,7 +34,7 @@ export class ProfesionalService {
   }
 
   update(USR_ID:string,profesional){
-    return this.http.put(`${this.env.apiUrl}/web/profesional/${USR_ID}`,profesional);
+    return this.http.put(`${this.env.apiUrl}/web/profesional/${USR_ID}`,profesional, {headers: this.httpHeaders});
   }
 
   delete(USR_ID: number){

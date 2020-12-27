@@ -74,7 +74,7 @@ export class FormProfComponent implements OnInit {
 
     if (this.id) {
       console.log("edita",formateado);
-      this.profesionalService.update(this.pro.PRO_ID, formateado).subscribe(
+      this.profesionalService.update(this.id, formateado).subscribe(
         res => console.log(res),
         err => console.error(err)
       );
