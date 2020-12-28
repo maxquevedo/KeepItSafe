@@ -14,6 +14,9 @@ export class FormProfComponent implements OnInit {
 
   profesionales : Profesional;
   now = Date.now();
+  params = this.activedRoute.snapshot.params;
+  id = this.params.Profesional;
+  
 
   pro: Profesional={
 
@@ -24,7 +27,7 @@ export class FormProfComponent implements OnInit {
     PRO_FINGRESO:'',
     PRO_CLI_ID:'',
 
-    USR_ID:'',
+    USR_ID: this.id,
     USR_USERNAME:'',
     USR_CORREO:'',
     USR_NOMBRECOMPLETO:'',
@@ -35,14 +38,13 @@ export class FormProfComponent implements OnInit {
   };
   constructor(public datepipe: DatePipe,private activedRoute: ActivatedRoute, private profesionalService: ProfesionalService, private router: Router, private activateRoute: ActivatedRoute) { }
 
-  params = this.activedRoute.snapshot.params;
-  id = this.params.Profesional;
+
   
 
   ngOnInit(): void {
+    console.log("pro", this.pro);
     this.profesionalService.getProfesional(this.id).subscribe( 
       res => {
-        console.log(res)
         this.pro = res;
       },
       err => console.error(err)
@@ -60,24 +62,26 @@ export class FormProfComponent implements OnInit {
   GuardarProfesional(){
 
     var formateado = JSON.stringify({
+      "id":this.id,
       "username":this.pro.USR_USERNAME,
       "password":this.pro.USR_PASSWORD,
       "email":this.pro.USR_CORREO,
       "rut":this.pro.PRO_RUT,
       "name":this.pro.PRO_NOMBRE,
       "apellido":this.pro.PRO_APELLIDO,
-      "fechaingreso": this.datepipe.transform(this.pro.PRO_FINGRESO, 'dd/MM/yyyy')
+      "fechaingreso": this.datepipe.transform(this.now, 'dd/MM/yyyy')
   });
 
-    if (this.pro.PRO_ID) {
-      this.profesionalService.update(this.pro.PRO_ID, formateado).subscribe(
+    if (this.id) {
+      console.log("edita",formateado);
+      this.profesionalService.update(this.id, formateado).subscribe(
         res => console.log(res),
         err => console.error(err)
       );
       
     } else {
       
-    console.log(formateado);
+    console.log("nuevo",formateado);
     this.profesionalService.create(formateado).subscribe(
       res => console.log(res),
       err => console.error(err)

@@ -744,7 +744,7 @@ app.get('/web/login/:username/:password', async(req, res) => {
 
 app.get('/web/clientes', async(req, res) => {
     let connection;
-    let query = `select * from usuarios where usr_tipousuario = 'Cliente' and usr_estado = 'Habilitado'`
+    let query = `select * from usuarios where usr_estado = 'Habilitado' or usr_estado = '1' and usr_tipousuario = 'Cliente'`
     try {
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query, [], {});
@@ -991,29 +991,37 @@ app.put('/web/profesional/:id', async(req, res) => {
     //update -->    
 
     let connection;
-    let userId = 0;
+    //let userId = 0;
     //let query1 = `select max(usr_id) from usuarios`;
     let querypro = `select max(PRO_ID) from pro`;
-    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
+    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente'`
 
-    connection = await oracledb.getConnection(connectionInfo2);
-    result = await connection.execute(querypro, [], {});
-
-    let proId = parseInt(result.rows[0]) + 1;
-    console.log("result", result);
-
-    let query3 = `insert into pro (PRO_RUT,PRO_ID,PRO_NOMBRE,PRO_APELLIDO,PRO_FINGRESO) values('${rut}',${proId},'${name}','${apellido}','${fechaingreso}')`;
-    console.log("query3 -> ", query3);
+    
 
     try {
+
+        connection = await oracledb.getConnection(connectionInfo2);
+        //result = await connection.execute(querypro, [], {});
+
+        //let proId = parseInt(result.rows[0]) + 1;
+        //console.log("result", result);
+        let query2 = `update USUARIOS set USR_USERNAME = '${username}', USR_CORREO = '${email}', USR_NOMBRECOMPLETO = '${name} ${apellido}', USR_PASSWORD = '${password}' where USR_ID= ${id}`;
+        console.log("query2 -> ", query2);
+
+        let queryidpro =`select USUARIOS.USR_IDPERFIL from usuarios where USUARIOS.USR_ID='${id}'`;
+        idpro = await connection.execute(queryidpro, [], {});
+        
+        console.log("idpro->", idpro);
+
+        let query3 = `update pro  set PRO_RUT ='${rut}', PRO_NOMBRE = '${name}', PRO_APELLIDO = '${apellido}' where PRO_ID =${idpro.rows}`;
+        console.log("query3 -> ", query3);
+
         //console.log("Query 3:",query3);
 
         //result = await connection.execute(query1,[],{})
 
         //userId = (result++);
-        let query2 = `INSERT INTO USUARIOS(USR_USERNAME, USR_CORREO, USR_NOMBRECOMPLETO, USR_PASSWORD, USR_TIPOUSUARIO, USR_IDPERFIL, USR_ESTADO) VALUES ('${username}','${email}','${name} ${apellido}','${password}','${tipoUsuario}',${proId} ,${estadousuario}) `;
-
-        console.log("query2 -> ", query2);
+        
 
         result = await connection.execute(query2, [], {});
         result = await connection.execute(query3, [], {});
@@ -1079,15 +1087,16 @@ app.get('/web/profesional/:id', async(req, res) => {
     res.json(mapResult(result))
 })
 
-app.delete('/web/usuario/:id', async function(req, res) {
+app.put('/web/usuario/:id', async function(req, res) {
 
     let id = req.params.id;
 
     let connection;
-    let query = `UPDATE usuarios SET USR_ESTADO = 0 WHERE USR_ID = :id;`
+    let query = `UPDATE usuarios SET USR_ESTADO = 0 WHERE USR_ID = ${id}`
+    console.log("query ->",query)
     try {
         connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query, [id], {});
+        result = await connection.execute(query, [],{});
     } catch (e) {
         console.log(e);
     } finally {
