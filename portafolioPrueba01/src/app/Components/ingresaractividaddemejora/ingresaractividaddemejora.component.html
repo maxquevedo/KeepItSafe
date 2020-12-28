@@ -1,52 +1,44 @@
 <br>
 <div class="card text-center">
     <div class="card-header">
-        INGRESAR MEJORA
+        Crear Nueva Mejora
     </div>
-    <div class="card-body text-center">
-        
-        <div class="card bg-aqua text-dark text-center col-sm-12">
+    <div class="card-body">
+
+        <div class="card bg-aqua text-dark col-sm-12">
+
+            <div class="card-body">
+
+                <form #form="ngForm">
+                    <div class="form-row">
+                        
+                        <div class="form-group col-sm-4">
+                            <label for="">Profesional</label>
+                            <input class="form-control" type="text" name="profesional" [(ngModel)]="nombreProfesional" readonly>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label for="">Cliente</label>
+                            <input class="form-control" type="text" name="cliente" [(ngModel)]="cliente.CLI_RAZONSOCIAL" readonly>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label for="col-sm-6">Descripcion</label>
+                            <input class="form-control" type="Text" #fechaCita="ngModel" name="descripcionMejora" [(ngModel)]="mejora.MEJ_DESCRIPCION" required>
     
-                <div class="card-body text-center">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class=" form-group col-sm-12">
+                            <button class="btn btn-success" (click)="crearMejora()" [disabled]="!form.valid">Guardar</button>
+                        </div>
+                        <span class="text-success">{{mensajeExito}}</span>
+                    </div>
+                </form>
 
-                    <table class="table table-bordered table-striped" style="font-size: 12px">
-                        <thead>
-                            <tr>
-                                <th>ID_MEJORA</th>
-                                <th>MEJORA</th>
-                                <th>DESCRIPCION</th>
-                                <th>APROBAR</th>
-                                <th>RECHAZAR</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr >
-                                <td></td>
-                                <td></td>
-                                <td></td>
-            
-                                <TD>
-                                    <BUTTON class="btn btn-success" style="margin-left: 5px;"> A </BUTTON>
-                                </TD>
-                                <TD>
-                                    <BUTTON class="btn btn-danger" name="eliminar" > R </BUTTON>
-                                </TD>
-                            </tr>
-                            <tr>
-                                <td> <input class="form-control" type="text"> </td>
-                                <td> <input class="form-control" type="text"> </td>
-                                <td> <input class="form-control" type="text"> </td>
-                                
-                                <td colspan="2"> <BUTTON class="btn btn-success" style="margin-left: 5px;"> Guardar </BUTTON> </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
+            </div>
         </div>
 
     </div>
     <div class="card-footer text-muted">
-        <button class="btn btn-outline-success" [routerLink]="['/prof']">Volver</button>
+        <button class="btn btn-outline-success" [routerLink]="['/Profesional']">Volver</button>
     </div>
 </div>
