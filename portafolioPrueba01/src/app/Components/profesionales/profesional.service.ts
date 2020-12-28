@@ -38,7 +38,7 @@ export class ProfesionalService {
   }
 
   delete(USR_ID: number){
-    return this.http.delete(`${this.env.apiUrl}/web/usuario/${USR_ID}`);
+    return this.http.put(`${this.env.apiUrl}/web/usuario/${USR_ID}`,{headers: this.httpHeaders});
   }
 
   }

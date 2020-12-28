@@ -1087,15 +1087,16 @@ app.get('/web/profesional/:id', async(req, res) => {
     res.json(mapResult(result))
 })
 
-app.delete('/web/usuario/:id', async function(req, res) {
+app.put('/web/usuario/:id', async function(req, res) {
 
     let id = req.params.id;
 
     let connection;
-    let query = `UPDATE usuarios SET USR_ESTADO = 0 WHERE USR_ID = :id;`
+    let query = `UPDATE usuarios SET USR_ESTADO = 0 WHERE USR_ID = ${id}`
+    console.log("query ->",query)
     try {
         connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query, [id], {});
+        result = await connection.execute(query, [],{});
     } catch (e) {
         console.log(e);
     } finally {
