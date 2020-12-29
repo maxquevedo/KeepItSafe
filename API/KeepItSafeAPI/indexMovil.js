@@ -547,18 +547,10 @@ app.post('/asignarPro',async function(req,res){
 app.get('/accidentes/:id',async function(req,res){
     let id_cli = req.params.id;
     let connection;
-    let query = `select * from accidentes where acc_id = 1`;
-    let possibleAccidents = [];
     try{
         connection = await oracledb.getConnection(connectionInfo);
-        result = await connection.execute(query)
-        possibleAccidents.push(result.rows[0]);
         query = `select * from accidentes where acc_id_cliente = :id_cli`;
         result = await connection.execute(query,[id_cli],{})
-        for (var i=0;i< result.rows.length; i++) {
-            possibleAccidents.push(result.rows[i]);
-        }
-        //console.log("Accidentes: ",possibleAccidents);
     }catch(err){
         console.log(err)
     }
@@ -572,7 +564,7 @@ app.get('/accidentes/:id',async function(req,res){
             }
         }
         //console.log(result);
-        return res.json(possibleAccidents);
+        return res.json(result.rows);
     }
 });
 

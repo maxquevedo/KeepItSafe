@@ -154,7 +154,10 @@ class PropuestasMejora extends Component {
         let colorRepro = "black";
         let sended = "black";
         let index = data.index;
-        let state = estados[data.index][1];
+        console.log("DATA: ",data)
+        console.log("Estados, en vola esto caga: ",estados[0]);
+        console.log("Lista prop: ",listaProp)
+        let state = data.item[1];
         //console.log("DATA: ",data, "\nListaProp: ",listaProp[data.index],'\nEstados: ',estados[data.index][3]);
         //console.log(estados[index],listaProp[index] );
         if(state == "abierta"){
@@ -186,7 +189,7 @@ class PropuestasMejora extends Component {
 
             <Text>     </Text>
 
-            <Text style={styles.text}>{ data.item[1] }</Text>
+            <Text style={styles.text}>{ data.item[2] }</Text>
 
             <Text>   </Text>
 
@@ -211,7 +214,7 @@ class PropuestasMejora extends Component {
     }
 
     render() {
-        const { listaProp,loading,refresh,propuestaMensaje,tipoUsuario } = this.state;
+        const { listaProp,loading,refresh,propuestaMensaje,tipoUsuario,estados } = this.state;
         let titulo = 'Enviar propuesta de mejora\n\n\n\t\t\t\t\tPropuesta anterior';
 
         if(propuestaMensaje == ""){
@@ -223,7 +226,7 @@ class PropuestasMejora extends Component {
                      {
                     loading? 
                     <ActivityIndicator size="large" color="#095813"/>:
-                        <FlatList data={listaProp} renderItem={this.renderItem.bind(this)} refreshing={refresh} onRefresh={()=> this.getData()} keyExtractor={ (item,index) => index.toString() } />
+                        <FlatList data={estados} renderItem={this.renderItem.bind(this)} refreshing={refresh} onRefresh={()=> this.getData()} keyExtractor={ (item,index) => index.toString() } />
                 }
 
                 <DialogInput isDialogVisible={this.state.isDialogVisible}

@@ -30,10 +30,10 @@ class Visita extends Component {
         id_cli = respJson[5];
         resp = await fetch(`http://10.0.2.2:8080/checks/${id}/${id_cli}`);
         respJson = await resp.json();
-        console.log(respJson[0])
+        //console.log(respJson[0])
         for(var i =0 ; i<respJson.length ; i++){
             nombres.push(respJson[i][1]);
-            estados.push(respJson[i][2]);
+            estados.push(respJson[i][4]);
         }
         this.setState({nombresChecks:nombres,estadoChecks:estados,loading:false,checks:respJson})
     }
@@ -74,7 +74,6 @@ class Visita extends Component {
     }
 
     renderItem = (data) => {
-        //console.log("DATA: ",data.item);
         var estado = this.state.estadoChecks[data.index];
         var color1 = "black";
         var color2 = "black";

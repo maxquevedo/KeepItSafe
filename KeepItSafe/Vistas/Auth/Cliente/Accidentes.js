@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet,Button, ActivityIndicator,FlatList,TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import DialogInput from 'react-native-dialog-input';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // create a component
 class Accidentes extends Component {
 
@@ -11,15 +12,37 @@ class Accidentes extends Component {
         this.state = {
             loading: true,
             accidentes: [],
-
+            isDialogVisible: false,
+            detalleAccidente: '',
+            idAccidenteSelec: ''
         }
     }
 
     async componentDidMount(){
-        const { loading } = this.state;
-        let resp = await fetch(`http://10.0.2.2:8080/accidentes/1`);
+        let cli_id = await AsyncStorage.getItem("id2")
+        console.log(cli_id);
+        let resp = await fetch(`http://10.0.2.2:8080/accidentes/${cli_id}`);
         let respJson = await resp.json();
         this.setState({accidentes: respJson, loading:false});
+    }
+
+    
+    async sendInput(inputText){
+        console.log("Input text: ",inputText);
+        console.log("Id ACcidente: ",this.state.idAccidenteSelec);
+        // let jeison = {
+        //     id: propuestaMensajeArr[0],
+        //     propuestaMensaje: inputText
+        // }
+        // let json = JSON.stringify({jeison:jeison});
+        // let resp = await fetch('http://10.0.2.2:8080/enviarPropuesta',{
+        //     method:'PATCH',
+        //     headers: {
+        //         'Content-Type':'application/json; charset="UTF-8"'
+        //     },
+        //     body:json
+        // });
+        this.setState({isDialogVisible:false});
     }
 
     prueba = async () => {
@@ -28,18 +51,19 @@ class Accidentes extends Component {
 
     renderItem(data){
         var color = "white";
+        var accidente_id = data.item[0];
+        var nombre = data.item[1].charAt(0).toUpperCase() +  data.item[1].slice(1);
         if(data.index%2==0){
             color= "#A2AFA2"
         }
-        //alert(JSON.stringify(data));
         return <View style={{flexDirection:'row'}} key={data.key}>
             <View style={{flexDirection:'column', width:"100%", padding:35, backgroundColor:color,}}>
                 <View style={{flexDirection:'row'}}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=> this.setState({idAccidenteSelec:accidente_id,detalleAccidente:nombre ,isDialogVisible:true})}>
                         <Ionicons name="md-notifications-outline" size={25} color={'#000'} />
                     </TouchableOpacity>
                     <Text>     </Text>
-                    <Text style={{fontSize:25}}>{ data.item[1].charAt(0).toUpperCase() +  data.item[1].slice(1)}</Text>  
+                    <Text style={{fontSize:25}}>{ nombre }</Text>  
                 </View>
             </View>
         </View>
@@ -47,13 +71,21 @@ class Accidentes extends Component {
 
 
     render() {
-        const { loading, accidentes } = this.state;
+        const { loading, accidentes,detalleAccidente } = this.state;
 
         return (
             <View style={{marginTop:35}}>
+                <DialogInput isDialogVisible={this.state.isDialogVisible}
+                    title={"Descripción del accidente - "+detalleAccidente}
+                    message={''}
+                    hintInput ={"Escribe aquí..."}
+                    submitInput={ (inputText) => {this.sendInput(inputText)} }
+                    closeDialog={ () => {this.setState({isDialogVisible:false})}}>
+                </DialogInput>
                 {
                     loading? <View style={{justifyContent:'center',alignContent:'center'}}><ActivityIndicator size="large" color="#095813"/></View>: <FlatList data={accidentes} renderItem={this.renderItem.bind(this)} keyExtractor={ (index,item) => index.toString() } />
                 }
+
             </View>
         );
     }
