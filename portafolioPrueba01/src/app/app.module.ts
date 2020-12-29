@@ -37,6 +37,7 @@ import { ReporteclienteComponent } from './Components/reportecliente/reporteclie
 import { AsignarComponent } from './Components/asignar/asignar.component';
 import { VerasesoriasComponent } from './Components/verasesorias/verasesorias.component';
 import { VerasesoriasService } from './Components/verasesorias/verasesorias.service';
+import { IngresaractividaddemejoraService } from './Components/ingresaractividaddemejora/ingresaractividaddemejora.service';
 
 
 
@@ -75,7 +76,7 @@ import { VerasesoriasService } from './Components/verasesorias/verasesorias.serv
     HttpClientModule,
     FormsModule
   ],
-  providers: [ClienteService, DatePipe, LoginService , ProfesionalService, PlanificarvisitaService, ReporteglobalService, ReporteclienteService, VerasesoriasService],
+  providers: [ClienteService, DatePipe, LoginService , ProfesionalService, PlanificarvisitaService, ReporteglobalService, ReporteclienteService, VerasesoriasService, IngresaractividaddemejoraService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

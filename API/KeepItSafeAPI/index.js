@@ -1276,6 +1276,50 @@ app.post('/web/visitas', async (req, res) => {
     }
 });
 
+// mejoras
+app.post('/web/mejoras', async (req, res) => {
+    console.log('post/web/mejoras: ', req.body);
+    let connection;
+    let result;
+    
+    try {
+        connection = await oracledb.getConnection(connectionInfo2);
+        let maxIdQuery = await connection.execute('SELECT MAX(MEJ_ID) FROM MEJORAS', [], {});
+        let maxMEJORAId = 1; 
+        if (maxIdQuery.rows){
+            maxMEJORAId = parseInt(maxIdQuery.rows[0]) + 1;
+        }
+        
+        result = await connection
+        .execute(`INSERT INTO MEJORAS (MEJ_ID, MEJ_ESTADO,  MEJ_DESCRIPCION, MEJ_RESP_CLI, MEJ_IDCLI, MEJ_IDPRO) 
+                  VALUES (:id, :estadoMejora, :descripcionMejora, :descripcionRespuesta, :idCliente, :idProfesional)`, 
+                  {
+                    id: maxMEJORAId, 
+                    estadoMejora: 'abierta',
+                    descripcionMejora: req.body.MEJ_DESCRIPCION,
+                    descripcionRespuesta: null,
+                    idCliente: req.body.MEJ_IDCLI,
+                    idProfesional: req.body.MEJ_IDPRO
+                  }, {});
+
+        console.log('post/web/mejoras result: ', result.rows);
+        res.json(mapResult(result));
+        
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+});
+
 
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8081;
