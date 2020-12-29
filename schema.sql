@@ -236,6 +236,16 @@ CREATE SEQUENCE  "TEV_TEV_ID1_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999
       CONSTRAINT FK_SOLICITUDES_PRO FOREIGN KEY (SOL_PRO_ID) REFERENCES USUARIOS (USR_ID)
    );
 
+   CREATE TABLE PRECIOS_EXTRA(
+    PRECIOS_ID NUMBER PRIMARY KEY,
+    PRECIOS_ITEM VARCHAR2(100),
+    PRECIOS_VALOR NUMBER NOT NULL
+   ); 
+   --insert into precios_extra values(1,'Visita',2);
+   --insert into precios_extra values(2,'Capacitacion',2);
+   --insert into precios_extra values(3,'Asesoria especial',3);
+   --insert into precios_extra values(4,'Reporte cliente',2);
+   --insert into precios_extra values(5,'Cambiar checks',4);
 
    CREATE OR REPLACE EDITIONABLE TRIGGER "REPORTE_CLI" 
    BEFORE INSERT 
