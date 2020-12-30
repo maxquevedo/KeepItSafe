@@ -1069,7 +1069,7 @@ app.get('/web/profesional/:id', async(req, res) => {
     let connection;
     let id = req.params.id;
     console.log(id);
-    let query = `select USR_USERNAME, USR_CORREO, PRO_NOMBRE, PRO_APELLIDO, PRO_RUT from usuarios u inner join pro p on u.usr_idperfil = p.pro_id where u.usr_id=:id`
+    let query = `select * from profesionales where pro_id = :id`
     try {
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query, [id], {});
@@ -1085,7 +1085,7 @@ app.get('/web/profesional/:id', async(req, res) => {
         }
     }
     res.json(mapResult(result))
-})
+});
 
 app.put('/web/usuario/:id', async function(req, res) {
 
