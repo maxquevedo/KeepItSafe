@@ -1404,6 +1404,152 @@ app.post('/web/validarPago', async (req, res) => {
     }
 });
 
+// Crearmejoras
+app.post('/web/mejoras', async (req, res) => {
+    console.log('post/web/mejoras: ', req.body);
+    let connection;
+    let result;
+    
+    try {
+        connection = await oracledb.getConnection(connectionInfo2);
+        let maxIdQuery = await connection.execute('SELECT MAX(MEJ_ID) FROM MEJORAS', [], {});
+        let maxMEJORAId = 1; 
+        if (maxIdQuery.rows){
+            maxMEJORAId = parseInt(maxIdQuery.rows[0]) + 1;
+        }
+        
+        result = await connection
+        .execute(`INSERT INTO MEJORAS (MEJ_ID, MEJ_ESTADO,  MEJ_DESCRIPCION, MEJ_RESP_CLI, MEJ_IDCLI, MEJ_IDPRO) 
+                  VALUES (:id, :estadoMejora, :descripcionMejora, :descripcionRespuesta, :idCliente, :idProfesional)`, 
+                  {
+                    id: maxMEJORAId, 
+                    estadoMejora: 'abierta',
+                    descripcionMejora: req.body.MEJ_DESCRIPCION,
+                    descripcionRespuesta: null,
+                    idCliente: req.body.MEJ_IDCLI,
+                    idProfesional: req.body.MEJ_IDPRO
+                  }, {});
+
+        console.log('post/web/mejoras result: ', result.rows);
+        res.json(mapResult(result));
+        
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+});
+
+//RevisarMejoras
+app.get('/web/mejoras/:id', async(req, res) => {
+    let connection;
+    let id = req.params.id;
+    console.log(req.params);
+    let query = `select * from mejoras INNER JOIN pro on mejoras.MEJ_IDPRO = PRO_ID INNER JOIN clientes on mejoras.MEJ_IDCLI=CLI_ID WHERE PRO_ID= ${id}`
+    try {
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query, [], {});
+    } catch (e) {
+        console.log(e);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+});
+
+//AprobarMejora
+app.put('/web/mejoras/aprobar', async(req, res) => {
+    console.log("Body: ", req.body);
+    //console.log("Params: ", req.params);
+    //console.log("Query: ", req.query);
+    let id = req.body.id;
+    let status = 'aprobada';
+    let connection;
+  
+
+
+    try {
+
+        connection = await oracledb.getConnection(connectionInfo2);
+        let query2 = `UPDATE MEJORAS SET MEJ_ESTADO = '${status}' WHERE MEJ_ID= ${id}`;
+        console.log("query2 -> ", query2);
+
+        result = await connection.execute(query2, [], {});
+
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return res.json(JSON.stringify({ result }));
+    }
+
+
+});
+
+// CrearAccidentes
+app.post('/web/accidentes', async (req, res) => {
+    console.log('post/web/accidentes: ', req.body);
+    let connection;
+    let result;
+    
+    try {
+        connection = await oracledb.getConnection(connectionInfo2);
+        let maxIdQuery = await connection.execute('SELECT MAX(ACC_ID) FROM ACCIDENTES', [], {});
+        let maxACCIDENTEId = 1; 
+        if (maxIdQuery.rows){
+            maxACCIDENTEId= parseInt(maxIdQuery.rows[0]) + 1;
+        }
+        
+        result = await connection
+        .execute(`INSERT INTO ACCIDENTES (ACC_ID, ACC_DESCRIPCION, ACC_ID_CLIENTE, ACC_ID_PRO, ACC_ESTADO) 
+                  VALUES (:id,:descripcionAccidente,:idCliente, :idProfesional,:estadoAccidente )`, 
+                  {
+                    id: maxACCIDENTEId, 
+                    descripcionAccidente: req.body.ACC_DESCRIPCION,
+                    idCliente: req.body.ACC_ID_CLIENTE,
+                    idProfesional: req.body.ACC_ID_PRO,
+                    estadoAccidente: '0'
+                  }, {});
+
+        console.log('post/web/accidentes result: ', result.rows);
+        res.json(mapResult(result));
+        
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+});
 
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8081;

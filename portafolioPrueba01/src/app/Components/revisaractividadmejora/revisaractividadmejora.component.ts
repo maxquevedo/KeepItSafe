@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Mejoras } from './revisarmejora';
+import { RevisaractividadmejoraService } from './revisaractividadmejora.service';
+import { Router} from '@angular/router';
 
 @Component({
   selector: 'app-revisaractividadmejora',
@@ -7,9 +10,37 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RevisaractividadmejoraComponent implements OnInit {
 
-  constructor() { }
+  mejoras : Mejoras;
+  constructor(private revisaractividadmejoraService: RevisaractividadmejoraService, private router: Router) { }
 
   ngOnInit(): void {
+    var profesionalId;
+    if (sessionStorage.getItem('USR_IDPERFIL')) {
+    profesionalId = sessionStorage.getItem('USR_IDPERFIL');
+      
+    }
+
+    this.revisaractividadmejoraService.getMejoras(profesionalId).subscribe( 
+      res => this.getMejoras(res),
+      err => console.error(err)
+    );
+    
   }
 
+
+  getMejoras(res){
+  
+    this.mejoras = res;
+    
+  }
+  editarAprobar(id:string){
+    this.revisaractividadmejoraService.updateAprobar(id).subscribe( 
+      res => console.log(res),
+      err => console.error(err)
+    );
+  }
+  editarRechazar(id:string){
+    this.revisaractividadmejoraService.updateAprobar(id);
+    console.log(`desde editarMejora:`,id);
+  }
 }

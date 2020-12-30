@@ -38,9 +38,7 @@ import { AsignarComponent } from './Components/asignar/asignar.component';
 import { VerasesoriasComponent } from './Components/verasesorias/verasesorias.component';
 import { VerasesoriasService } from './Components/verasesorias/verasesorias.service';
 import { ControlarPagosClienteComponent } from './Components/controlar-pagos-cliente/controlar-pagos-cliente.component';
-
-
-
+import { IngresaractividaddemejoraService } from './Components/ingresaractividaddemejora/ingresaractividaddemejora.service';
 
 @NgModule({
   declarations: [
@@ -77,7 +75,7 @@ import { ControlarPagosClienteComponent } from './Components/controlar-pagos-cli
     HttpClientModule,
     FormsModule
   ],
-  providers: [ClienteService, DatePipe, LoginService , ProfesionalService, PlanificarvisitaService, ReporteglobalService, ReporteclienteService, VerasesoriasService],
+  providers: [ClienteService, DatePipe, LoginService , ProfesionalService, PlanificarvisitaService, ReporteglobalService, ReporteclienteService, VerasesoriasService, IngresaractividaddemejoraService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
