@@ -1,7 +1,7 @@
 <br>
 <div class="card text-center">
     <div class="card-header">
-        Crear Solicitud
+        Crear Solicitud Asesoria
     </div>
     <div class="card-body">
 
@@ -12,22 +12,29 @@
                 <form #form="ngForm">
                     <div class="form-row">
                         <div class="form-group col-sm-4">
-                            <label for="col-sm-6">Fecha Cita</label>
-                            <input class="form-control" type="date" #fechaCita="ngModel" name="fechaCita" [(ngModel)]="visita.VIS_FCITA" min="{{fechaMinima | date:'yyyy-MM-dd'}}" required>
-                            <small *ngIf="fechaCita.errors?.required" class="form-text text-muted">El campo es requerido.</small>
+                            <label for="">Cliente</label>
+                            <input class="form-control" type="text" name="cliente" [(ngModel)]="nombreCliente" readonly>
                         </div>
                         <div class="form-group col-sm-4">
                             <label for="">Profesional</label>
-                            <input class="form-control" type="text" name="profesional" [(ngModel)]="nombreProfesional" readonly>
+                            <input class="form-control" type="text" name="profesionales" [(ngModel)]="profesional.PRO_NOMBRE" readonly>
                         </div>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group col-sm-4">
-                            <label for="">Cliente</label>
-                            <input class="form-control" type="text" name="cliente" [(ngModel)]="cliente.CLI_RAZONSOCIAL" readonly>
+                            <label for="col-sm-6">Fecha Cita</label>
+                            <input class="form-control" type="date" #fechaCita="ngModel" name="fechaSolicitud" [(ngModel)]="solicitud.SOL_FECHA" min="{{fechaMinima | date:'yyyy-MM-dd'}}" required>
+                            <small *ngIf="fechaCita.errors?.required" class="form-text text-muted">El campo es requerido.</small>
+                        </div>
+                        <div class="form-group col-sm-8">
+                            <label for="col-sm-6">Descripcion</label>
+                            <input class="form-control" type="Text" name="descripcionSolicitud" [(ngModel)]="solicitud.SOL_DESCRIPCION" required>
+    
                         </div>
                     </div>
                     <div class="row">
                         <div class=" form-group col-sm-12">
-                            <button class="btn btn-success" (click)="crearVisita()" [disabled]="!form.valid">Guardar</button>
+                            <button class="btn btn-success" (click)="crearSolicitud()" [disabled]="!form.valid">Guardar</button>
                         </div>
 
                         <span class="text-danger">{{mensajeError}}</span>

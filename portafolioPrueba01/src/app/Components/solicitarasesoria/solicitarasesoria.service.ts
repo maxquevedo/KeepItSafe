@@ -13,7 +13,7 @@ export class SolicitarasesoriaService {
   constructor(private http: HttpClient) { }
 
   getProfesional(idCliente){
-    return this.http.get(`${this.env.apiUrl}/web/profesional/${idCliente}`);
+    return this.http.get(`${this.env.apiUrl}/web/solicitud/profesional/${idCliente}`);
   }
 
   crearSolicitud(solicitud){

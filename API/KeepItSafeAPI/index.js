@@ -13,8 +13,8 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 const mypw = '1234';
 const mypw2 = 'Aa123456';
 const connectionInfo = { user: "c##max2330", password: mypw, connectString: "localhost:1521" };
-const connectionInfo2 = { user: "c##dba_desarrollo", password: mypw2, connectString: "localhost:1521" };
-//const connectionInfo2 = { user: "system",password: mypw2, connectString: "localhost:1521" }
+//const connectionInfo2 = { user: "c##dba_desarrollo", password: mypw2, connectString: "localhost:1521" };
+const connectionInfo2 = { user: "system",password: mypw2, connectString: "localhost:1521" }
 
 function mapResult(arreglo) {
     if (!arreglo || !arreglo.metaData || !arreglo.rows)
@@ -1069,7 +1069,30 @@ app.get('/web/profesional/:id', async(req, res) => {
     let connection;
     let id = req.params.id;
     console.log(id);
-    let query = `select * from profesionales where pro_id = :id`
+    let query = 'select USR_USERNAME, USR_CORREO, PRO_NOMBRE, PRO_APELLIDO, PRO_RUT from usuarios u inner join pro p on u.usr_idperfil = p.pro_id where u.usr_id=:id'
+    try {
+        connection = await oracledb.getConnection(connectionInfo2);
+        result = await connection.execute(query, [id], {});
+    } catch (e) {
+        console.log(e);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapResult(result))
+});
+
+
+app.get('/web/solicitud/profesional/:id', async(req, res) => {
+    let connection;
+    let id = req.params.id;
+    console.log(id);
+    let query = `select * from PRO where pro_cli_asignado = :id`
     try {
         connection = await oracledb.getConnection(connectionInfo2);
         result = await connection.execute(query, [id], {});
@@ -1378,6 +1401,50 @@ app.put('/web/mejoras/aprobar', async(req, res) => {
     }
 
 
+});
+
+// CrearSolicitudAsesorias
+app.post('/web/solicitudes', async (req, res) => {
+    console.log('post/web/solicitudes: ', req.body);
+    let connection;
+    let result;
+    
+    try {
+        connection = await oracledb.getConnection(connectionInfo2);
+        let maxIdQuery = await connection.execute('SELECT MAX(SOL_ID) FROM SOLICITUDES', [], {});
+        let maxSOLICITUDId = 1; 
+        if (maxIdQuery.rows){
+            maxSOLICITUDId= parseInt(maxIdQuery.rows[0]) + 1;
+        }
+        
+        result = await connection
+        .execute(`INSERT INTO SOLICITUDES (SOL_ID, SOL_CLI_ID, SOL_PRO_ID, SOL_DESCRIPCION, SOL_ESTADO, SOL_FECHA) 
+                  VALUES (:id,:idCliente, :idProfesional,:descripcionSolicitud,:estadoSolicitud ,TO_DATE(:fechaSolicitud,'YYYY-MM-DD'))`, 
+                  {
+                    id: parseInt(maxSOLICITUDId), 
+                    idCliente: parseInt(req.body.SOL_CLI_ID),
+                    idProfesional: parseInt(req.body.SOL_PRO_ID),
+                    descripcionSolicitud: req.body.SOL_DESCRIPCION,
+                    estadoSolicitud: 'pendiente',
+                    fechaSolicitud: req.body.SOL_FECHA
+                  }, {});
+
+        console.log('post/web/solicitudes result: ', result.rows);
+        res.json(mapResult(result));
+        
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
 });
 
 // CrearAccidentes

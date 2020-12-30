@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Solicitudes } from './solicitudes';
 import { Profesional } from '../profesionales/profesional';
 import { SolicitarasesoriaService} from './solicitarasesoria.service';
-
+import { Cliente } from '../clientes/cliente';
 
 
 @Component({
@@ -12,11 +12,12 @@ import { SolicitarasesoriaService} from './solicitarasesoria.service';
 })
 export class SolicitarasesoriaComponent implements OnInit {
 
-  profesionales: Profesional = new Profesional();
+  profesional: Profesional;
   solicitud: Solicitudes = new Solicitudes ();
   nombreCliente = null;
   mensajeError = null;
   mensajeExito = null;
+  fechaMinima = new Date();
   
   constructor(private solicitarasesoriaService : SolicitarasesoriaService) { }
 
@@ -27,9 +28,10 @@ export class SolicitarasesoriaComponent implements OnInit {
       this.solicitud.SOL_CLI_ID = parseInt(clienteId);
 
       this.solicitarasesoriaService.getProfesional(clienteId).subscribe((response) => {
-        this.solicitud = response[0];
+        this.profesional = response;
+        console.log(response);
 
-        this.solicitud.SOL_PRO_ID = this.profesionales.PRO_ID;
+        this.solicitud.SOL_PRO_ID = this.profesional.PRO_ID;
       }); 
     }
 
@@ -39,9 +41,11 @@ export class SolicitarasesoriaComponent implements OnInit {
 
   }
   crearSolicitud() {
+
+    
     this.mensajeExito = null;
     this.solicitarasesoriaService.crearSolicitud(this.solicitud).subscribe((response) => {
-      console.log('crearSolicitud: ', response);
+      console.log('crearSolicitud: ', this.solicitud);
       this.mensajeExito = 'Mejora creada con éxito';
 
     }, (error) => {
