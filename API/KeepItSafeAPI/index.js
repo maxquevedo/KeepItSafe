@@ -1304,63 +1304,89 @@ app.post('/web/generarFacturas', async (req, res) => {
         let today = new Date();
         let date = `${today.getFullYear()}-${(req.body.mes + 1)}`;
 
-        let facturas = connection.execute(`SELECT * FROM FACTURA_MENSUAL WHERE TO_CHAR(PAGO_MENS_FECHA_GEN, 'YYYY-MM') = :fecha`, {
+        let facturasQuery = connection.execute(`SELECT * FROM FACTURA_MENSUAL WHERE TO_CHAR(PAGO_MENS_FECHA_GEN, 'YYYY-MM') = :fecha`, {
             fecha: date
         });
 
-        // con esto podemos validar de solo generar facturas a los clientes que no tienen
-        let clientes = connection.execute(`SELECT * FROM CLIENTES`, {});
+        let facturas = [];
+        if (facturasQuery && facturasQuery.rows) {
+            // materializamos las facturas
+            facturas = mapMultipleResult(facturas);
+
+            // obtenemos los precios que se usarán en caso de que sea necesario 
+            let preciosQuery = connection.execute(``, {});
+
+            let precios = []; 
+            if (preciosQuery && preciosQuery.rows)
+            {
+                precios = mapMultipleResult(preciosQuery);
+            }
+            
+            // con esto podemos validar de solo generar facturas a los clientes que no tienen
+            let clientes = connection.execute(`SELECT * FROM CLIENTES`, {});
+
+            if (clientes && clientes.rows) {
+                for (let index = 0; index < clientes.rows.length; index++) {
+                    const cliente = mapResult(clientes[index]);
+
+                    if (!facturas || (facturas && !facturas.some(x => x.PAGO_MENS_CLI === cliente.CLI_ID))) {
+                        // crear factura del cliente
+                        let totalMensualCliente = 0;
+
+                        // generacion de detalle 
+                        // concepto de pago mensual 
+                        let suscripcionMensual = {
+                            DETALLE_DESCRIPCION: 'Subscripción mensual',
+                            DETALLE_VALOR: 250000
+                        };
+
+                        // visitas
+                        let visitas = await connection.execute(`SELECT COUNT(1) FROM VISITAS 
+                        WHERE VIS_ID_CLI = :idCliente AND TO_DATE(VIS_FCITA, 'YYYY-MM') = :fechaGen`,
+                            {
+                                idCliente: 1,
+                                fechaGen: date
+                            });
+
+                        // capacitaciones 
+                        //CAPACITACIONES CAP_ID_CLI CAP_FECHA
+                        // reportes de accidentes
+                        //REPORTES_ACCIDENTES REP_ACC_CLI_ID REP_ACC_FECHA
+                        // cambios de check
+                        //HISTORIAL_CHECKS HIS_CLI_ID HIS_FECHA
+                        // asesorias especiales
+                        //ASESORIAS ASE_ID_USUARIO ASE_FECHA
 
 
-        if (clientes && clientes.rows) {
-            for (let index = 0; index < clientes.rows.length; index++) {
-                const cliente = mapResult(clientes[index]);
+                        let factura = {
+                            "PAGO_MENS_CLI": cliente.CLI_ID,
+                            "PAGO_MENS_FECHA_GEN": `${date}-${today.getDate()}`,
+                            "PAGO_MENS_ESTADO": 0,
+                            "PAGO_MENS_TOTAL": totalMensualCliente,
+                            "PAGO_MENS_FECHA_PAGO": null
+                        };
 
-                if (!facturas || !facturas.rows || (facturas && facturas.rows && !facturas.rows.some(x => x.PAGO_MENS_CLI === cliente.CLI_ID))) {
-                    // crear factura del cliente
-                    let totalMensualCliente = 0;
-
-                    // generacion de detalle 
-                    // concepto de pago mensual 
-                    let suscripcionMensual = {
-                        DETALLE_DESCRIPCION: 'Subscripción mensual',
-                        DETALLE_VALOR: 250000
-                    };
-
-                    let visitas = await connection.execute(`SELECT COUNT(1) FROM VISITAS 
-                        WHERE VIS_ID_CLI = :idCliente AND `,
-                        {
-
-                        });
-
-                    let factura = {
-                        "PAGO_MENS_CLI": cliente.CLI_ID,
-                        "PAGO_MENS_FECHA_GEN": `${date}-${today.getDate()}`,
-                        "PAGO_MENS_ESTADO": 0,
-                        "PAGO_MENS_TOTAL": totalMensualCliente,
-                        "PAGO_MENS_FECHA_PAGO": null
-                    };
-
-                    let insertFactura = await connection.execute(`INSERT INTO FACTURA_MENSUAL (PAGO_MENS_CLI, PAGO_MENS_FECHA_GEN, PAGO_MENS_ESTADO, PAGO_MENS_TOTAL) 
+                        let insertFactura = await connection.execute(`INSERT INTO FACTURA_MENSUAL (PAGO_MENS_CLI, PAGO_MENS_FECHA_GEN, PAGO_MENS_ESTADO, PAGO_MENS_TOTAL) 
                         VALUES (:idCliente, TO_DATE(:fechaGen, 'YYYY-MM-DD'), :estado, :total)
                         RETURNING PAGO_MENS_ID INTO :idFacturaMensual`,
-                        {
-                            idCliente: factura.PAGO_MENS_CLI,
-                            fechaGen: factura.PAGO_MENS_FECHA_GEN,
-                            estado: factura.PAGO_MENS_ESTADO,
-                            total: factura.PAGO_MENS_TOTAL,
-                            idFacturaMensual: {
-                                type: oracledb.NUMBER, dir: oracledb.BIND_OUT
+                            {
+                                idCliente: factura.PAGO_MENS_CLI,
+                                fechaGen: factura.PAGO_MENS_FECHA_GEN,
+                                estado: factura.PAGO_MENS_ESTADO,
+                                total: factura.PAGO_MENS_TOTAL,
+                                idFacturaMensual: {
+                                    type: oracledb.NUMBER, dir: oracledb.BIND_OUT
+                                }
                             }
-                        }
-                    );
+                        );
 
-                    await connection.execute(`INSERT INTO DETALLE_FACTURA (DETALLE_FACTURA_ID, DETALLE_DESCRIPCION, DETALLE_VALOR)
+                        await connection.execute(`INSERT INTO DETALLE_FACTURA (DETALLE_FACTURA_ID, DETALLE_DESCRIPCION, DETALLE_VALOR)
                         VALUES (:idFacturaMensual, :descripcion, :valor)`, {
-                        idFacturaMensual: insertFactura.outBinds.idFacturaMensual,
-                        descripcion: suscripcionMensual.DETALLE_DESCRIPCION,
-                        valor: suscripcionMensual.DETALLE_VALOR
-                    });
+                            idFacturaMensual: insertFactura.outBinds.idFacturaMensual,
+                            descripcion: suscripcionMensual.DETALLE_DESCRIPCION,
+                            valor: suscripcionMensual.DETALLE_VALOR
+                        });
+                    }
                 }
             }
         }
