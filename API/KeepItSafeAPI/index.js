@@ -13,8 +13,8 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 const mypw = '1234';
 const mypw2 = 'Aa123456';
 const connectionInfo = { user: "c##max2330", password: mypw, connectString: "localhost:1521" };
-//const connectionInfo2 = { user: "c##dba_desarrollo", password: mypw2, connectString: "localhost:1521" };
-const connectionInfo2 = { user: "system",password: mypw2, connectString: "localhost:1521" }
+const connectionInfo2 = { user: "c##dba_desarrollo", password: mypw2, connectString: "localhost:1521" };
+//const connectionInfo2 = { user: "system",password: mypw2, connectString: "localhost:1521" }
 
 function mapResult(arreglo) {
     if (!arreglo || !arreglo.metaData || !arreglo.rows)
