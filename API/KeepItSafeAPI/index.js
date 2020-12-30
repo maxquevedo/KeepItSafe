@@ -10,11 +10,10 @@ app.use(bodyParser.json());
 app.use(cors());
 
 oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
-const mypw = '1234';
-const mypw2 = 'Aa123456';
-const connectionInfo = { user: "c##max2330", password: mypw, connectString: "localhost:1521" };
-const connectionInfo2 = { user: "c##dba_desarrollo", password: mypw2, connectString: "localhost:1521" };
-//const connectionInfo2 = { user: "system",password: mypw2, connectString: "localhost:1521" }
+// max user
+// const credentials = { user: "c##max2330", password: "1234", connectString: "localhost:1521" };
+// dev user
+const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
 
 function mapResult(arreglo) {
     if (!arreglo || !arreglo.metaData || !arreglo.rows)
@@ -54,7 +53,7 @@ dateToString = (date) => {
             let month = date.getMonth() + 1;
             let year = date.getFullYear();
 
-            result = `${(day < 10 ? `0${day}` : day )}-${(month < 10 ? `0${month}` : month )}-${year}`;
+            result = `${(day < 10 ? `0${day}` : day)}-${(month < 10 ? `0${month}` : month)}-${year}`;
     }
 
     return result;
@@ -64,7 +63,7 @@ async function getUsuarios(req, res) {
     let connection;
     let query = "SELECT * FROM USUARIOS";
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query)
     } catch (err) {
         console.log(err)
@@ -87,7 +86,7 @@ async function logIn(req, res, username, password) {
     let connection;
     let query = `select * from usuarios where usr_username= :username and usr_password = :password`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [username, password], {});
     } catch (e) {
         console.log(e);
@@ -105,7 +104,7 @@ async function logIn(req, res, username, password) {
 
 //MOVIL
 
-app.get('/', async function(req, res) {
+app.get('/', async function (req, res) {
     res.send('KeepItSafe Api');
 })
 
@@ -113,11 +112,11 @@ app.get('/usuarios', (req, res) => {
     getUsuarios(req, res);
 })
 
-app.get('/clientes', async(req, res) => {
+app.get('/clientes', async (req, res) => {
     let connection;
     let query = `select * from usuarios where usr_tipousuario = 'Cliente'`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
@@ -133,11 +132,11 @@ app.get('/clientes', async(req, res) => {
     res.send(result.rows)
 })
 
-app.get('/profesionales', async(req, res) => {
+app.get('/profesionales', async (req, res) => {
     let connection;
     let query = `select * from usuarios where usr_tipousuario = 'Profesional'`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
@@ -160,7 +159,7 @@ app.get('/login/:username/:password', (req, res) => {
     logIn(req, res, username, password)
 });
 
-app.post('/create/profesional', async(req, res) => {
+app.post('/create/profesional', async (req, res) => {
     console.log("Body: ", req.body);
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
@@ -188,7 +187,7 @@ app.post('/create/profesional', async(req, res) => {
         //console.log("Query 3:",query3);
         //Agregar el id correspondiente y crearlo en usuario
 
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query1, [], {})
 
         userId = (result.rows[0][0]) + 1;
@@ -215,7 +214,7 @@ app.post('/create/profesional', async(req, res) => {
     }
 });
 
-app.post('/create/cliente', async(req, res) => {
+app.post('/create/cliente', async (req, res) => {
     console.log("Body: ", req.body);
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
@@ -237,7 +236,7 @@ app.post('/create/cliente', async(req, res) => {
     try {
         //console.log("Query 3:",query3);
 
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query1, [], {})
 
         userId = (result.rows[0][0]) + 1;
@@ -265,7 +264,7 @@ app.post('/create/cliente', async(req, res) => {
 
 });
 
-app.patch('/update/email', async(req, res) => {
+app.patch('/update/email', async (req, res) => {
     console.log("Body: ", req.body);
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
@@ -275,7 +274,7 @@ app.patch('/update/email', async(req, res) => {
     let connection;
     let query = `update usuarios set usr_correo='${email}' where usr_id = ${id}`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
@@ -291,7 +290,7 @@ app.patch('/update/email', async(req, res) => {
     res.json(JSON.stringify({ result }));
 })
 
-app.get('/actividades/:userId/:tipoUsuario/:id2', async function(req, res) {
+app.get('/actividades/:userId/:tipoUsuario/:id2', async function (req, res) {
     let id = req.params.userId;
     let tipoUsuario = req.params.tipoUsuario;
     let rut = req.params.rut;
@@ -304,7 +303,7 @@ app.get('/actividades/:userId/:tipoUsuario/:id2', async function(req, res) {
 
     let query = `select * from usuarios`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         switch (tipoUsuario) {
             case 'Cliente':
                 query = `select to_char(ase_fecha,'DD/MM/YYYY') from asesorias where ase_id_usuario = :id2`;
@@ -350,13 +349,13 @@ app.get('/actividades/:userId/:tipoUsuario/:id2', async function(req, res) {
     res.json(respuesta);
 });
 
-app.get('/clientes/:id', async function(req, res) {
+app.get('/clientes/:id', async function (req, res) {
 
     let id = req.params.id;
     let connection;
     let query = `select * from clientes where cli_id = :id`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id], {});
     } catch (e) {
         console.log(e);
@@ -372,12 +371,12 @@ app.get('/clientes/:id', async function(req, res) {
     res.json(result.rows[0])
 })
 
-app.get('/profesionales/:id', async function(req, res) {
+app.get('/profesionales/:id', async function (req, res) {
     let id = req.params.id;
     let connection;
     let query = `select * from pro where pro_id = :id`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id], {});
     } catch (e) {
         console.log(e);
@@ -393,12 +392,12 @@ app.get('/profesionales/:id', async function(req, res) {
     res.json(result.rows[0])
 });
 
-app.get('/usuarios_clientes/:id', async function(req, res) {
+app.get('/usuarios_clientes/:id', async function (req, res) {
     let id = req.params.id;
     let connection;
     let query = `select * from usuarios where usr_tipoUsuario='Cliente' and usr_idperfil = :id`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id], {});
     } catch (e) {
         console.log(e);
@@ -414,7 +413,7 @@ app.get('/usuarios_clientes/:id', async function(req, res) {
     res.json(result.rows[0])
 });
 
-app.get('/asignarPro/:cli_electo/:fecha/:evento', async function(req, res) {
+app.get('/asignarPro/:cli_electo/:fecha/:evento', async function (req, res) {
     let cli_electo = req.params.cli_electo;
     let fecha = req.params.fecha;
     let fechaFormateada = fecha[3] + fecha[4] + '/' + fecha[0] + fecha[1] + '/' + fecha[6] + fecha[7];
@@ -428,7 +427,7 @@ app.get('/asignarPro/:cli_electo/:fecha/:evento', async function(req, res) {
     let connection;
     let query = `select * from usuarios where usr_nombrecompleto = :cli_electo`;
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [cli_electo], {});
         idCliente = result.rows[0][6];
         query = `select * from pro`
@@ -499,7 +498,7 @@ app.get('/asignarPro/:cli_electo/:fecha/:evento', async function(req, res) {
     }
 });
 
-app.patch('/asignarPro', async function(req, res) {
+app.patch('/asignarPro', async function (req, res) {
     let info = req.body.jeison;
     let idCliente = info.idCli;
     let idPro = info.idPro;
@@ -529,7 +528,7 @@ app.patch('/asignarPro', async function(req, res) {
     let connection;
 
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         console.log(query);
         result = await connection.execute(query, [idCliente, idPro, fechaFormat], {})
         console.log(result);
@@ -551,13 +550,13 @@ app.patch('/asignarPro', async function(req, res) {
     res.status(200).json("Wena: ") //,idCli,idPro,fecha,evento);
 });
 
-app.get('/accidentes/:id', async function(req, res) {
+app.get('/accidentes/:id', async function (req, res) {
     let id_cli = req.params.id;
     let connection;
     let query = `select * from accidentes where acc_id = 1`;
     let possibleAccidents = [];
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query)
         possibleAccidents.push(result.rows[0]);
         query = `select * from accidentes where acc_id_cliente = :id_cli`;
@@ -582,13 +581,13 @@ app.get('/accidentes/:id', async function(req, res) {
     }
 });
 
-app.get('/reportes/:id', async function(req, res) {
+app.get('/reportes/:id', async function (req, res) {
     let id = req.params.id;
     let connection;
     let reportDays = [];
     let query = `select to_char(con_finicio,'DD/MM/YY') from contratos where con_id_usu = :id`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id], {});
         let inicio = result.rows[0][0];
         let inicioFormat = inicio[3] + inicio[4] + '-' + inicio[0] + inicio[1] + '-' + inicio[6] + inicio[7]
@@ -626,13 +625,13 @@ app.get('/reportes/:id', async function(req, res) {
     return res.json(reportDays)
 });
 
-app.get('/checks/:id_pro/:id_cli/', async function(req, res) {
+app.get('/checks/:id_pro/:id_cli/', async function (req, res) {
     let id_pro = req.params.id_pro;
     let id_cli = req.params.id_cli;
     let connection;
     let query = `select acc_descripcion, acc_estado,acc_id from accidentes where acc_id_pro = :id_pro and acc_id_cliente = :id_cli`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id_pro, id_cli], {});
         //console.log(result.rows);
     } catch (e) {
@@ -649,12 +648,12 @@ app.get('/checks/:id_pro/:id_cli/', async function(req, res) {
     return res.json(result.rows);
 })
 
-app.patch('/checkFail', async function(req, res) {
+app.patch('/checkFail', async function (req, res) {
     let id = req.body.jeison.id;
     let connection;
     let query = `update accidentes set acc_estado = 1 where acc_id = :id`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id], {});
         console.log(result);
     } catch (e) {
@@ -671,12 +670,12 @@ app.patch('/checkFail', async function(req, res) {
     return res.json(result.rowsAffected);
 });
 
-app.patch('/checkSuccess', async function(req, res) {
+app.patch('/checkSuccess', async function (req, res) {
     let id = req.body.jeison.id;
     let connection;
     let query = `update accidentes set acc_estado = 0 where acc_id = :id`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id], {});
         console.log(query, id);
         console.log(result.rowsAffected);
@@ -695,11 +694,11 @@ app.patch('/checkSuccess', async function(req, res) {
 })
 
 //WEB
-app.get('/prueba', async(req, res) => {
+app.get('/prueba', async (req, res) => {
     let connection;
     let query = "SELECT * FROM USUARIOS";
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query)
     } catch (err) {
         console.log(err)
@@ -717,7 +716,7 @@ app.get('/prueba', async(req, res) => {
     }
 })
 
-app.get('/web/login/:username/:password', async(req, res) => {
+app.get('/web/login/:username/:password', async (req, res) => {
 
     let password = req.params.password;
     let username = req.params.username;
@@ -725,7 +724,7 @@ app.get('/web/login/:username/:password', async(req, res) => {
     let connection;
     let query = `select * from usuarios where usr_username= :username and usr_password = :password`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [username, password], {});
     } catch (e) {
         console.log(e);
@@ -742,11 +741,11 @@ app.get('/web/login/:username/:password', async(req, res) => {
 
 })
 
-app.get('/web/clientes', async(req, res) => {
+app.get('/web/clientes', async (req, res) => {
     let connection;
     let query = `select * from usuarios where usr_estado = 'Habilitado' or usr_estado = '1' and usr_tipousuario = 'Cliente'`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
@@ -762,11 +761,11 @@ app.get('/web/clientes', async(req, res) => {
     res.json(mapMultipleResult(result))
 })
 
-app.get('/web/rev/clientes', async(req, res) => {
+app.get('/web/rev/clientes', async (req, res) => {
     let connection;
     let query = `select * from clientes`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
@@ -783,14 +782,14 @@ app.get('/web/rev/clientes', async(req, res) => {
 })
 
 
-app.get('/web/cliente/:id', async function(req, res) {
+app.get('/web/cliente/:id', async function (req, res) {
 
     let id = req.params.id;
 
     let connection;
     let query = `select * from clientes where cli_id = :id`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id], {});
     } catch (e) {
         console.log(e);
@@ -807,14 +806,14 @@ app.get('/web/cliente/:id', async function(req, res) {
 })
 
 
-app.get('/web/usuario/:id', async function(req, res) {
+app.get('/web/usuario/:id', async function (req, res) {
 
     let id = req.params.id;
 
     let connection;
     let query = `select * from usuario where usr_id = :id`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id], {});
     } catch (e) {
         console.log(e);
@@ -830,13 +829,13 @@ app.get('/web/usuario/:id', async function(req, res) {
     res.json(mapMultipleResult(result))
 })
 
-app.get('/web/responderchecklist/:id_pro/:id_cli/', async function(req, res) {
+app.get('/web/responderchecklist/:id_pro/:id_cli/', async function (req, res) {
     let id_pro = req.params.id_pro;
     let id_cli = req.params.id_cli;
     let connection;
     let query = `select acc_descripcion, acc_estado,acc_id from accidentes where acc_id_pro = :id_pro and acc_id_cliente = :id_cli`
     try {
-        connection = await oracledb.getConnection(connectionInfo);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id_pro, id_cli], {});
         //console.log(result.rows);
     } catch (e) {
@@ -853,7 +852,7 @@ app.get('/web/responderchecklist/:id_pro/:id_cli/', async function(req, res) {
     return res.json(result.rows);
 })
 
-app.post('/web/cliente', async(req, res) => {
+app.post('/web/cliente', async (req, res) => {
     console.log("Body: ", req.body);
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
@@ -877,7 +876,7 @@ app.post('/web/cliente', async(req, res) => {
     try {
         //console.log("Query 3:",query3);
 
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query1, [], {})
 
         userId = (result.rows[0][0]) + 1;
@@ -906,7 +905,7 @@ app.post('/web/cliente', async(req, res) => {
 
 });
 
-app.post('/web/profesional', async(req, res) => {
+app.post('/web/profesional', async (req, res) => {
     console.log("Body: ", req.body);
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
@@ -929,7 +928,7 @@ app.post('/web/profesional', async(req, res) => {
     let querypro = `select max(PRO_ID) from pro`;
     let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
 
-    connection = await oracledb.getConnection(connectionInfo2);
+    connection = await oracledb.getConnection(credentials);
     result = await connection.execute(querypro, [], {});
 
     let proId = parseInt(result.rows[0]) + 1;
@@ -970,7 +969,7 @@ app.post('/web/profesional', async(req, res) => {
 
 });
 
-app.put('/web/profesional/:id', async(req, res) => {
+app.put('/web/profesional/:id', async (req, res) => {
     console.log("Body: ", req.body);
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
@@ -996,11 +995,11 @@ app.put('/web/profesional/:id', async(req, res) => {
     let querypro = `select max(PRO_ID) from pro`;
     let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente'`
 
-    
+
 
     try {
 
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         //result = await connection.execute(querypro, [], {});
 
         //let proId = parseInt(result.rows[0]) + 1;
@@ -1008,9 +1007,9 @@ app.put('/web/profesional/:id', async(req, res) => {
         let query2 = `update USUARIOS set USR_USERNAME = '${username}', USR_CORREO = '${email}', USR_NOMBRECOMPLETO = '${name} ${apellido}', USR_PASSWORD = '${password}' where USR_ID= ${id}`;
         console.log("query2 -> ", query2);
 
-        let queryidpro =`select USUARIOS.USR_IDPERFIL from usuarios where USUARIOS.USR_ID='${id}'`;
+        let queryidpro = `select USUARIOS.USR_IDPERFIL from usuarios where USUARIOS.USR_ID='${id}'`;
         idpro = await connection.execute(queryidpro, [], {});
-        
+
         console.log("idpro->", idpro);
 
         let query3 = `update pro  set PRO_RUT ='${rut}', PRO_NOMBRE = '${name}', PRO_APELLIDO = '${apellido}' where PRO_ID =${idpro.rows}`;
@@ -1021,7 +1020,7 @@ app.put('/web/profesional/:id', async(req, res) => {
         //result = await connection.execute(query1,[],{})
 
         //userId = (result++);
-        
+
 
         result = await connection.execute(query2, [], {});
         result = await connection.execute(query3, [], {});
@@ -1045,11 +1044,11 @@ app.put('/web/profesional/:id', async(req, res) => {
 
 });
 
-app.get('/web/profesional', async(req, res) => {
+app.get('/web/profesional', async (req, res) => {
     let connection;
     let query = `select * from usuarios where usr_tipousuario = 'Profesional'`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
@@ -1065,13 +1064,13 @@ app.get('/web/profesional', async(req, res) => {
     res.json(mapMultipleResult(result))
 })
 
-app.get('/web/profesional/:id', async(req, res) => {
+app.get('/web/profesional/:id', async (req, res) => {
     let connection;
     let id = req.params.id;
     console.log(id);
     let query = `select USR_USERNAME, USR_CORREO, PRO_NOMBRE, PRO_APELLIDO, PRO_RUT from usuarios u inner join pro p on u.usr_idperfil = p.pro_id where u.usr_id=:id`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id], {});
     } catch (e) {
         console.log(e);
@@ -1087,16 +1086,16 @@ app.get('/web/profesional/:id', async(req, res) => {
     res.json(mapResult(result))
 })
 
-app.put('/web/usuario/:id', async function(req, res) {
+app.put('/web/usuario/:id', async function (req, res) {
 
     let id = req.params.id;
 
     let connection;
     let query = `UPDATE usuarios SET USR_ESTADO = 0 WHERE USR_ID = ${id}`
-    console.log("query ->",query)
+    console.log("query ->", query)
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
-        result = await connection.execute(query, [],{});
+        connection = await oracledb.getConnection(credentials);
+        result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
     } finally {
@@ -1113,11 +1112,11 @@ app.put('/web/usuario/:id', async function(req, res) {
 
 });
 
-app.get('/web/reporteglobal', async(req, res) => {
+app.get('/web/reporteglobal', async (req, res) => {
     let connection;
     let query = `select * from reportes_global`;
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query);
     } catch (err) {
         console.log(err)
@@ -1135,13 +1134,13 @@ app.get('/web/reporteglobal', async(req, res) => {
     }
 })
 
-app.get('/web/reporteclientes/:id', async(req, res) => {
+app.get('/web/reporteclientes/:id', async (req, res) => {
 
     let id = req.params.id;
     let connection;
     let query = "SELECT * FROM reportes_global where REP_ID_CLI = :id";
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query)
     } catch (err) {
         console.log(err)
@@ -1159,11 +1158,11 @@ app.get('/web/reporteclientes/:id', async(req, res) => {
     }
 })
 
-app.get('/web/reportecliente', async(req, res) => {
+app.get('/web/reportecliente', async (req, res) => {
     let connection;
     let query = `select * from Reporte_cliente' where REP_ID_CLIENTE = :id`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
@@ -1179,11 +1178,11 @@ app.get('/web/reportecliente', async(req, res) => {
     res.json(mapMultipleResult(result))
 })
 
-app.get('/web/profesionalclientes', async(req, res) => {
+app.get('/web/profesionalclientes', async (req, res) => {
     let connection;
     let query = `select * from clientes INNER JOIN pro on PRO_CLI_ASIGNADO = CLI_ID`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
@@ -1199,11 +1198,11 @@ app.get('/web/profesionalclientes', async(req, res) => {
     res.json(mapMultipleResult(result))
 })
 
-app.get('/web/asesorias', async(req, res) => {
+app.get('/web/asesorias', async (req, res) => {
     let connection;
     let query = `select * from asesorias INNER JOIN pro on asesorias.ASE_ID_PRO = PRO_ID INNER JOIN clientes on asesorias.ase_id_usuario=CLI_ID`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
@@ -1226,40 +1225,40 @@ app.post('/web/visitas', async (req, res) => {
     let connection;
     let result;
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
 
         let existeVisita = await connection
             .execute(`SELECT 1 FROM VISITAS 
                     WHERE VIS_FCITA = TO_DATE(:fechaVisita,'YYYY-MM-DD') 
                     AND VIS_ID_CLI = :idCliente 
-                    AND VIS_ID_PRO = :idProfesional`, 
-                    {
-                        fechaVisita: req.body.VIS_FCITA,
-                        idCliente: req.body.VIS_ID_CLI,
-                        idProfesional: req.body.VIS_ID_PRO
-                    }, {});
+                    AND VIS_ID_PRO = :idProfesional`,
+                {
+                    fechaVisita: req.body.VIS_FCITA,
+                    idCliente: req.body.VIS_ID_CLI,
+                    idProfesional: req.body.VIS_ID_PRO
+                }, {});
 
         if (existeVisita.rows && existeVisita.rows.length > 0) {
             res.status(400).send('No se puede crear una visita ya que existe otra visita creada para esta misma fecha');
-            return; 
+            return;
         }
-        
+
         let maxIdQuery = await connection.execute('SELECT MAX(VIS_ID) FROM VISITAS', [], {});
-        
-        let maxVisitaId = 1; 
-        if (maxIdQuery.rows){
+
+        let maxVisitaId = 1;
+        if (maxIdQuery.rows) {
             maxVisitaId = parseInt(maxIdQuery.rows[0]) + 1;
         }
 
         result = await connection
             .execute(`INSERT INTO VISITAS (VIS_ID,  VIS_FCREACION, VIS_FCITA, VIS_ID_CLI, VIS_ID_PRO) 
-                      VALUES (:id, SYSDATE, TO_DATE(:fechaVisita,'YYYY-MM-DD'), :idCliente, :idProfesional)`, 
-                      {
-                        id: maxVisitaId, 
-                        fechaVisita: req.body.VIS_FCITA,
-                        idCliente: req.body.VIS_ID_CLI,
-                        idProfesional: req.body.VIS_ID_PRO
-                      }, {});
+                      VALUES (:id, SYSDATE, TO_DATE(:fechaVisita,'YYYY-MM-DD'), :idCliente, :idProfesional)`,
+                {
+                    id: maxVisitaId,
+                    fechaVisita: req.body.VIS_FCITA,
+                    idCliente: req.body.VIS_ID_CLI,
+                    idProfesional: req.body.VIS_ID_PRO
+                }, {});
 
         console.log('post/web/visitas result: ', result);
         res.json(mapResult(result));
@@ -1273,6 +1272,109 @@ app.post('/web/visitas', async (req, res) => {
                 console.log(e);
             }
         }
+    }
+});
+
+// controlar pagos
+app.post('/web/obtenerPagos', async (req, res) => {
+    console.log('api/obtenerPagos: ', req.body);
+    let connection;
+    let result;
+
+    try {
+        connection = await oracledb.getConnection(credentials);
+        // obtener los registros de la tabla FACTURA_MENSUAL para el mes solicitado
+        let date = `${new Date().getFullYear()}-${(req.body.mes + 1)}`;
+
+        result = connection.execute(`SELECT * FROM FACTURA_MENSUAL WHERE TO_CHAR(PAGO_MENS_FECHA_GEN, 'YYYY-MM') = :fecha`, {
+            fecha: date
+        });
+
+        res.json(mapMultipleResult(result));
+    } catch (error) {
+        res.status(400).send('ocurrió un error al obtener las facturas de los clientes');
+    }
+});
+app.post('/web/generarFacturas', async (req, res) => {
+    console.log('api/generarFacturas: ', req.body);
+
+    try {
+        connection = await oracledb.getConnection(credentials);
+        // obtener los registros de la tabla FACTURA_MENSUAL para el mes solicitado
+        let today = new Date();
+        let date = `${today.getFullYear()}-${(req.body.mes + 1)}`;
+
+        let facturas = connection.execute(`SELECT * FROM FACTURA_MENSUAL WHERE TO_CHAR(PAGO_MENS_FECHA_GEN, 'YYYY-MM') = :fecha`, {
+            fecha: date
+        });
+
+        // con esto podemos validar de solo generar facturas a los clientes que no tienen
+        let clientes = connection.execute(`SELECT * FROM CLIENTES`, {});
+
+
+        if (clientes && clientes.rows) {
+            for (let index = 0; index < clientes.rows.length; index++) {
+                const cliente = mapResult(clientes[index]);
+
+                if (!facturas || !facturas.rows || (facturas && facturas.rows && !facturas.rows.some(x => x.PAGO_MENS_CLI === cliente.CLI_ID))) {
+                    // crear factura del cliente
+                    let totalMensualCliente = 0;
+
+                    // generacion de detalle 
+                    // concepto de pago mensual 
+                    let suscripcionMensual = {
+                        DETALLE_DESCRIPCION: 'Subscripción mensual',
+                        DETALLE_VALOR: 250000
+                    };
+
+                    let visitas = await connection.execute(`SELECT COUNT(1) FROM VISITAS 
+                        WHERE VIS_ID_CLI = :idCliente AND `,
+                        {
+
+                        });
+
+                    let factura = {
+                        "PAGO_MENS_CLI": cliente.CLI_ID,
+                        "PAGO_MENS_FECHA_GEN": `${date}-${today.getDate()}`,
+                        "PAGO_MENS_ESTADO": 0,
+                        "PAGO_MENS_TOTAL": totalMensualCliente,
+                        "PAGO_MENS_FECHA_PAGO": null
+                    };
+
+                    let insertFactura = await connection.execute(`INSERT INTO FACTURA_MENSUAL (PAGO_MENS_CLI, PAGO_MENS_FECHA_GEN, PAGO_MENS_ESTADO, PAGO_MENS_TOTAL) 
+                        VALUES (:idCliente, TO_DATE(:fechaGen, 'YYYY-MM-DD'), :estado, :total)
+                        RETURNING PAGO_MENS_ID INTO :idFacturaMensual`,
+                        {
+                            idCliente: factura.PAGO_MENS_CLI,
+                            fechaGen: factura.PAGO_MENS_FECHA_GEN,
+                            estado: factura.PAGO_MENS_ESTADO,
+                            total: factura.PAGO_MENS_TOTAL,
+                            idFacturaMensual: {
+                                type: oracledb.NUMBER, dir: oracledb.BIND_OUT
+                            }
+                        }
+                    );
+
+                    await connection.execute(`INSERT INTO DETALLE_FACTURA (DETALLE_FACTURA_ID, DETALLE_DESCRIPCION, DETALLE_VALOR)
+                        VALUES (:idFacturaMensual, :descripcion, :valor)`, {
+                        idFacturaMensual: insertFactura.outBinds.idFacturaMensual,
+                        descripcion: suscripcionMensual.DETALLE_DESCRIPCION,
+                        valor: suscripcionMensual.DETALLE_VALOR
+                    });
+                }
+            }
+        }
+    } catch (error) {
+        res.status(400).send('ocurrió un error al generar la factura del cliente');
+    }
+});
+app.post('/web/validarPago', async (req, res) => {
+    console.log('api/validarPago: ', req.body);
+
+    try {
+
+    } catch (error) {
+        res.status(400).send('ocurrió un error al validar el pago del cliente');
     }
 });
 

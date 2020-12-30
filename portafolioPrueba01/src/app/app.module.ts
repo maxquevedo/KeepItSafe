@@ -37,6 +37,7 @@ import { ReporteclienteComponent } from './Components/reportecliente/reporteclie
 import { AsignarComponent } from './Components/asignar/asignar.component';
 import { VerasesoriasComponent } from './Components/verasesorias/verasesorias.component';
 import { VerasesoriasService } from './Components/verasesorias/verasesorias.service';
+import { ControlarPagosClienteComponent } from './Components/controlar-pagos-cliente/controlar-pagos-cliente.component';
 
 
 
@@ -67,7 +68,8 @@ import { VerasesoriasService } from './Components/verasesorias/verasesorias.serv
     ReporteclienteComponent,
     ReporteglobalComponent,
     AsignarComponent,
-    VerasesoriasComponent
+    VerasesoriasComponent,
+    ControlarPagosClienteComponent
   ],
   imports: [
     BrowserModule,
