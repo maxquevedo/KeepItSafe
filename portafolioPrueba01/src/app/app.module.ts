@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common' ;
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -39,6 +40,8 @@ import { VerasesoriasComponent } from './Components/verasesorias/verasesorias.co
 import { VerasesoriasService } from './Components/verasesorias/verasesorias.service';
 import { ControlarPagosClienteComponent } from './Components/controlar-pagos-cliente/controlar-pagos-cliente.component';
 import { IngresaractividaddemejoraService } from './Components/ingresaractividaddemejora/ingresaractividaddemejora.service';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ModalContentComponent } from './Components/controlar-pagos-cliente/controlar-pagos-cliente.component';
 
 @NgModule({
   declarations: [
@@ -67,13 +70,15 @@ import { IngresaractividaddemejoraService } from './Components/ingresaractividad
     ReporteglobalComponent,
     AsignarComponent,
     VerasesoriasComponent,
-    ControlarPagosClienteComponent
+    ControlarPagosClienteComponent,
+    ModalContentComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ModalModule.forRoot()
   ],
   providers: [ClienteService, DatePipe, LoginService , ProfesionalService, PlanificarvisitaService, ReporteglobalService, ReporteclienteService, VerasesoriasService, IngresaractividaddemejoraService],
   bootstrap: [AppComponent],

@@ -26,6 +26,7 @@
             <thead>
                 <tr>
                     <th>CLIENTE</th>
+                    <th>TOTAL (UF)</th>
                     <th>ESTADO</th>
                     <th>FECHA DE PAGO</th>
                     <th></th>
@@ -33,18 +34,19 @@
             </thead>
             <tbody>
                 <tr *ngFor="let factura of facturas">
-                    <td>{{ factura.CLI_NOM }}</td>
-                    <td>
+                    <td style="width: 30%;">{{ factura.USR_NOMBRECOMPLETO }}</td>
+                    <td style="width: 10%;">{{ factura.PAGO_MENS_TOTAL }}</td>
+                    <td style="width: 15%;">
                         {{ factura.PAGO_MENS_ESTADO ? 'Pagado' : 'Pendiente' }}
                     </td>
-                    <td>{{ factura.PAGO_MENS_FECHA_PAGO | date:'dd/MM/yyyy' }}</td>
-                    <td>
-                        <button> Ver Detalle</button>
-                        <button> Validar Pago</button>
+                    <td style="width: 20%;">{{ factura.PAGO_MENS_FECHA_PAGO | date:'dd/MM/yyyy' }}</td>
+                    <td style="width: 25%;">
+                        <button type="button" class="btn btn-sm btn-info" (click)="verDetalle(factura)"> Ver Detalle</button> &nbsp;
+                        <button type="button" class="btn btn-sm btn-success" (click)="validarPago(factura)" *ngIf="!factura.PAGO_MENS_ESTADO"> Validar Pago</button>
                     </td>
                 </tr>
                 <tr *ngIf="facturas && facturas.length === 0">
-                    <td colspan="4" class="text-center"> No hay facturas pendientes </td>
+                    <td colspan="5" class="text-center"> No hay facturas pendientes </td>
                 </tr>
             </tbody>
         </table>

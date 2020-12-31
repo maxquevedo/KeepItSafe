@@ -1,3 +1,6 @@
+--PLANES
+insert into planes values(1,3);
+select * from planes;
 -- USUARIOS
 insert into usuarios values (1,'Adam','adam@falabella.com','Adam Acosta','1234','Cliente',1,'1');
 insert into usuarios values (2,'Brett','Brett2@gmail.com','Brett Hodge','1234','Profesional',1,'1');
@@ -25,6 +28,13 @@ insert into mejoras values(1,'abierta','extintor','',1,1);
 insert into mejoras values(2,'abierta','pasamanos','',1,1);
 insert into mejoras values(3,'abierta','zona segura','',1,1);
 select * from mejoras;
+--PRECIOS EXTRA
+insert into precios_extra values(1,'Visita',2);
+insert into precios_extra values(2,'Capacitacion',2);
+insert into precios_extra values(3,'Asesoria especial',3);
+insert into precios_extra values(4,'Reporte cliente',2);
+insert into precios_extra values(5,'Cambiar checks',4);
+insert into precios_extra values (6,'Subscripción mensual', 18)
 
 -- descomentar si todo sale bien
 -- commit; 
