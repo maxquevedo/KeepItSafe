@@ -11,7 +11,7 @@ app.use(cors());
 
 oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 // max user
-// const credentials = { user: "c##max2330", password: "1234", connectString: "localhost:1521" };
+// const credentials = { user: "c##max2330", password: "Aa123456", connectString: "localhost:1521" };
 // dev user
 const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
 
@@ -746,7 +746,7 @@ app.get('/web/login/:username/:password', async (req, res) => {
 
 app.get('/web/clientes', async (req, res) => {
     let connection;
-    let query = `select * from usuarios where usr_estado = 'Habilitado' or usr_estado = '1' and usr_tipousuario = 'Cliente'`
+    let query = `select * from usuarios where usr_tipousuario = 'Cliente'`
     try {
         connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
@@ -790,10 +790,10 @@ app.get('/web/cliente/:id', async function (req, res) {
     let id = req.params.id;
 
     let connection;
-    let query = `select * from clientes where cli_id = :id`
+    let query = `select * from clientes inner join USUARIOS on CLIENTES.CLI_ID = USUARIOS.USR_IDPERFIL where USUARIOS.USR_ID = ${id}`
     try {
         connection = await oracledb.getConnection(credentials);
-        result = await connection.execute(query, [id], {});
+        result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
     } finally {
@@ -871,19 +871,22 @@ app.post('/web/cliente', async (req, res) => {
     let estadousuario = '1';
 
     let connection;
-    let userId = 0;
-    let query1 = `select count(*) from usuarios`;
-    let query3 = `insert into clientes(CLI_RUT, CLI_ID, CLI_RAZONSOCIAL, CLI_STATUS, PLANES_PLA_IDPLAN) values('${rut}','${userId}','${razonSocial}','${status}',${plan})`;
-    console.log("query3 -> ", query3);
-    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
+    
     try {
         //console.log("Query 3:",query3);
-
+        let querycli = `select max(CLI_ID) from clientes`;
+        let queryusr = `select max(USR_ID) from USUARIOS`;
         connection = await oracledb.getConnection(credentials);
-        result = await connection.execute(query1, [], {})
+        resultCliId = await connection.execute(querycli, [], {})
+        resultUsrId = await connection.execute(queryusr, [], {})
 
-        userId = (result.rows[0][0]) + 1;
-        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}','${userId}',${estadousuario}) `;
+
+        cliId = (resultCliId.rows[0][0]) + 1;
+        usrid = (resultUsrId.rows[0][0]) + 1;
+        let query3 = `insert into   clientes(CLI_RUT, CLI_ID, CLI_RAZONSOCIAL, CLI_STATUS, PLANES_PLA_IDPLAN) 
+                                    values('${rut}','${cliId}','${razonSocial}','${status}',${plan})`;
+        let query2 = `INSERT INTO   USUARIOS(USR_ID,USR_USERNAME,USR_CORREO,USR_NOMBRECOMPLETO,USR_PASSWORD,USR_TIPOUSUARIO,USR_IDPERFIL,USR_ESTADO) 
+                                    VALUES ('${usrid}','${username}','${email}','${name}','${password}','${tipoUsuario}','${cliId}',${estadousuario}) `;
         console.log("query2 -> ", query2);
 
         result = await connection.execute(query2, [], {});

@@ -51,11 +51,12 @@ export class FormComponent implements OnInit {
   importCliente(){
     this.clienteService.getCliente(this.id).subscribe( 
       res => {
-        console.log("res", res);
-        this.cli = res;
+        console.log("res", res[0]);
+        this.cli = res[0];
       },
       err => console.error(err)
     );
+    
   }
 
   guardarCliente(){

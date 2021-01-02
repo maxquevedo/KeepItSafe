@@ -23,7 +23,14 @@
                     <td>{{ usuario.USR_USERNAME }}</td>
                     <td>{{ usuario.USR_CORREO }}</td>
                     <td>{{ usuario.USR_NOMBRECOMPLETO }}</td>
-                    <td>{{ usuario.USR_ESTADO }}</td>
+                    
+                    <ng-container *ngIf="usuario.USR_ESTADO == 1; else desabilitadotemplate">
+                        <td>Habilitado</td>
+                    </ng-container>
+                    <ng-template #desabilitadotemplate>
+                        <td>Deshabilitado</td>
+                    </ng-template>
+                    
 
                     <TD>
                         <BUTTON class="botonEditar" style="margin-left: 5px;" (click)='editar(usuario.USR_ID)'> Editar </BUTTON>
