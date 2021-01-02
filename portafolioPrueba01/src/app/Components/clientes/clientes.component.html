@@ -26,7 +26,7 @@
                     <td>{{ usuario.USR_ESTADO }}</td>
 
                     <TD>
-                        <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/clientes/form']"> Editar </BUTTON>
+                        <BUTTON class="botonEditar" style="margin-left: 5px;" (click)='editar(usuario.USR_ID)'> Editar </BUTTON>
                     </TD>
                     <TD>
                         <BUTTON class="botonEliminar" name="eliminar" (click)='delete(usuario)'> Eliminar </BUTTON>
