@@ -12,7 +12,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">Rut</span>
                             </div>
-                            <input type="text" class="form-control" name="rut_cliente" [(ngModel)]="cliente.CLI_RUT" required>
+                            <input type="text" class="form-control" name="rut_cliente" [(ngModel)]="cli.CLI_RUT" required>
                         </div>
                     </div>
                     <div class="col-mb-4">
@@ -20,7 +20,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">Usuario</span>
                             </div>
-                            <input type="text" class="form-control" name="username"[(ngModel)]="cliente.USR_USERNAME" required>
+                            <input type="text" class="form-control" name="username"[(ngModel)]="cli.USR_USERNAME" required>
                         </div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                             <div class="input-group-prepend">
                                 <span for="tipo_contrato" class="input-group-text">Tipo Contrato</span>
                             </div>
-                            <select class="form-control" name="tipo_contrato" [(ngModel)]="cliente.PLANES_PLA_IDPLAN">
+                            <select class="form-control" name="tipo_contrato" [(ngModel)]="cli.PLANES_PLA_IDPLAN">
                                         <option value="1">Standard</option>
                                     </select>
                         </div>
@@ -43,7 +43,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">Nombre</span>
                             </div>
-                            <input type="text" class="form-control" name="username"[(ngModel)]="cliente.USR_NOMBRECOMPLETO">
+                            <input type="text" class="form-control" name="Nombre"[(ngModel)]="cli.USR_NOMBRECOMPLETO">
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">Razón Social</span>
                             </div>
-                            <input type="text" class="form-control" name="razon_social"[(ngModel)]="cliente.CLI_RAZONSOCIAL">
+                            <input type="text" class="form-control" name="razon_social"[(ngModel)]="cli.CLI_RAZONSOCIAL">
                         </div>
                     </div>
                     <div class="col-mb-4">
@@ -62,7 +62,7 @@
                             <div class="input-group-prepend">
                                 <span for="rut_cliente" class="input-group-text">E-Mail</span>
                             </div>
-                            <input type="text" class="form-control" name="mail_usuario"[(ngModel)]="cliente.USR_CORREO">
+                            <input type="text" class="form-control" name="mail_usuario"[(ngModel)]="cli.USR_CORREO">
                         </div>
                     </div>
 
@@ -83,7 +83,7 @@
                             <div class="input-group-prepend">
                                 <span for="user_email_profesional" class="input-group-text">Confirmar contraseña</span>
                             </div>
-                            <input type="password" class="form-control" name="user_password_prof" [(ngModel)]="cliente.USR_PASSWORD">
+                            <input type="password" class="form-control" name="user_password_prof" [(ngModel)]="cli.USR_PASSWORD">
                         </div>
                     </div>
                 </div>

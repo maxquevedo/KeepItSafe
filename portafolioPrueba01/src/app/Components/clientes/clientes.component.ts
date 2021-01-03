@@ -20,19 +20,25 @@ export class ClientesComponent implements OnInit {
   constructor( private clienteService: ClienteService, private router: Router ) { }
 
   ngOnInit(): void {
-    this.clienteService.getClientes().subscribe( 
-      /*(res:Cliente[]) => {
-        this.clientes = res;
-      },*/
-      res => this.getClientes(res),
-      err => console.error(err)
-    );
+    this.importCliente();   
     
+}
+
+importCliente(){
+  this.clienteService.getClientes().subscribe( 
+    res => this.getClientes(res),
+    err => console.error(err)
+  );
 }
 
 getClientes(res){
   this.usuarios = res;
   console.log("desde getcliente",this.usuarios);
+}
+
+editar(id:string){
+  console.log(`desde asignarpro:`,id);
+  this.router.navigate([`clientes/form/${id}`]);
 }
 
 delete(usuario: Usuario): void{

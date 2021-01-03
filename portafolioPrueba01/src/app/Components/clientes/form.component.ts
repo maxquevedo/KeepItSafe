@@ -4,6 +4,7 @@ import { ClienteService } from './cliente.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import swal from 'sweetalert2';
 import { Usuario } from './usuario';
+import { ClientesComponent } from './clientes.component';
 
 
 
@@ -13,43 +14,83 @@ import { Usuario } from './usuario';
 })
 export class FormComponent implements OnInit {
 
-  cliente: Cliente ={
-    USR_ID:'',
-    USR_USERNAME:'',
-    USR_CORREO:'',
-    USR_NOMBRECOMPLETO:'',
-    USR_PASSWORD:'',
-    USR_TIPOUSUARIO:'Cliente',
-    USR_IDPERFIL:'',
-    CLI_RUT: '',
-    CLI_RAZONSOCIAL: '',
-    CLI_STATUS: '',
+  clientes: Cliente;
+  params = this.activedRoute.snapshot.params;
+  id = this.params.id_cliente;
+
+  cli: Cliente ={
+    
+    CLI_ID: '',
     CLI_ID_PRO: '',
-    PLANES_PLA_IDPLAN: ''
+    CLI_RAZONSOCIAL: '',
+    CLI_RUT: '',
+    CLI_STATUS: '',
+    PLANES_PLA_IDPLAN: '',
+
+    USR_CORREO: '',
+    USR_ESTADO: '',
+    USR_ID: '',
+    USR_IDPERFIL: '',
+    USR_NOMBRECOMPLETO: '',
+    USR_PASSWORD: '',
+    USR_TIPOUSUARIO: '',
+    USR_USERNAME: ''
   };
   
 
   
-  constructor( private clienteService: ClienteService, private router: Router, private activateRoute: ActivatedRoute) { }
+  constructor( private clienteService: ClienteService,private activedRoute: ActivatedRoute, private router: Router, private activateRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    if (this.id) {
+      this.importCliente();
+    }
+    
+  }
 
+  importCliente(){
+    this.clienteService.getCliente(this.id).subscribe( 
+      res => {
+        console.log("res", res[0]);
+        this.cli = res[0];
+      },
+      err => console.error(err)
+    );
+    
   }
 
   guardarCliente(){
     var formateado = JSON.stringify({
-    
-      "username":this.cliente.USR_USERNAME,
-      "password":this.cliente.USR_PASSWORD,
-      "email":this.cliente.USR_CORREO,
-      "rut":this.cliente.CLI_RUT,
-      "name":this.cliente.USR_NOMBRECOMPLETO,
-      "razonSocial":this.cliente.CLI_RAZONSOCIAL,
-      "status":this.cliente.CLI_STATUS,
+      
+      "id": this.id,
+      "username":this.cli.USR_USERNAME,
+      "password":this.cli.USR_PASSWORD,
+      "email":this.cli.USR_CORREO,
+      "rut":this.cli.CLI_RUT,
+      "name":this.cli.USR_NOMBRECOMPLETO,
+      "razonSocial":this.cli.CLI_RAZONSOCIAL,
+      "status":this.cli.CLI_STATUS,
     
     });
-    
+
+    if (this.id) {
+      console.log("edita",formateado);
+      this.clienteService.update(this.id, formateado).subscribe(
+        res => console.log(res),
+        err => console.error(err)
+      );
+      
+    } else {
+      
+    console.log("nuevo",formateado);
+    this.clienteService.create(formateado).subscribe(
+      res => console.log(res),
+      err => console.error(err)
+    );
+      
+    }
+
     console.log(formateado);
-    this.clienteService.create(formateado);
+    ;
   }
 }

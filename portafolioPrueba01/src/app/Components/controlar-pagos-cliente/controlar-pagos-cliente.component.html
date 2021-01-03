@@ -1,0 +1,55 @@
+<br>
+<div class="card border-warning mb-3">
+    <div class="card-header">Controlar pagos</div>
+    <div class="card-body text-Dark">
+        <h5 class="card-title">Estado de pagos del mes: {{ obtenerNombreMes() }}</h5>
+
+
+        <div class="row">
+            <div class="col-4">
+                <label for="month">Seleccione un mes:</label>
+                <select name="month" id="month" [(ngModel)]="mes" class="form-control" (change)="obtenerPagos()">
+                    <option *ngFor="let month of monthNames; let i = index" value="{{i}}" >{{month}}</option>
+                </select>
+            </div>
+            <div class="col">
+                <button *ngIf="mostrarGenerarFacturas()" type="button" (click)="generarFacturas()" class="btn btn-secondary float-right"> Generar facturas </button>
+            </div>
+        </div>
+
+
+
+        <br />
+
+
+        <table class="table table-bordered table-striped" style="font-size: 12px">
+            <thead>
+                <tr>
+                    <th>CLIENTE</th>
+                    <th>TOTAL (UF)</th>
+                    <th>ESTADO</th>
+                    <th>FECHA DE PAGO</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let factura of facturas">
+                    <td style="width: 30%;">{{ factura.USR_NOMBRECOMPLETO }}</td>
+                    <td style="width: 10%;">{{ factura.PAGO_MENS_TOTAL }}</td>
+                    <td style="width: 15%;">
+                        {{ factura.PAGO_MENS_ESTADO ? 'Pagado' : 'Pendiente' }}
+                    </td>
+                    <td style="width: 20%;">{{ factura.PAGO_MENS_FECHA_PAGO | date:'dd/MM/yyyy' }}</td>
+                    <td style="width: 25%;">
+                        <button type="button" class="btn btn-sm btn-info" (click)="verDetalle(factura)"> Ver Detalle</button> &nbsp;
+                        <button type="button" class="btn btn-sm btn-success" (click)="validarPago(factura)" *ngIf="!factura.PAGO_MENS_ESTADO"> Validar Pago</button>
+                    </td>
+                </tr>
+                <tr *ngIf="facturas && facturas.length === 0">
+                    <td colspan="5" class="text-center"> No hay facturas pendientes </td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-outline-secondary" [routerLink]="['/admin']">volver</button>
+    </div>
+</div>

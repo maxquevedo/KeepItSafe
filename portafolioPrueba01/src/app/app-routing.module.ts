@@ -22,6 +22,7 @@ import { ReporteclienteComponent } from './Components/reportecliente/reporteclie
 import { ReporteglobalComponent } from './Components/reporteglobal/reporteglobal.component';
 import { AsignarComponent} from './Components/asignar/asignar.component';
 import { VerasesoriasComponent} from './Components/verasesorias/verasesorias.component'
+import { ControlarPagosClienteComponent } from './Components/controlar-pagos-cliente/controlar-pagos-cliente.component';
 
 
 const routes: Routes = [
@@ -48,6 +49,7 @@ const routes: Routes = [
 {path: 'reportaraccidente', component: ReportaraccidenteComponent},
 {path: 'crearchecklist', component: CrearcheklistComponent},
 {path: 'responderchecklist', component: ResponderchecklistComponent},
+{path: 'controlar-pagos', component: ControlarPagosClienteComponent},
 {path: 'asignar', component: AsignarComponent},
 {path: 'asignar/:id', component: AsignarComponent},
 {path: '', redirectTo: '/home', pathMatch: 'full'},
