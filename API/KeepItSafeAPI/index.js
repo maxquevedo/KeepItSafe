@@ -13,8 +13,8 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 // max user
 // const credentials = { user: "c##max2330", password: "Aa123456", connectString: "localhost:1521" };
 // dev user
-//const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
- const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
+const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
+ //const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
 
 function mapResult(arreglo) {
     if (!arreglo || !arreglo.metaData || !arreglo.rows)
@@ -1727,16 +1727,60 @@ app.put('/web/mejoras/aprobar', async(req, res) => {
 
 // CrearSolicitudAsesorias
 app.post('/web/solicitudes', async (req, res) => {
+    console.log("Body: ", req.body);
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+
+    
+    let idCliente =  req.body.SOL_CLI_ID;
+    let idProfesional= req.body.SOL_PRO_ID;
+    let descripcionSolicitud= req.body.SOL_DESCRIPCION;
+    let estadoSolicitud= 'pendiente';
+    let fechaSolicitud=req.body.SOL_FECHA;
+    let solicitudID=0;
+    let query1 = 'select count(*) from SOLICITUDES';
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(credentials);
+        result = await connection.execute(query1, [], {})
+        console.log("result query1", result);
+        solicitudID = parseInt(result.rows[0][0]) + 1;
+        console.log("ResultRows",result.rows);
+        console.log("VALOR",solicitudID);
+        console.log(typeof(solicitudID));
+        let query2 = `INSERT INTO SOLICITUDES (SOL_ID, SOL_CLI_ID, SOL_PRO_ID, SOL_DESCRIPCION, SOL_ESTADO, SOL_FECHA) VALUES (${solicitudID},${idCliente},${idProfesional},'${descripcionSolicitud}','${estadoSolicitud}',TO_DATE('${fechaSolicitud}','YYYY-MM-DD'))`;
+        console.log("insert: ",query2)
+        result = await connection.execute(query2, [], {});
+       
+        
+    } catch (err) {
+        console.log("Error en query: ",err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return res.json(JSON.stringify({ result }));
+    }
+});
+
+/* CrearSolicitudAsesorias
+app.post('/web/solicitudes', async (req, res) => {
     console.log('post/web/solicitudes: ', req.body);
     let connection;
     let result;
-    
+    let solicitudID=0;
     try {
         connection = await oracledb.getConnection(credentials);
-        let maxIdQuery = await connection.execute('SELECT COUNT(*) FROM SOLICITUDES', [], {});
-        let maxSOLICITUDId = parseInt(maxIdQuery)+1; 
+        solicitudID = (result.rows[0][0]) + 1;
       
-        console.log(maxSOLICITUDId);
+        console.log(solicitudID);
         console.log(req.body.SOL_CLI_ID);
         console.log(req.body.SOL_PRO_ID);
         console.log(req.body.SOL_DESCRIPCION);
@@ -1746,7 +1790,7 @@ app.post('/web/solicitudes', async (req, res) => {
         .execute(`INSERT INTO SOLICITUDES (SOL_ID, SOL_CLI_ID, SOL_PRO_ID, SOL_DESCRIPCION, SOL_ESTADO, SOL_FECHA) 
                   VALUES (:id,:idCliente, :idProfesional,:descripcionSolicitud,:estadoSolicitud ,TO_DATE(:fechaSolicitud,'YYYY-MM-DD'))`, 
                   {
-                    id: maxSOLICITUDId, 
+                    id: solicitudID, 
                     idCliente: req.body.SOL_CLI_ID,
                     idProfesional: req.body.SOL_PRO_ID,
                     descripcionSolicitud: req.body.SOL_DESCRIPCION,
@@ -1770,7 +1814,7 @@ app.post('/web/solicitudes', async (req, res) => {
             }
         }
     }
-});
+});*/
 
 // CrearAccidentes
 app.post('/web/accidentes', async (req, res) => {
