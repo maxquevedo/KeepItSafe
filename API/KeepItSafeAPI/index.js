@@ -13,7 +13,8 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 // max user
 // const credentials = { user: "c##max2330", password: "Aa123456", connectString: "localhost:1521" };
 // dev user
-const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
+//const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
+ const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
 
 function mapResult(arreglo) {
     if (!arreglo || !arreglo.metaData || !arreglo.rows)
@@ -1099,7 +1100,7 @@ app.get('/web/solicitud/profesional/:id', async(req, res) => {
     console.log(id);
     let query = `select * from PRO where pro_cli_asignado = :id`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [id], {});
     } catch (e) {
         console.log(e);
@@ -1627,7 +1628,7 @@ app.post('/web/mejoras', async (req, res) => {
     let result;
     
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         let maxIdQuery = await connection.execute('SELECT MAX(MEJ_ID) FROM MEJORAS', [], {});
         let maxMEJORAId = 1; 
         if (maxIdQuery.rows){
@@ -1671,7 +1672,7 @@ app.get('/web/mejoras/:id', async(req, res) => {
     console.log(req.params);
     let query = `select * from mejoras INNER JOIN pro on mejoras.MEJ_IDPRO = PRO_ID INNER JOIN clientes on mejoras.MEJ_IDCLI=CLI_ID WHERE PRO_ID= ${id}`
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
@@ -1700,7 +1701,7 @@ app.put('/web/mejoras/aprobar', async(req, res) => {
 
     try {
 
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         let query2 = `UPDATE MEJORAS SET MEJ_ESTADO = '${status}' WHERE MEJ_ID= ${id}`;
         console.log("query2 -> ", query2);
 
@@ -1731,7 +1732,7 @@ app.post('/web/solicitudes', async (req, res) => {
     let result;
     
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         let maxIdQuery = await connection.execute('SELECT COUNT(*) FROM SOLICITUDES', [], {});
         let maxSOLICITUDId = parseInt(maxIdQuery)+1; 
       
@@ -1778,7 +1779,7 @@ app.post('/web/accidentes', async (req, res) => {
     let result;
     
     try {
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         let maxIdQuery = await connection.execute('SELECT MAX(ACC_ID) FROM ACCIDENTES', [], {});
         let maxACCIDENTEId = 1; 
         if (maxIdQuery.rows){
