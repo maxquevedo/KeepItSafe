@@ -1411,19 +1411,22 @@ app.post('/web/solicitudes', async (req, res) => {
     
     try {
         connection = await oracledb.getConnection(connectionInfo2);
-        let maxIdQuery = await connection.execute('SELECT MAX(SOL_ID) FROM SOLICITUDES', [], {});
-        let maxSOLICITUDId = 1; 
-        if (maxIdQuery.rows){
-            maxSOLICITUDId= parseInt(maxIdQuery.rows[0]) + 1;
-        }
-        
+        let maxIdQuery = await connection.execute('SELECT COUNT(*) FROM SOLICITUDES', [], {});
+        let maxSOLICITUDId = parseInt(maxIdQuery)+1; 
+      
+        console.log(maxSOLICITUDId);
+        console.log(req.body.SOL_CLI_ID);
+        console.log(req.body.SOL_PRO_ID);
+        console.log(req.body.SOL_DESCRIPCION);
+        console.log('pendiente');
+        console.log( req.body.SOL_FECHA);
         result = await connection
         .execute(`INSERT INTO SOLICITUDES (SOL_ID, SOL_CLI_ID, SOL_PRO_ID, SOL_DESCRIPCION, SOL_ESTADO, SOL_FECHA) 
                   VALUES (:id,:idCliente, :idProfesional,:descripcionSolicitud,:estadoSolicitud ,TO_DATE(:fechaSolicitud,'YYYY-MM-DD'))`, 
                   {
-                    id: parseInt(maxSOLICITUDId), 
-                    idCliente: parseInt(req.body.SOL_CLI_ID),
-                    idProfesional: parseInt(req.body.SOL_PRO_ID),
+                    id: maxSOLICITUDId, 
+                    idCliente: req.body.SOL_CLI_ID,
+                    idProfesional: req.body.SOL_PRO_ID,
                     descripcionSolicitud: req.body.SOL_DESCRIPCION,
                     estadoSolicitud: 'pendiente',
                     fechaSolicitud: req.body.SOL_FECHA
