@@ -28,6 +28,7 @@ import { SolicitarasesoriaComponent } from './Components/solicitarasesoria/solic
 import { ReportaraccidenteComponent } from './Components/reportaraccidente/reportaraccidente.component';
 import { CrearcheklistComponent } from './Components/crearcheklist/crearcheklist.component';
 import { ResponderchecklistComponent } from './Components/responderchecklist/responderchecklist.component';
+import { ResponderchecklistService } from './Components/responderchecklist/responderchecklist.service';
 import { LoginService } from './services/login.service';
 import { PlanificarvisitaService } from './Components/planificarvisita/planificarvisita.service';
 import { from } from 'rxjs';
@@ -82,7 +83,7 @@ import { RespondermejoraComponent } from './Components/respondermejora/responder
     FormsModule,
     ModalModule.forRoot()
   ],
-  providers: [ClienteService, DatePipe, LoginService , ProfesionalService, PlanificarvisitaService, ReporteglobalService, ReporteclienteService, VerasesoriasService, IngresaractividaddemejoraService],
+  providers: [ClienteService, DatePipe, LoginService , ProfesionalService, PlanificarvisitaService, ReporteglobalService, ReporteclienteService, VerasesoriasService, IngresaractividaddemejoraService,ResponderchecklistService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

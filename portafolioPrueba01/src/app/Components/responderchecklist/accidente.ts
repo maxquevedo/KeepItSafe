@@ -1,8 +1,7 @@
-export class Accidente{
-ACC_ID?;
-ACC_DESCRIPCION?;
-ACC_ID_CLIENTE?;
-ACC_ID_PRO?;
-ACC_ESTADO?;
-ASESORIAS_ASE_ID1?;
+export class Accidentes{
+    ACC_ID?;
+    ACC_DESCRIPCION?;
+    ACC_ID_CLIENTE?;
+    ACC_ID_PRO?;
+    ACC_ESTADO?;
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment'
-import { Accidente } from './accidente';
+import { Accidentes } from './accidente';
 
 
 @Injectable({
@@ -10,11 +10,15 @@ import { Accidente } from './accidente';
 export class ResponderchecklistService {
 
   private env=environment;
-  accidente:[];
-  constructor(private http: HttpClient) { }
+  accidentes:[];
+
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
+
+  constructor(private http: HttpClient) { }
+
   
-  getResponderChecklist(id_pro: number,id_cli:number){
-    return this.http.get(`${this.env.apiUrl}/web/responderchecklist/:id_pro/:id_cli/`)
+  getAccidentes(ACC_ID_PRO:string){
+    return this.http.get(`${this.env.apiUrl}/web/responderchecklist/${ACC_ID_PRO}`)
   }
+ 
 }
