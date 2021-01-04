@@ -891,9 +891,13 @@ app.post('/reportarAccidente',async function(req,res){
         query = `select count(*) from chat`;
         result = await connection.execute(query);
         idChat = result.rows[0][0] +1;
+        query = `select cli_id_pro from clientes where cli_id = ${idCli}`; 
+        result = await connection.execute(query);
+        idPro = result.rows[0][0];
         console.log("Id chat: ",idChat);
-        // query = `insert into chat values(${idChat},${idCli},${idPro},${idAccidente},${req.body.jeison.descripcion},sysdate,${req.body.jeison.nombreAccidente},'cliente')`;
-        // result = await connection.execute(query);
+        console.log("Id pro: ",idPro);
+        query = `insert into chat values(${idChat},${idCli},${idPro},${idAccidente},'${req.body.jeison.descripcion}',sysdate,'cliente','${req.body.jeison.nombreAccidente}')`;
+        result = await connection.execute(query);
     }catch(err){
         console.log(err)
     }
@@ -906,10 +910,75 @@ app.post('/reportarAccidente',async function(req,res){
                 console.log(err);
             }
         }
-        console.log(result);
-        return res.json(['success']);
+        if(result.rowsAffected > 0){
+            return res.json(['success']);
+        }
+        return res.json(['failure']);
     }
 });
+
+//CANAL
+app.get('/chats/:id/:tipoUsu',async function(req,res){
+    let query;
+    let result;
+    let connection;
+    let id = req.params.id;
+    let tipoUsu = req.params.tipoUsu;
+
+    if(tipoUsu == "Cliente"){
+        query = `select * from chat where chat_id_cliente = '${id}' order by chat_mensaje_date desc`;    
+    }else{
+        query = `select * from chat where chat_id_pro = ${id} order by chat_mensaje_date desc`;
+    }
+
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return  res.json(result.rows); 
+})
+
+//CHAT
+app.get('/chat/:idCli/:idPro/:idAcc/:cabecera',async function(req,res){
+    let idCli = req.params.idCli;
+    let idPro = req.params.idPro;
+    let idAcc = req.params.idAcc;
+    let cabecera = req.params.cabecera;
+    let connection;
+    let query = "";
+    let result;
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        query = `select * from chat where chat_id_cliente = ${idCli} and chat_id_pro = ${idPro} and
+        chat_id_accidente = ${idAcc} and chat_cabezera = '${cabecera}'`;
+        result = await connection.execute(query);
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        return res.json(result.rows)
+    }
+
+
+})
 
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;
