@@ -1184,10 +1184,25 @@ app.get('/web/reporteclientes/:id', async (req, res) => {
 
     let id = req.params.id;
     let connection;
-    let query = "SELECT * FROM reportes_global where REP_ID_CLI = :id";
+    let queryid = `select max(REP_CLI_ID) from REPORTES_CLI`;
+    let query = `SELECT * FROM reportes_cli where REP_CLI_ID = ${id}`;
+    let idreporte = "0";
+
     try {
         connection = await oracledb.getConnection(credentials);
-        result = await connection.execute(query)
+        resultqryid = await connection.execute(queryid);
+
+        if (resultqryid.rows[0][0] == null) {
+            idreporte = '1';
+
+        } else {
+            idreporte = parseInt(resultqryid.rows[0]) + 1;
+            
+        }
+
+        let query2 =`insert into REPORTES_CLI ( REP_CLI_ID, REP_ID_CLI, REP_PROFESIONAL) values (${idreporte},1,'1') `
+        result = await connection.execute(query2);
+        result = await connection.execute(query);
     } catch (err) {
         console.log(err)
     } finally {
