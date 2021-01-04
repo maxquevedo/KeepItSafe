@@ -871,25 +871,29 @@ app.post('/reportarAccidente',async function(req,res){
     let idReportes;
     let idCli = req.body.jeison.idCli;
     let idChat;
+    let idPro;
     let connection;
     let query = "";
     let result;
     try{
         connection = await oracledb.getConnection(connectionInfo);
         //INSERTAR EN TABLA DE reportes_accidentes
-        query = `select count(*) from reportes_accidentes`;
-        result = await connection.execute(query);
-        idReportes = (result.rows[0][0])+1;
-        query = `insert into reportes_accidentes values(:idReportes,:idCli,sysdate,:detalle)`;
-        console.log("query: ",query,idReportes,idCli,detalle);
-        result = await connection.execute(query,[idReportes,idCli,detalle],{})
+        // query = `select count(*) from reportes_accidentes`;
+        // result = await connection.execute(query);
+        // idReportes = (result.rows[0][0])+1;
+        // query = `insert into reportes_accidentes values(:idReportes,:idCli,sysdate,:detalle)`;
+        // console.log("query: ",query,idReportes,idCli,detalle);
+        // result = await connection.execute(query,[idReportes,idCli,detalle],{})
         //ACTUALIZAR ACCIDENTES
         query = `update accidentes set acc_estado = 1 where acc_descripcion = '${accidente}'`;
         result = await connection.execute(query);
-        console.log(result.rows[0]);
         //ABRIR CHAT
-        
-        
+        query = `select count(*) from chat`;
+        result = await connection.execute(query);
+        idChat = result.rows[0][0] +1;
+        console.log("Id chat: ",idChat);
+        // query = `insert into chat values(${idChat},${idCli},${idPro},${idAccidente},${req.body.jeison.descripcion},sysdate,${req.body.jeison.nombreAccidente},'cliente')`;
+        // result = await connection.execute(query);
     }catch(err){
         console.log(err)
     }
@@ -903,7 +907,7 @@ app.post('/reportarAccidente',async function(req,res){
             }
         }
         console.log(result);
-        return res.json([]);
+        return res.json(['success']);
     }
 });
 
