@@ -930,27 +930,24 @@ app.post('/web/profesional', async (req, res) => {
 
     let connection;
     let userId = 0;
-    //let query1 = `select max(usr_id) from usuarios`;
     let querypro = `select max(PRO_ID) from pro`;
-    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
+    let queryusr = `select max(usr_ID) from usuarios`;
 
     connection = await oracledb.getConnection(credentials);
     result = await connection.execute(querypro, [], {});
+    idusuario = await connection.execute(queryusr, [], {});
 
     let proId = parseInt(result.rows[0]) + 1;
-    console.log("result", result);
+    let usrId = parseInt(idusuario.rows[0]) + 1;
+    console.log("result", proId);
+    console.log("usrID: ", usrId);
 
     let query3 = `insert into pro (PRO_RUT,PRO_ID,PRO_NOMBRE,PRO_APELLIDO,PRO_FINGRESO) values('${rut}',${proId},'${name}','${apellido}','${fechaingreso}')`;
     console.log("query3 -> ", query3);
 
     try {
-        //console.log("Query 3:",query3);
-
-        //result = await connection.execute(query1,[],{})
-
-        //userId = (result++);
-        let query2 = `INSERT INTO USUARIOS(USR_USERNAME, USR_CORREO, USR_NOMBRECOMPLETO, USR_PASSWORD, USR_TIPOUSUARIO, USR_IDPERFIL, USR_ESTADO) VALUES ('${username}','${email}','${name} ${apellido}','${password}','${tipoUsuario}',${proId} ,${estadousuario}) `;
-
+        
+        let query2 = `INSERT INTO USUARIOS(USR_ID,USR_USERNAME, USR_CORREO, USR_NOMBRECOMPLETO, USR_PASSWORD, USR_TIPOUSUARIO, USR_IDPERFIL, USR_ESTADO) VALUES ('${usrId}','${username}','${email}','${name} ${apellido}','${password}','${tipoUsuario}',${proId} ,${estadousuario}) `;
         console.log("query2 -> ", query2);
 
         result = await connection.execute(query2, [], {});
@@ -976,7 +973,7 @@ app.post('/web/profesional', async (req, res) => {
 });
 
 app.put('/web/profesional/:id', async (req, res) => {
-    console.log("Body: ", req.body);
+    console.log("Body: ", req.body);    
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
     let id = req.body.id;
