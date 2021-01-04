@@ -14,5 +14,6 @@ export class Profesional {
     PRO_APELLIDO?;
     PRO_FINGRESO?;
     PRO_CLI_ID?;
+    
 
 }
