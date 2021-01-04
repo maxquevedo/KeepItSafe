@@ -14,7 +14,7 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 // const credentials = { user: "c##max2330", password: "Aa123456", connectString: "localhost:1521" };
 // dev user
 const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
- //const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
+//const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
 
 function mapResult(arreglo) {
     if (!arreglo || !arreglo.metaData || !arreglo.rows)
@@ -1689,14 +1689,57 @@ app.get('/web/mejoras/:id', async(req, res) => {
 });
 
 //AprobarMejora
-app.put('/web/mejoras/aprobar', async(req, res) => {
+app.put('/web/mejoras/aprobar/:id', async(req, res) => {
     console.log("Body: ", req.body);
-    //console.log("Params: ", req.params);
-    //console.log("Query: ", req.query);
-    let id = req.body.id;
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+   
+    let id = req.params.id;
     let status = 'aprobada';
     let connection;
   
+    console.log("ID: ",id);
+    console.log("Estado: ",status);
+
+
+    try {
+
+        connection = await oracledb.getConnection(credentials);
+        let query2 = `UPDATE MEJORAS SET MEJ_ESTADO = '${status}' WHERE MEJ_ID= ${id}`;
+        console.log("query2 -> ", query2);
+
+        result = await connection.execute(query2, [], {});
+
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return res.json(JSON.stringify({ result }));
+    }
+
+
+});
+
+//RechazarMejora
+app.put('/web/mejoras/rechazar/:id', async(req, res) => {
+    console.log("Body: ", req.body);
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+   
+    let id = req.params.id;
+    let status = 'rechazado';
+    let connection;
+  
+    console.log("ID: ",id);
+    console.log("Estado: ",status);
 
 
     try {

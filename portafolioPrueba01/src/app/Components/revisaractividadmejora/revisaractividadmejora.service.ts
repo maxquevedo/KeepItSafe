@@ -20,10 +20,10 @@ export class RevisaractividadmejoraService {
   }
 
   updateAprobar(MEJ_ID:string){
-    return this.http.put(`${this.env.apiUrl}/web/mejoras/aprobar`,MEJ_ID, {headers: this.httpHeaders});
+    return this.http.put(`${this.env.apiUrl}/web/mejoras/aprobar/${MEJ_ID}`, {headers: this.httpHeaders});
     
   }
   updateRechazar(MEJ_ID:string){
-    return this.http.put(`${this.env.apiUrl}/web/mejoras/rechazar`,MEJ_ID, {headers: this.httpHeaders});
+    return this.http.put(`${this.env.apiUrl}/web/mejoras/rechazar/${MEJ_ID}`, {headers: this.httpHeaders});
   }
 }
