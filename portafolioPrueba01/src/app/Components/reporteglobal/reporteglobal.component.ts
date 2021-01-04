@@ -17,14 +17,19 @@ export class ReporteglobalComponent implements OnInit {
   constructor(private ReporteglobalService: ReporteglobalService, private router: Router) { }
 
   ngOnInit(): void {
+    
+  }
+
+  generarReporte(){
     this.ReporteglobalService.getReporteGlobal().subscribe( 
       res => this.ReporteGlobal(res),
       (err) => console.error(err)
     );
+
   }
 
   ReporteGlobal(res){
     this.reporteglobal = res;
-    console.log("desde getcliente",this.reporteglobal);
+    console.log("reporte global",this.reporteglobal);
   }
 }

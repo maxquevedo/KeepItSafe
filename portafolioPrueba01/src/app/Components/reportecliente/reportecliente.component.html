@@ -7,24 +7,31 @@
             <div class="col-mb-4">
                 <label class="text-primary" for="Clientes">Elija un cliente:</label>
             </div>
-            <select name="visita" id="visita">
-                <option value="id cliente">Cliente1</option>
-                <option value="id cliente">Cliente2</option>
-                <option value="id cliente">Cliente3</option>
-            </select>
-            <input type="submit" value="Submit">
-        
+            <div class="input-group">
+                <select [(ngModel)]="opcionSeleccionado" (change)="capturar()" class="fomr-control" name="visita" id="visita">
+                    <option *ngFor="let cli of clientes" value="{{cli.USR_IDPERFIL}}">{{cli.USR_NOMBRECOMPLETO}}</option>
+                </select>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-success" (click)="generarReporte(verSeleccion)" > Generar Reporte </button>
+                </div>  
+            </div>
+            <p [hidden]="opcionSeleccionado == '0'">Haz seleccionado la opción # {{ verSeleccion }}</p>
+
 
         </form>
 
         <table class="table table-bordered table-striped" style="font-size: 12px">
             <thead>
                 <tr>
-                    <th>NOMBRE DE USUARIO</th>
+                    <th>ID_REPOTE</th>
+                    <th>ID_CLIENTE</th>
+                    <th>FECHA</th>
                     <th>VISITAS</th>
                     <th>ASESORIAS</th>
-                    <th>CAPACITACIONES</th>
                     <th>ACCIDENTES</th>
+                    <th>PROFESIONAL</th>
+                    <th>CAPACITACIONES</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -34,21 +41,10 @@
                     <td>{{ reportecliente.REP_FECHA }}</td>
                     <td>{{ reportecliente.REP_VISITAS }}</td>
                     <td>{{ reportecliente.REP_ASESORIAS}}</td>
-                    <td>{{ reportecliente.REP_PROPUESTAS}}</td>
                     <td>{{ reportecliente.REP_ACCIDENTES}}</td>
                     <td>{{ reportecliente.REP_PROFESIONAL}}</td>
                     <td>{{ reportecliente.REP_CAPACITACIONES}}</td>
 
-                    <TD>
-                        <BUTTON class="botonCrear" style="margin-left: 5px;"> Asignar </BUTTON>
-                    </TD>
-
-                    <TD>
-                        <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/profesionales/form-prof', Profesional.id_profesional]"> Editar </BUTTON>
-                    </TD>
-                    <TD>
-                        <BUTTON class="botonEliminar" name="eliminar" (click)='delete(Profesional)'> Eliminar </BUTTON>
-                    </TD>
                 </tr>
             </tbody>
         </table>

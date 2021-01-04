@@ -12,8 +12,8 @@ export class ReporteclienteService {
 
   constructor(private http : HttpClient) { }
   
-  getReporteClientes(){
-    return this.http.get(`${this.env.apiUrl}/web/reporteclientes`)
+  getReporteClientes(id){
+    return this.http.get(`${this.env.apiUrl}/web/reporteclientes/${id}`)
   }
 
   getReporteCliente(id){

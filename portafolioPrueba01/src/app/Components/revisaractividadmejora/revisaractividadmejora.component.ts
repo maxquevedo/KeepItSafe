@@ -38,9 +38,20 @@ export class RevisaractividadmejoraComponent implements OnInit {
       res => console.log(res),
       err => console.error(err)
     );
-  }
-  editarRechazar(id:string){
-    this.revisaractividadmejoraService.updateAprobar(id);
     console.log(`desde editarMejora:`,id);
+    console.log(typeof(id));
+    this.ngOnInit();
+
+  }
+
+  editarRechazar(id:string){
+    this.revisaractividadmejoraService.updateRechazar(id).subscribe( 
+      res => console.log(res),
+      err => console.error(err)
+    );
+    console.log(`desde editarRechazar:`,id);
+    console.log(typeof(id));
+    this.ngOnInit();
+  
   }
 }

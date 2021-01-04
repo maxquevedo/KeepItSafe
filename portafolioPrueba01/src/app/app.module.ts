@@ -44,6 +44,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { ModalContentComponent } from './Components/controlar-pagos-cliente/controlar-pagos-cliente.component';
 import { CalcularAccidentabilidadComponent } from './Components/calcular-accidentabilidad/calcular-accidentabilidad.component';
 import { VisualizarActividadesComponent } from './Components/visualizar-actividades/visualizar-actividades.component';
+import { RespondermejoraComponent } from './Components/respondermejora/respondermejora.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { VisualizarActividadesComponent } from './Components/visualizar-activida
     ControlarPagosClienteComponent,
     ModalContentComponent,
     CalcularAccidentabilidadComponent,
-    VisualizarActividadesComponent
+    VisualizarActividadesComponent,
+    RespondermejoraComponent
   ],
   imports: [
     BrowserModule,

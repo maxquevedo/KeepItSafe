@@ -7,6 +7,7 @@ export class Cliente {
     USR_PASSWORD?;
     USR_TIPOUSUARIO?;
     USR_IDPERFIL?;
+    USR_ESTADO?;
 
 
     CLI_RUT?;

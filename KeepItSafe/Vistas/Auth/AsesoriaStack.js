@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import CanalComu from './CanalComu';
 import PropuestasMejora from './PropuestasMejora';
 import Asesorias from './Asesorias';
+import Chat from './Chat';
 
 // create a component
 class AsesoriaStack extends Component {
@@ -15,6 +16,7 @@ class AsesoriaStack extends Component {
                 <Stack.Screen name="Home" component={Asesorias} options={{headerShown:false}} />
                 <Stack.Screen name="Canal" component={CanalComu}/>
                 <Stack.Screen name="Propuestas" component={PropuestasMejora}/>
+                <Stack.Screen name="Chat" component={Chat}/>
             </Stack.Navigator>
         );
     }
