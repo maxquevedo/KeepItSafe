@@ -864,6 +864,47 @@ app.patch('/enviarPropuesta',async function(req,res){
     return res.json(result.rowsAffected);
 });
 
+app.post('/reportarAccidente',async function(req,res){
+    let idAccidente = req.body.jeison.id;
+    let accidente = req.body.jeison.nombreAccidente.toLowerCase();
+    let detalle = `id: ${idAccidente}, accidente: ${accidente} - activo, detalle: ${ req.body.jeison.descripcion}`;
+    let idReportes;
+    let idCli = req.body.jeison.idCli;
+    let idChat;
+    let connection;
+    let query = "";
+    let result;
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        //INSERTAR EN TABLA DE reportes_accidentes
+        query = `select count(*) from reportes_accidentes`;
+        result = await connection.execute(query);
+        idReportes = (result.rows[0][0])+1;
+        query = `insert into reportes_accidentes values(:idReportes,:idCli,sysdate,:detalle)`;
+        console.log("query: ",query,idReportes,idCli,detalle);
+        result = await connection.execute(query,[idReportes,idCli,detalle],{})
+        //ACTUALIZAR ACCIDENTES
+        //query = `update accidentes set acc_estado = 1 where acc_descripcion = '${accidente}'`;
+        ///result = await connection.execute(query);
+        //console.log(result.rows[0]);
+        //ABRIR CHAT
+        
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        console.log(result);
+        return res.json([]);
+    }
+});
 
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;

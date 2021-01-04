@@ -21,6 +21,7 @@ const ActividadesForm = (props) => {
         deit.setHours(12,0,0,0);
         let day = deit.getDate();
         let month = deit.getMonth();
+        month = month+1;
         let year = deit.getFullYear();
         let decada = ''+year.toString()[2];
         let año = ''+year.toString()[3];
@@ -29,10 +30,13 @@ const ActividadesForm = (props) => {
         if(day.toString().length < 2){
           day = '0'+day;
         }
-        
-        let dateCompairable = day+'/'+(month+1)+'/'+year;
 
-        let dateCompairableFull = day+'/'+(month+1)+'/'+deit.getFullYear();
+        if(month.toString().length < 2){
+          month = '0' + month;
+        } 
+        let dateCompairable = day+'/'+(month)+'/'+year;
+
+        let dateCompairableFull = day+'/'+(month)+'/'+deit.getFullYear();
 
         for( dias in asesorias){
           if(dateCompairable == asesorias[dias] || dateCompairableFull == asesorias[dias]){

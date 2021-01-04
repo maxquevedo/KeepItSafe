@@ -28,20 +28,24 @@ class Accidentes extends Component {
 
     
     async sendInput(inputText){
-        console.log("Input text: ",inputText);
-        console.log("Id ACcidente: ",this.state.idAccidenteSelec);
-        // let jeison = {
-        //     id: propuestaMensajeArr[0],
-        //     propuestaMensaje: inputText
-        // }
-        // let json = JSON.stringify({jeison:jeison});
-        // let resp = await fetch('http://10.0.2.2:8080/enviarPropuesta',{
-        //     method:'PATCH',
-        //     headers: {
-        //         'Content-Type':'application/json; charset="UTF-8"'
-        //     },
-        //     body:json
-        // });
+        let idCli = await AsyncStorage.getItem("id2");
+        let jeison = {
+            id: this.state.idAccidenteSelec,
+            nombreAccidente: this.state.detalleAccidente,
+            descripcion: inputText,
+            idCli: idCli
+        }
+        console.log("json: ",jeison);
+        let json = JSON.stringify({jeison:jeison});
+        let resp = await fetch('http://10.0.2.2:8080/reportarAccidente',{
+            method:'POST',
+            headers: {
+                'Content-Type':'application/json; charset="UTF-8"'
+            },
+            body:json
+        });
+        let respJson = await resp.json();
+        console.log(respJson);
         this.setState({isDialogVisible:false});
     }
 
