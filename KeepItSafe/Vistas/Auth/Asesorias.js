@@ -44,37 +44,6 @@ class Asesorias extends Component {
         //console.log((usuarios[0]+"{''}"));
         return (
             <View style={{flex:1,justifyContent:'space-evenly'}}>
-                <View>
-                    { tipoUsuario==="Profesional"? <View></View>:(
-                        <View>
-                            <View style={{flexDirection:'row', paddingHorizontal:145 }}>
-                                <Text>{fecha.getDate()}/{fecha.getMonth()+1}/{fecha.getFullYear()}</Text>
-                                <Text>                  </Text>
-                                <TouchableOpacity onPress={()=>{
-                                    let showDatePickerCurrent = this.state.showDatePicker;
-                                    this.setState({showDatePicker:!showDatePickerCurrent})
-                                    //this.forceUpdate()
-                                }}>
-                                    <Ionicons name="md-calendar" size={24} color="black" />
-                                </TouchableOpacity>
-                            </View>
-                            
-                            { showDatePicker?
-                                <DateTimePicker mode="date"
-                                    minimumDate={new Date()}
-                                    onConfirm={()=>{console.log("confirma3")}}  onChange={(event,date)=> this.updateDate(event,date)} onCancel={()=>{}} value={fecha}/>:
-                                    <View></View>
-                            }
-            
-                            <View style={styles.FieldSeparator}></View>
-                            <Text></Text>
-                            <Button color="#095813" title="Solicitar fiscalizacion" onPress={()=>{
-                                console.log("Fecha: ",fecha.toLocaleDateString());
-                                console.log("showDatePicker: ",showDatePicker)
-                            }}/>
-                        </View>)}
-                </View>
-
                 <View style={{justifyContent:'space-around'}}>
                     <Button color="#095813" title="canal de comunicacion" onPress={()=>{
                         navigation.navigate('Canal');

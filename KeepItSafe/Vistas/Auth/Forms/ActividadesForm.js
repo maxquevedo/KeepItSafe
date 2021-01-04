@@ -230,8 +230,12 @@ const ActividadesForm = (props) => {
             selectedStartDate != null? 
             <View style={{alignItems:'baseline'}}>
               <Text style={styles.text}>{ selectedStartDate ? fechaElegida() : ''}</Text>
-              <Text style={styles.text}>{ selectedStartDate ? eventoEnFechaElegida() : ''}</Text>
+              <Text></Text>
+              {//<Text style={styles.text}>{ selectedStartDate ? eventoEnFechaElegida() : ''}</Text>
+              }
               <Text style={styles.text}>{ selectedStartDate ? evento() : ''}</Text>
+              <Text></Text>
+              <Text></Text>
             </View>  
               :<Text></Text>
           }
