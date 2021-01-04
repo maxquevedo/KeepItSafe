@@ -1141,9 +1141,28 @@ app.put('/web/usuario/:id', async function (req, res) {
 
 app.get('/web/reporteglobal', async (req, res) => {
     let connection;
+    let queryid = `select max(REP_ID) from REPORTES_GLOBAL`
     let query = `select * from reportes_global`;
+    let idreporte = "0";
     try {
+        
         connection = await oracledb.getConnection(credentials);
+        resultqryid = await connection.execute(queryid);
+        console.log("resulqryID",resultqryid.rows[0][0]);
+
+        if (resultqryid.rows[0][0] == null) {
+            idreporte = '1';
+
+        } else {
+            idreporte = parseInt(resultqryid.rows[0]) + 1;
+            
+        }
+        
+        console.log("idReporte", idreporte)
+
+
+        let query2 =`insert into REPORTES_GLOBAL (REPORTES_GLOBAL.REP_ID) values ('${idreporte}') `
+        result = await connection.execute(query2);
         result = await connection.execute(query);
     } catch (err) {
         console.log(err)
