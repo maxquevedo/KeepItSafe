@@ -5,6 +5,7 @@ export class Solicitudes {
     SOL_PRO_ID?;
     SOL_DESCRIPCION?;
     SOL_ESTADO?;
+    SOL_TIPO?;
     SOL_FECHA?;
 
 }

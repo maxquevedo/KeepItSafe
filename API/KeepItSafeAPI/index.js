@@ -1779,6 +1779,7 @@ app.post('/web/solicitudes', async (req, res) => {
     let idProfesional= req.body.SOL_PRO_ID;
     let descripcionSolicitud= req.body.SOL_DESCRIPCION;
     let estadoSolicitud= 'pendiente';
+    let tipoSolicitud= 'asesoria especial';
     let fechaSolicitud=req.body.SOL_FECHA;
     let solicitudID=0;
     let query1 = 'select count(*) from SOLICITUDES';
@@ -1792,7 +1793,7 @@ app.post('/web/solicitudes', async (req, res) => {
         console.log("ResultRows",result.rows);
         console.log("VALOR",solicitudID);
         console.log(typeof(solicitudID));
-        let query2 = `INSERT INTO SOLICITUDES (SOL_ID, SOL_CLI_ID, SOL_PRO_ID, SOL_DESCRIPCION, SOL_ESTADO, SOL_FECHA) VALUES (${solicitudID},${idCliente},${idProfesional},'${descripcionSolicitud}','${estadoSolicitud}',TO_DATE('${fechaSolicitud}','YYYY-MM-DD'))`;
+        let query2 = `INSERT INTO SOLICITUDES (SOL_ID, SOL_CLI_ID, SOL_PRO_ID, SOL_DESCRIPCION, SOL_ESTADO,SOL_TIPO, SOL_FECHA) VALUES (${solicitudID},${idCliente},${idProfesional},'${descripcionSolicitud}','${estadoSolicitud}','${tipoSolicitud}',TO_DATE('${fechaSolicitud}','YYYY-MM-DD'))`;
         console.log("insert: ",query2)
         result = await connection.execute(query2, [], {});
        
@@ -1813,80 +1814,29 @@ app.post('/web/solicitudes', async (req, res) => {
     }
 });
 
-/* CrearSolicitudAsesorias
-app.post('/web/solicitudes', async (req, res) => {
-    console.log('post/web/solicitudes: ', req.body);
-    let connection;
-    let result;
-    let solicitudID=0;
-    try {
-        connection = await oracledb.getConnection(credentials);
-        solicitudID = (result.rows[0][0]) + 1;
-      
-        console.log(solicitudID);
-        console.log(req.body.SOL_CLI_ID);
-        console.log(req.body.SOL_PRO_ID);
-        console.log(req.body.SOL_DESCRIPCION);
-        console.log('pendiente');
-        console.log( req.body.SOL_FECHA);
-        result = await connection
-        .execute(`INSERT INTO SOLICITUDES (SOL_ID, SOL_CLI_ID, SOL_PRO_ID, SOL_DESCRIPCION, SOL_ESTADO, SOL_FECHA) 
-                  VALUES (:id,:idCliente, :idProfesional,:descripcionSolicitud,:estadoSolicitud ,TO_DATE(:fechaSolicitud,'YYYY-MM-DD'))`, 
-                  {
-                    id: solicitudID, 
-                    idCliente: req.body.SOL_CLI_ID,
-                    idProfesional: req.body.SOL_PRO_ID,
-                    descripcionSolicitud: req.body.SOL_DESCRIPCION,
-                    estadoSolicitud: 'pendiente',
-                    fechaSolicitud: req.body.SOL_FECHA
-                  }, {});
-
-        console.log('post/web/solicitudes result: ', result.rows);
-        res.json(mapResult(result));
-        
-    } catch (err) {
-        console.log(err)
-        res.send(err);
-    } finally {
-        if (connection) {
-            try {
-                await connection.close();
-
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    }
-});*/
-
 // CrearAccidentes
 app.post('/web/accidentes', async (req, res) => {
-    console.log('post/web/accidentes: ', req.body);
+    console.log("Body: ", req.body);
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+
+    let idAccidente=0;
+    let descripcionAccidente=req.body.ACC_DESCRIPCION;
+    let idCliente= req.body.ACC_ID_CLIENTE;
+    let idProfesional= req.body.ACC_ID_PRO;
+    let estadoAccidente = 0;
+    let query1 ='select count(*) from ACCIDENTES';
     let connection;
-    let result;
     
     try {
         connection = await oracledb.getConnection(credentials);
-        let maxIdQuery = await connection.execute('SELECT MAX(ACC_ID) FROM ACCIDENTES', [], {});
-        let maxACCIDENTEId = 1; 
-        if (maxIdQuery.rows){
-            maxACCIDENTEId= parseInt(maxIdQuery.rows[0]) + 1;
-        }
-        
-        result = await connection
-        .execute(`INSERT INTO ACCIDENTES (ACC_ID, ACC_DESCRIPCION, ACC_ID_CLIENTE, ACC_ID_PRO, ACC_ESTADO) 
-                  VALUES (:id,:descripcionAccidente,:idCliente, :idProfesional,:estadoAccidente )`, 
-                  {
-                    id: maxACCIDENTEId, 
-                    descripcionAccidente: req.body.ACC_DESCRIPCION,
-                    idCliente: req.body.ACC_ID_CLIENTE,
-                    idProfesional: req.body.ACC_ID_PRO,
-                    estadoAccidente: '0'
-                  }, {});
-
-        console.log('post/web/accidentes result: ', result.rows);
-        res.json(mapResult(result));
-        
+        result = await connection.execute(query1, [], {})
+        console.log("result query1", result);
+        idAccidente = parseInt(result.rows[0][0]) + 1;
+        let query2 = `INSERT INTO ACCIDENTES (ACC_ID, ACC_DESCRIPCION, ACC_ID_CLIENTE, ACC_ID_PRO, ACC_ESTADO) VALUES (${idAccidente},'${descripcionAccidente}',${idCliente},${idProfesional},${estadoAccidente})`;
+        console.log("insert: ",query2)
+        result = await connection.execute(query2, [], {});
+       
     } catch (err) {
         console.log(err)
         res.send(err);
@@ -1899,6 +1849,7 @@ app.post('/web/accidentes', async (req, res) => {
                 console.log(err);
             }
         }
+        return res.json(JSON.stringify({ result }));
     }
 });
 

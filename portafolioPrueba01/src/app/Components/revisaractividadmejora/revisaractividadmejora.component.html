@@ -28,7 +28,7 @@
                                 <td>{{mej.MEJ_RESP_CLI}}</td>
             
                                 <TD>
-                                    <BUTTON class="btn btn-success" style="margin-left: 5px;" [disabled]="mej.MEJ_ESTADO == 'aprobada' || mej.MEJ_ESTADO == 'rechazado'" (click)='editarAprobar(mej.MEJ_ID)'> A </BUTTON>
+                                    <BUTTON class="btn btn-success" style="margin-left: 5px;" [disabled]="mej.MEJ_ESTADO == 'aprobada' " (click)='editarAprobar(mej.MEJ_ID)'> A </BUTTON>
                                 </TD>
                                 <TD>
                                     <BUTTON class="btn btn-danger" style="margin-left: 5px;" [disabled]="mej.MEJ_ESTADO == 'aprobada' || mej.MEJ_ESTADO == 'rechazado' "  (click)='editarRechazar(mej.MEJ_ID)' > R </BUTTON>

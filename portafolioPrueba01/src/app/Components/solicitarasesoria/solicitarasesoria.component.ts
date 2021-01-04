@@ -46,7 +46,7 @@ export class SolicitarasesoriaComponent implements OnInit {
     this.mensajeExito = null;
     this.solicitarasesoriaService.crearSolicitud(this.solicitud).subscribe((response) => {
       console.log('crearSolicitud: ', this.solicitud);
-      this.mensajeExito = 'Mejora creada con éxito';
+      this.mensajeExito = 'Solicitud enviada con éxito';
 
     }, (error) => {
       console.log('error: ', error);
