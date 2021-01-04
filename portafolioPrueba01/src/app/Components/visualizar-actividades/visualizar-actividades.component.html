@@ -1,0 +1,64 @@
+<br>
+<div class="card border-warning mb-3">
+    <div class="card-header">Visualizar Actividades</div>
+    <div class="card-body text-Dark">
+        <h5 class="card-title">Actividades del mes: {{ obtenerNombreMes() }}</h5>
+        <div class="row">
+            <div class="col-3">
+                <label for="cliente">Cliente:</label>
+                <select name="cliente" id="cliente" [(ngModel)]="filtros.idCliente" class="form-control">
+                    <option value="null" disabled>Seleccione...</option>
+                    <option *ngFor="let cliente of clientes" value="{{cliente.USR_IDPERFIL}}" >{{cliente.USR_NOMBRECOMPLETO}}</option>
+                </select>
+            </div>
+            <div class="col-3">
+                <label for="anio">Seleccione un año:</label>
+                <select name="anio" id="anio" [(ngModel)]="filtros.anio" class="form-control">
+                    <option *ngFor="let anio of anios;" value="{{anio}}" >{{anio}}</option>
+                </select>
+            </div>
+            <div class="col-3">
+                <label for="month">Seleccione un mes:</label>
+                <select name="month" id="month" [(ngModel)]="filtros.mes" class="form-control">
+                    <option *ngFor="let month of monthNames; let i = index" value="{{i}}" >{{month}}</option>
+                </select>
+            </div>
+
+        </div>
+
+        <br />
+
+        <div class="text-center">
+            <button type="button" (click)="obtenerActividades()" class="btn btn-secondary"> Buscar actividades </button>
+        </div>
+
+
+        <br />
+
+
+        <table class="table table-bordered table-striped" style="font-size: 12px">
+            <thead>
+                <tr>
+                    <th>CLIENTE</th>
+                    <th>FECHA</th>
+                    <th>ACTIVIDAD</th>
+                    <th>PROFESIONAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let actividad of actividades">
+                    <td style="width: 30%;">{{ actividad.NOMBRE_CLIENTE }}</td>
+                    <td style="width: 10%;">{{ actividad.FECHA | date:'dd/MM/yyyy' }}</td>
+                    <td style="width: 15%;">
+                        {{ obtenerActividad(actividad) }}
+                    </td>
+                    <td style="width: 20%;">{{ actividad.NOMBRE_PROFESIONAL }}</td>
+                </tr>
+                <tr *ngIf="actividades && actividades.length === 0">
+                    <td colspan="5" class="text-center"> No hay actividades. </td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-outline-secondary" [routerLink]="['/admin']">Volver</button>
+    </div>
+</div>

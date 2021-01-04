@@ -23,6 +23,8 @@ import { ReporteglobalComponent } from './Components/reporteglobal/reporteglobal
 import { AsignarComponent} from './Components/asignar/asignar.component';
 import { VerasesoriasComponent} from './Components/verasesorias/verasesorias.component';
 import { ControlarPagosClienteComponent } from './Components/controlar-pagos-cliente/controlar-pagos-cliente.component';
+import { CalcularAccidentabilidadComponent } from './Components/calcular-accidentabilidad/calcular-accidentabilidad.component';
+import { VisualizarActividadesComponent } from './Components/visualizar-actividades/visualizar-actividades.component';
 import { RespondermejoraComponent} from './Components/respondermejora/respondermejora.component';
 
 const routes: Routes = [
@@ -51,7 +53,9 @@ const routes: Routes = [
 {path: 'crearchecklist', component: CrearcheklistComponent},
 {path: 'responderchecklist', component: ResponderchecklistComponent},
 {path: 'controlar-pagos', component: ControlarPagosClienteComponent},
+{path: 'calcular-accidentabilidad', component: CalcularAccidentabilidadComponent},
 {path: 'asignar', component: AsignarComponent},
+{path: 'visualizar-actividades', component: VisualizarActividadesComponent},
 {path: 'asignar/:id', component: AsignarComponent},
 {path: '', redirectTo: '/home', pathMatch: 'full'},
 {path: '**', redirectTo: '/home', pathMatch: 'full'}

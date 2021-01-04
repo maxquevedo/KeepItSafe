@@ -43,6 +43,8 @@ import { ControlarPagosClienteComponent } from './Components/controlar-pagos-cli
 import { IngresaractividaddemejoraService } from './Components/ingresaractividaddemejora/ingresaractividaddemejora.service';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ModalContentComponent } from './Components/controlar-pagos-cliente/controlar-pagos-cliente.component';
+import { CalcularAccidentabilidadComponent } from './Components/calcular-accidentabilidad/calcular-accidentabilidad.component';
+import { VisualizarActividadesComponent } from './Components/visualizar-actividades/visualizar-actividades.component';
 import { RespondermejoraComponent } from './Components/respondermejora/respondermejora.component';
 
 @NgModule({
@@ -74,6 +76,8 @@ import { RespondermejoraComponent } from './Components/respondermejora/responder
     VerasesoriasComponent,
     ControlarPagosClienteComponent,
     ModalContentComponent,
+    CalcularAccidentabilidadComponent,
+    VisualizarActividadesComponent,
     RespondermejoraComponent
   ],
   imports: [
