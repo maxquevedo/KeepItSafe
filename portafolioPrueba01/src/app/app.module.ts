@@ -42,6 +42,7 @@ import { ControlarPagosClienteComponent } from './Components/controlar-pagos-cli
 import { IngresaractividaddemejoraService } from './Components/ingresaractividaddemejora/ingresaractividaddemejora.service';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ModalContentComponent } from './Components/controlar-pagos-cliente/controlar-pagos-cliente.component';
+import { RespondermejoraComponent } from './Components/respondermejora/respondermejora.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { ModalContentComponent } from './Components/controlar-pagos-cliente/cont
     AsignarComponent,
     VerasesoriasComponent,
     ControlarPagosClienteComponent,
-    ModalContentComponent
+    ModalContentComponent,
+    RespondermejoraComponent
   ],
   imports: [
     BrowserModule,
