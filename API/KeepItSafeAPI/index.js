@@ -931,27 +931,24 @@ app.post('/web/profesional', async (req, res) => {
 
     let connection;
     let userId = 0;
-    //let query1 = `select max(usr_id) from usuarios`;
     let querypro = `select max(PRO_ID) from pro`;
-    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
+    let queryusr = `select max(usr_ID) from usuarios`;
 
     connection = await oracledb.getConnection(credentials);
     result = await connection.execute(querypro, [], {});
+    idusuario = await connection.execute(queryusr, [], {});
 
     let proId = parseInt(result.rows[0]) + 1;
-    console.log("result", result);
+    let usrId = parseInt(idusuario.rows[0]) + 1;
+    console.log("result", proId);
+    console.log("usrID: ", usrId);
 
     let query3 = `insert into pro (PRO_RUT,PRO_ID,PRO_NOMBRE,PRO_APELLIDO,PRO_FINGRESO) values('${rut}',${proId},'${name}','${apellido}','${fechaingreso}')`;
     console.log("query3 -> ", query3);
 
     try {
-        //console.log("Query 3:",query3);
-
-        //result = await connection.execute(query1,[],{})
-
-        //userId = (result++);
-        let query2 = `INSERT INTO USUARIOS(USR_USERNAME, USR_CORREO, USR_NOMBRECOMPLETO, USR_PASSWORD, USR_TIPOUSUARIO, USR_IDPERFIL, USR_ESTADO) VALUES ('${username}','${email}','${name} ${apellido}','${password}','${tipoUsuario}',${proId} ,${estadousuario}) `;
-
+        
+        let query2 = `INSERT INTO USUARIOS(USR_ID,USR_USERNAME, USR_CORREO, USR_NOMBRECOMPLETO, USR_PASSWORD, USR_TIPOUSUARIO, USR_IDPERFIL, USR_ESTADO) VALUES ('${usrId}','${username}','${email}','${name} ${apellido}','${password}','${tipoUsuario}',${proId} ,${estadousuario}) `;
         console.log("query2 -> ", query2);
 
         result = await connection.execute(query2, [], {});
@@ -977,7 +974,7 @@ app.post('/web/profesional', async (req, res) => {
 });
 
 app.put('/web/profesional/:id', async (req, res) => {
-    console.log("Body: ", req.body);
+    console.log("Body: ", req.body);    
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
     let id = req.body.id;
@@ -1144,9 +1141,28 @@ app.put('/web/usuario/:id', async function (req, res) {
 
 app.get('/web/reporteglobal', async (req, res) => {
     let connection;
+    let queryid = `select max(REP_ID) from REPORTES_GLOBAL`
     let query = `select * from reportes_global`;
+    let idreporte = "0";
     try {
+        
         connection = await oracledb.getConnection(credentials);
+        resultqryid = await connection.execute(queryid);
+        console.log("resulqryID",resultqryid.rows[0][0]);
+
+        if (resultqryid.rows[0][0] == null) {
+            idreporte = '1';
+
+        } else {
+            idreporte = parseInt(resultqryid.rows[0]) + 1;
+            
+        }
+        
+        console.log("idReporte", idreporte)
+
+
+        let query2 =`insert into REPORTES_GLOBAL (REPORTES_GLOBAL.REP_ID) values ('${idreporte}') `
+        result = await connection.execute(query2);
         result = await connection.execute(query);
     } catch (err) {
         console.log(err)
@@ -1168,10 +1184,25 @@ app.get('/web/reporteclientes/:id', async (req, res) => {
 
     let id = req.params.id;
     let connection;
-    let query = "SELECT * FROM reportes_global where REP_ID_CLI = :id";
+    let queryid = `select max(REP_CLI_ID) from REPORTES_CLI`;
+    let query = `SELECT * FROM reportes_cli where REP_CLI_ID = ${id}`;
+    let idreporte = "0";
+
     try {
         connection = await oracledb.getConnection(credentials);
-        result = await connection.execute(query)
+        resultqryid = await connection.execute(queryid);
+
+        if (resultqryid.rows[0][0] == null) {
+            idreporte = '1';
+
+        } else {
+            idreporte = parseInt(resultqryid.rows[0]) + 1;
+            
+        }
+
+        let query2 =`insert into REPORTES_CLI ( REP_CLI_ID, REP_ID_CLI, REP_PROFESIONAL) values (${idreporte},1,'1') `
+        result = await connection.execute(query2);
+        result = await connection.execute(query);
     } catch (err) {
         console.log(err)
     } finally {

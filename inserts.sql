@@ -1,5 +1,5 @@
 --PLANES
-insert into planes values(1,3);
+insert into planes values(1,2);
 select * from planes;
 -- USUARIOS
 insert into usuarios values (1,'Adam','adam@falabella.com','Adam Acosta','1234','Cliente',1,'1');

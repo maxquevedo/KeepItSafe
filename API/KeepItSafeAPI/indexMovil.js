@@ -864,6 +864,121 @@ app.patch('/enviarPropuesta',async function(req,res){
     return res.json(result.rowsAffected);
 });
 
+app.post('/reportarAccidente',async function(req,res){
+    let idAccidente = req.body.jeison.id;
+    let accidente = req.body.jeison.nombreAccidente.toLowerCase();
+    let detalle = `id: ${idAccidente}, accidente: ${accidente} - activo, detalle: ${ req.body.jeison.descripcion}`;
+    let idReportes;
+    let idCli = req.body.jeison.idCli;
+    let idChat;
+    let idPro;
+    let connection;
+    let query = "";
+    let result;
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        //INSERTAR EN TABLA DE reportes_accidentes
+        // query = `select count(*) from reportes_accidentes`;
+        // result = await connection.execute(query);
+        // idReportes = (result.rows[0][0])+1;
+        // query = `insert into reportes_accidentes values(:idReportes,:idCli,sysdate,:detalle)`;
+        // console.log("query: ",query,idReportes,idCli,detalle);
+        // result = await connection.execute(query,[idReportes,idCli,detalle],{})
+        //ACTUALIZAR ACCIDENTES
+        query = `update accidentes set acc_estado = 1 where acc_descripcion = '${accidente}'`;
+        result = await connection.execute(query);
+        //ABRIR CHAT
+        query = `select count(*) from chat`;
+        result = await connection.execute(query);
+        idChat = result.rows[0][0] +1;
+        query = `select cli_id_pro from clientes where cli_id = ${idCli}`; 
+        result = await connection.execute(query);
+        idPro = result.rows[0][0];
+        console.log("Id chat: ",idChat);
+        console.log("Id pro: ",idPro);
+        query = `insert into chat values(${idChat},${idCli},${idPro},${idAccidente},'${req.body.jeison.descripcion}',sysdate,'cliente','${req.body.jeison.nombreAccidente}')`;
+        result = await connection.execute(query);
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        if(result.rowsAffected > 0){
+            return res.json(['success']);
+        }
+        return res.json(['failure']);
+    }
+});
+
+//CANAL
+app.get('/chats/:id/:tipoUsu',async function(req,res){
+    let query;
+    let result;
+    let connection;
+    let id = req.params.id;
+    let tipoUsu = req.params.tipoUsu;
+
+    if(tipoUsu == "Cliente"){
+        query = `select * from chat where chat_id_cliente = '${id}' order by chat_mensaje_date desc`;    
+    }else{
+        query = `select * from chat where chat_id_pro = ${id} order by chat_mensaje_date desc`;
+    }
+
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[],{});
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return  res.json(result.rows); 
+})
+
+//CHAT
+app.get('/chat/:idCli/:idPro/:idAcc/:cabecera',async function(req,res){
+    let idCli = req.params.idCli;
+    let idPro = req.params.idPro;
+    let idAcc = req.params.idAcc;
+    let cabecera = req.params.cabecera;
+    let connection;
+    let query = "";
+    let result;
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        query = `select * from chat where chat_id_cliente = ${idCli} and chat_id_pro = ${idPro} and
+        chat_id_accidente = ${idAcc} and chat_cabezera = '${cabecera}'`;
+        result = await connection.execute(query);
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        return res.json(result.rows)
+    }
+
+
+})
 
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;

@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet,Button, ActivityIndicator,FlatList,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,Button, ActivityIndicator,FlatList,TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DialogInput from 'react-native-dialog-input';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,7 +20,6 @@ class Accidentes extends Component {
 
     async componentDidMount(){
         let cli_id = await AsyncStorage.getItem("id2")
-        console.log(cli_id);
         let resp = await fetch(`http://10.0.2.2:8080/accidentes/${cli_id}`);
         let respJson = await resp.json();
         this.setState({accidentes: respJson, loading:false});
@@ -28,20 +27,28 @@ class Accidentes extends Component {
 
     
     async sendInput(inputText){
-        console.log("Input text: ",inputText);
-        console.log("Id ACcidente: ",this.state.idAccidenteSelec);
-        // let jeison = {
-        //     id: propuestaMensajeArr[0],
-        //     propuestaMensaje: inputText
-        // }
-        // let json = JSON.stringify({jeison:jeison});
-        // let resp = await fetch('http://10.0.2.2:8080/enviarPropuesta',{
-        //     method:'PATCH',
-        //     headers: {
-        //         'Content-Type':'application/json; charset="UTF-8"'
-        //     },
-        //     body:json
-        // });
+        let idCli = await AsyncStorage.getItem("id2");
+        let jeison = {
+            id: this.state.idAccidenteSelec,
+            nombreAccidente: this.state.detalleAccidente,
+            descripcion: inputText,
+            idCli: idCli
+        }
+    
+        let json = JSON.stringify({jeison:jeison});
+        let resp = await fetch('http://10.0.2.2:8080/reportarAccidente',{
+            method:'POST',
+            headers: {
+                'Content-Type':'application/json; charset="UTF-8"'
+            },
+            body:json
+        });
+        let respJson = await resp.json();
+
+        if(respJson[0] == "success"){
+            Alert.alert("Accidente reportado correctamente","Por favor dirijase a ASESORIA - CANAL DE COMUNICACIÓN.",
+            [{text:"OK"}]);
+        }
         this.setState({isDialogVisible:false});
     }
 
