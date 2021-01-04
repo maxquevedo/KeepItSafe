@@ -884,10 +884,11 @@ app.post('/reportarAccidente',async function(req,res){
         console.log("query: ",query,idReportes,idCli,detalle);
         result = await connection.execute(query,[idReportes,idCli,detalle],{})
         //ACTUALIZAR ACCIDENTES
-        //query = `update accidentes set acc_estado = 1 where acc_descripcion = '${accidente}'`;
-        ///result = await connection.execute(query);
-        //console.log(result.rows[0]);
+        query = `update accidentes set acc_estado = 1 where acc_descripcion = '${accidente}'`;
+        result = await connection.execute(query);
+        console.log(result.rows[0]);
         //ABRIR CHAT
+        
         
     }catch(err){
         console.log(err)
