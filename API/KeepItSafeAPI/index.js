@@ -1858,6 +1858,7 @@ app.post('/web/accidentes', async (req, res) => {
     let estadoAccidente = 0;
     let query1 ='select count(*) from ACCIDENTES';
     let connection;
+
     
     try {
         connection = await oracledb.getConnection(credentials);
@@ -1866,6 +1867,7 @@ app.post('/web/accidentes', async (req, res) => {
         idAccidente = parseInt(result.rows[0][0]) + 1;
         let query2 = `INSERT INTO ACCIDENTES (ACC_ID, ACC_DESCRIPCION, ACC_ID_CLIENTE, ACC_ID_PRO, ACC_ESTADO) VALUES (${idAccidente},'${descripcionAccidente}',${idCliente},${idProfesional},${estadoAccidente})`;
         console.log("insert: ",query2)
+        console.log("ID:",idAccidente)
         result = await connection.execute(query2, [], {});
        
     } catch (err) {
