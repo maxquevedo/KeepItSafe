@@ -1741,6 +1741,80 @@ app.post('/web/accidentes', async (req, res) => {
     }
 });
 
+// visualizar actividades 
+app.post('/web/obtenerActividades', async (req, res) => {
+    console.log('post/web/obtenerActividades: ', req.body);
+    let connection;
+    let result = [];
+    
+    try {
+        connection = await oracledb.getConnection(credentials);
+        let mesInt = parseInt(req.body.mes) + 1;
+        let mes = mesInt < 10 ? '0' + (mesInt) : mesInt;
+        let date = `${req.body.anio}-${mes}`;
+        console.log('date: ', date);
+
+        let capacitacionesQry = `
+        SELECT 
+            CAP_ID AS ID, CAP_FECHA AS FECHA, CAP_ID_PRO AS ID_PRO, 1 AS ACTIVIDAD, up.USR_NOMBRECOMPLETO AS NOMBRE_PROFESIONAL, uc.USR_NOMBRECOMPLETO AS NOMBRE_CLIENTE
+        FROM CAPACITACIONES c
+        INNER JOIN USUARIOS up ON up.USR_IDPERFIL = c.CAP_ID_PRO AND up.USR_TIPOUSUARIO = 'Profesional'
+        INNER JOIN USUARIOS uc ON uc.USR_IDPERFIL = c.CAP_ID_CLI AND uc.USR_TIPOUSUARIO = 'Cliente'
+        WHERE (:idCliente IS NULL OR CAP_ID_CLI = :idCliente) AND TO_CHAR(CAP_FECHA, 'YYYY-MM') = :fechaGen`;
+        let visitasQry = `
+        SELECT 
+            VIS_ID AS ID, VIS_FCITA AS FECHA, VIS_ID_PRO AS ID_PRO, 2 AS ACTIVIDAD, up.USR_NOMBRECOMPLETO AS NOMBRE_PROFESIONAL, uc.USR_NOMBRECOMPLETO AS NOMBRE_CLIENTE
+        FROM VISITAS v
+        INNER JOIN USUARIOS up ON up.USR_IDPERFIL = v.VIS_ID_PRO AND up.USR_TIPOUSUARIO = 'Profesional'
+        INNER JOIN USUARIOS uc ON uc.USR_IDPERFIL = v.VIS_ID_CLI AND uc.USR_TIPOUSUARIO = 'Cliente'
+        WHERE (:idCliente IS NULL OR VIS_ID_CLI = :idCliente) AND TO_CHAR(VIS_FCITA, 'YYYY-MM') = :fechaGen`;
+        let asesoriasQry = `
+        SELECT 
+            ASE_ID AS ID, ASE_FECHA AS FECHA, ASE_ID_PRO AS ID_PRO, 3 AS ACTIVIDAD, up.USR_NOMBRECOMPLETO AS NOMBRE_PROFESIONAL, uc.USR_NOMBRECOMPLETO AS NOMBRE_CLIENTE
+        FROM ASESORIAS a
+        INNER JOIN USUARIOS up ON up.USR_IDPERFIL = a.ASE_ID_PRO AND up.USR_TIPOUSUARIO = 'Profesional'
+        INNER JOIN USUARIOS uc ON uc.USR_IDPERFIL = a.ASE_ID_USUARIO AND uc.USR_TIPOUSUARIO = 'Cliente'
+        WHERE (:idCliente IS NULL OR ASE_ID_USUARIO = :idCliente) AND TO_CHAR(ASE_FECHA, 'YYYY-MM') = :fechaGen`;
+
+        let capacitaciones = await connection.execute(capacitacionesQry, {
+            idCliente: req.body.idCliente,
+            fechaGen: date
+        });
+        let visitas = await connection.execute(visitasQry, {
+            idCliente: req.body.idCliente,
+            fechaGen: date
+        });
+        let asesorias = await connection.execute(asesoriasQry, {
+            idCliente: req.body.idCliente,
+            fechaGen: date
+        });
+
+        if (capacitaciones.rows && capacitaciones.rows.length > 0)
+            result.push.apply(result, mapMultipleResult(capacitaciones));
+        if (visitas.rows && visitas.rows.length > 0)
+            result.push.apply(result, mapMultipleResult(visitas));
+        if (asesorias.rows && asesorias.rows.length > 0)
+            result.push.apply(result, mapMultipleResult(asesorias));
+
+        console.log('capacitaciones: ', capacitaciones);
+        console.log('visitas: ', visitas);
+        console.log('asesorias: ', asesorias);
+        res.json(result);
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+});
+
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8081;
 app.listen(port, () => console.log(`Listening on port ${port}..`));
