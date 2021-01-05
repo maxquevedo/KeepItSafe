@@ -833,15 +833,13 @@ app.get('/web/usuario/:id', async function (req, res) {
     res.json(mapMultipleResult(result))
 })
 
-app.get('/web/responderchecklist/:id_pro/:id_cli/', async function (req, res) {
-    let id_pro = req.params.id_pro;
-    let id_cli = req.params.id_cli;
+app.get('/web/responderchecklist/:id', async function (req, res) {
     let connection;
-    let query = `select acc_descripcion, acc_estado,acc_id from accidentes where acc_id_pro = :id_pro and acc_id_cliente = :id_cli`
+    let id = req.params.id;
+    let query = `select * from accidentes INNER JOIN pro on accidentes.ACC_ID_PRO = PRO_ID INNER JOIN clientes on accidentes.ACC_ID_CLIENTE=CLI_ID WHERE PRO_ID= ${id}`
     try {
         connection = await oracledb.getConnection(credentials);
-        result = await connection.execute(query, [id_pro, id_cli], {});
-        //console.log(result.rows);
+        result = await connection.execute(query, [], {});
     } catch (e) {
         console.log(e);
     } finally {

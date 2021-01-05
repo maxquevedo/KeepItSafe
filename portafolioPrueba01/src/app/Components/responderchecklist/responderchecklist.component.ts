@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ResponderchecklistService } from './responderchecklist.service';
 import { Router} from '@angular/router';
-import { Accidente } from './accidente';
+import { Accidentes } from './accidente';
 
 @Component({
   selector: 'app-responderchecklist',
@@ -10,11 +10,28 @@ import { Accidente } from './accidente';
 })
 export class ResponderchecklistComponent implements OnInit {
 
-  accidente:Accidente;
+  accidentes : Accidentes;
 
-  constructor() { }
+  constructor(private responderchecklistService:  ResponderchecklistService, private router: Router ) { }
 
   ngOnInit(): void {
+
+    var profesionalId;
+    if (sessionStorage.getItem('USR_IDPERFIL')) {
+    profesionalId = sessionStorage.getItem('USR_IDPERFIL');
+      
+    }
+
+    this.responderchecklistService.getAccidentes(profesionalId).subscribe( 
+      res => this.getAccidentes(res),
+      err => console.error(err)
+    );
+    
+  }
+  getAccidentes(res){
+  
+    this.accidentes = res;
+    
   }
 
 }
