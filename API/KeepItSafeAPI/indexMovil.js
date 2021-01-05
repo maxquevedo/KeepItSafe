@@ -989,6 +989,7 @@ app.get('/solicitudes/capacitacion/:idCli', async function(req,res){
         connection = await oracledb.getConnection(connectionInfo);
         query = `select * from solicitudes where sol_cli_id = ${idCli} and sol_tipo = 'capacitacion' `;
         result = await connection.execute(query);
+        console.log(result);
     }catch(err){
         console.log(err)
     }

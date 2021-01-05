@@ -1,9 +1,8 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Visita from './Visita';
-import Capacitacion from './Capacitacion';
 
 // create a component
 class VisitaStack extends Component {
@@ -12,7 +11,6 @@ class VisitaStack extends Component {
         return (
             <Stack.Navigator>
                 <Stack.Screen name="Home" component={Visita} options={{headerShown:false}} />
-                <Stack.Screen name="Capacitacion" component={Capacitacion}/>
             </Stack.Navigator>
         );
     }

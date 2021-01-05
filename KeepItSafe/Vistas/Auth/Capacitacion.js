@@ -32,6 +32,7 @@ class Capacitacion extends Component {
         let idCli = await AsyncStorage.getItem('id2');
         let resp = await fetch(`http://10.0.2.2:8080/solicitudes/capacitacion/${idCli}`);
         let respJson = await resp.json();
+        console.log(respJson);
         this.setState({solicitudes: respJson,loading:false,tipoUsu});
     }
 

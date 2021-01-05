@@ -146,7 +146,7 @@ class PropuestasMejora extends Component {
 
     renderItem(data){
         const { listaProp,estados,respuestas,tipoUsuario} = this.state;
-        console.log(tipoUsuario);
+        
         let color = "white";
         let colorOjo = "black";
         let colorApr = "black";
@@ -160,7 +160,11 @@ class PropuestasMejora extends Component {
         }else if(state == "aprobada"){
             colorApr = "green";
             colorRepro = "black";
-        }else {
+        }else if(state == "rechazada"){
+            colorApr = "black";
+            colorRepro = "red";
+        }
+        else {
             colorRepro = "black";
             colorApr = "black";
         }
