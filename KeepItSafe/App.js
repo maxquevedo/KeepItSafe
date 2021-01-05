@@ -97,8 +97,6 @@ function Profesional(){
         iconName = 'ios-person';
       } else if (route.name === "Actividades") {
         iconName = 'ios-calendar';
-      } else if(route.name === "Reportes"){
-        iconName = focused ? 'ios-folder-open' : 'ios-folder';
       } else if(route.name === "Accidentes"){
         iconName = 'ios-flame';
       } else if(route.name === "Asesoria"){
@@ -114,7 +112,6 @@ function Profesional(){
 <Tab.Screen name="Actividades" component={Actividades}/>
 <Tab.Screen name="Visita" component={VisitaStack}/>
 <Tab.Screen name="Asesoria" component={AsesoriaStack}/>
-<Tab.Screen name="Reportes" component={VerReportes}/>
 </Tab.Navigator>);
 }
 

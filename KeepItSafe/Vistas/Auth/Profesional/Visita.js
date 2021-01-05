@@ -131,7 +131,6 @@ class Visita extends Component {
                         
                         <View>
                             <View>
-                                <Button color="#095813" onPress={()=>{console.log(checks)}} title="capacitacion"/>
                                 <View><Text></Text><Text></Text></View>
                                 <Button color="#095813" onPress={ ()=> this._generarInforme() } title="generar informe"/>
                             </View>
