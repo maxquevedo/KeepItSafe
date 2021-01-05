@@ -43,21 +43,20 @@ class Asesorias extends Component {
         const { navigation } = this.props;
         //console.log((usuarios[0]+"{''}"));
         return (
-            <View style={{flex:1,justifyContent:'space-evenly'}}>
-                <View style={{justifyContent:'space-around'}}>
+            <View style={{flex:1}}>
+                <View style={{flex:0.2}}></View>
+                <View style={{flex:0.5, justifyContent:'space-around'}}>
                     <Button color="#095813" title="canal de comunicacion" onPress={()=>{
                         navigation.navigate('Canal');
                     }}/>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
+                    <Button color="#095813" title="capacitacion" onPress={()=>{
+                        navigation.navigate('Capacitacion');
+                    }}/>
                     <Button color="#095813" title="propuestas de mejora" onPress={()=>{
                         navigation.navigate('Propuestas');
                     }}/>
                 </View>
+                <View style={{flex:0.2}}></View>
             </View>
         );
     }
@@ -71,6 +70,10 @@ class Asesorias extends Component {
 //         alignItems: 'center'
 //     },
 // });
+//               <Text></Text>
+//<Text></Text>
+//<Text></Text>
+//<Text></Text>
 
 //make this component available to the app
 export default Asesorias;

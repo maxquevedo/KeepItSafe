@@ -11,7 +11,6 @@ class PropuestasMejora extends Component {
     constructor(props){
         super(props);
         this.state = {
-            propuestas:['Cambiar el extintor','Poner avisos en escaleras','Marcar zona segura'],
             listaProp: [],
             tipoUsuario:'',
             loading:true,
@@ -154,12 +153,7 @@ class PropuestasMejora extends Component {
         let colorRepro = "black";
         let sended = "black";
         let index = data.index;
-        console.log("DATA: ",data)
-        console.log("Estados, en vola esto caga: ",estados[0]);
-        console.log("Lista prop: ",listaProp)
         let state = data.item[1];
-        //console.log("DATA: ",data, "\nListaProp: ",listaProp[data.index],'\nEstados: ',estados[data.index][3]);
-        //console.log(estados[index],listaProp[index] );
         if(state == "abierta"){
             colorApr = "black";
             colorRepro = "black";
@@ -167,9 +161,8 @@ class PropuestasMejora extends Component {
             colorApr = "green";
             colorRepro = "black";
         }else {
-            colorRepro = "red";
+            colorRepro = "black";
             colorApr = "black";
-            sended = "blue";
         }
         if(estados[data.index][3] != null ){
             colorOjo = "green";

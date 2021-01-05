@@ -846,7 +846,7 @@ app.patch('/enviarPropuesta',async function(req,res){
     let mensaje = req.body.jeison.propuestaMensaje;
     console.log(mensaje,id);
     let connection;
-    let query = `update mejoras set mej_resp_cli = :mensaje where mej_id = :id`
+    let query = `update mejoras set mej_resp_cli = :mensaje, mej_estado ='enviada' where mej_id = :id`
     try{    
         connection = await oracledb.getConnection(connectionInfo);
         var result = await connection.execute(query,[mensaje,id],{});
@@ -960,7 +960,7 @@ app.get('/chat/:idCli/:idPro/:idAcc/:cabecera',async function(req,res){
     try{
         connection = await oracledb.getConnection(connectionInfo);
         query = `select * from chat where chat_id_cliente = ${idCli} and chat_id_pro = ${idPro} and
-        chat_id_accidente = ${idAcc} and chat_cabezera = '${cabecera}'`;
+        chat_id_accidente = ${idAcc} and chat_cabecera = '${cabecera}' order by chat_mensaje_date desc`;
         result = await connection.execute(query);
     }catch(err){
         console.log(err)
@@ -978,6 +978,31 @@ app.get('/chat/:idCli/:idPro/:idAcc/:cabecera',async function(req,res){
     }
 
 
+})
+
+app.get('/solicitudes/capacitacion/:idCli', async function(req,res){
+    let idCli = req.params.idCli;
+    let connection;
+    let query = "";
+    let result;
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        query = `select * from solicitudes where sol_cli_id = ${idCli} and sol_tipo = 'capacitacion' `;
+        result = await connection.execute(query);
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        return res.json(result.rows)
+    }
 })
 
 //PORT ENVIRONMENT VARIABLE

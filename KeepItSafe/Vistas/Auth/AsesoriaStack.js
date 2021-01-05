@@ -6,6 +6,7 @@ import CanalComu from './CanalComu';
 import PropuestasMejora from './PropuestasMejora';
 import Asesorias from './Asesorias';
 import Chat from './Chat';
+import Capacitacion from './Capacitacion';
 
 // create a component
 class AsesoriaStack extends Component {
@@ -17,6 +18,7 @@ class AsesoriaStack extends Component {
                 <Stack.Screen name="Canal" component={CanalComu}/>
                 <Stack.Screen name="Propuestas" component={PropuestasMejora}/>
                 <Stack.Screen name="Chat" component={Chat}/>
+                <Stack.Screen name="Capacitacion" component={Capacitacion}/>
             </Stack.Navigator>
         );
     }

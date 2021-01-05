@@ -33,7 +33,7 @@ class Chat extends Component {
                 pro.push(respJson[i]);
             }
         }
-        console.log("Pro dice: ",pro,"\nCli dice: ",cliente);
+       // console.log("Pro dice: ",pro,"\nCli dice: ",cliente);
         this.setState({mensajesCli: cliente, mensajesPro: pro,mensajesTotales:respJson,loading:false})
     }
 
