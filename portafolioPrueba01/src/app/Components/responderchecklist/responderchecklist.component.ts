@@ -31,7 +31,29 @@ export class ResponderchecklistComponent implements OnInit {
   getAccidentes(res){
   
     this.accidentes = res;
-    
+    console.log(res);
   }
-
+   editarAprobar(desc:string){
+    var aprobado =sessionStorage.getItem('aprobados');
+    aprobado+=', '+desc;
+    sessionStorage.setItem('aprobados',aprobado)
+    console.log(aprobado);
+  }
+  editarRechazar(desc:string){
+    var rechazado =sessionStorage.getItem('rechazados');
+    rechazado+=', '+desc;
+    sessionStorage.setItem('rechazados',rechazado)
+    console.log(rechazado);
+  }
 }
+  /*editarAprobar(id:string){
+    this.responderchecklistService.updateAprobar(id).subscribe( 
+      res => console.log(res),
+      err => console.error(err)
+    );
+    console.log(`desde editarChecklist:`,id);
+    console.log(typeof(id));
+    this.ngOnInit();
+
+  }*/
+

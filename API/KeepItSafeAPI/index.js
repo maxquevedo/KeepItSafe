@@ -13,8 +13,8 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 // max user
 // const credentials = { user: "c##max2330", password: "Aa123456", connectString: "localhost:1521" };
 // dev user
-const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
-//const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
+//const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
+const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
 
 function mapResult(arreglo) {
     if (!arreglo || !arreglo.metaData || !arreglo.rows)
@@ -765,9 +765,10 @@ app.get('/web/clientes', async (req, res) => {
     res.json(mapMultipleResult(result))
 })
 
-app.get('/web/rev/clientes', async (req, res) => {
+app.get('/web/rev/clientes/:id', async (req, res) => {
     let connection;
-    let query = `select * from clientes`
+    let id = req.params.id;
+    let query = `select * from clientes WHERE CLI_ID_PRO=${id}`
     try {
         connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
@@ -836,7 +837,7 @@ app.get('/web/usuario/:id', async function (req, res) {
 app.get('/web/responderchecklist/:id', async function (req, res) {
     let connection;
     let id = req.params.id;
-    let query = `select * from accidentes INNER JOIN pro on accidentes.ACC_ID_PRO = PRO_ID INNER JOIN clientes on accidentes.ACC_ID_CLIENTE=CLI_ID WHERE PRO_ID= ${id}`
+    let query = `select * from accidentes WHERE ACC_ID_PRO=${id}`
     try {
         connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
@@ -851,8 +852,125 @@ app.get('/web/responderchecklist/:id', async function (req, res) {
             }
         }
     }
-    return res.json(result.rows);
+    res.json(mapMultipleResult(result))
 })
+//AprobarChecklist
+app.put('/web/responderchecklist/aprobar/:id', async(req, res) => {
+    console.log("Body: ", req.body);
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+   
+    let id = req.params.id;
+    let status = 1;
+    let connection;
+  
+    console.log("ID: ",id);
+    console.log("Estado: ",status);
+
+
+    try {
+
+        connection = await oracledb.getConnection(credentials);
+        let query2 = `UPDATE ACCIDENTES SET ACC_ESTADO = ${status} WHERE ACC_ID= ${id}`;
+        console.log("query2 -> ", query2);
+
+        result = await connection.execute(query2, [], {});
+
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return res.json(JSON.stringify({ result }));
+    }
+
+
+});
+//AprobarChecklist
+app.put('/web/responderchecklist/aprobar/:id', async(req, res) => {
+    console.log("Body: ", req.body);
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+   
+    let id = req.params.id;
+    let status = 1;
+    let connection;
+  
+    console.log("ID: ",id);
+    console.log("Estado: ",status);
+
+
+    try {
+
+        connection = await oracledb.getConnection(credentials);
+        let query2 = `UPDATE ACCIDENTES SET ACC_ESTADO = ${status} WHERE ACC_ID= ${id}`;
+        console.log("query2 -> ", query2);
+
+        result = await connection.execute(query2, [], {});
+
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return res.json(JSON.stringify({ result }));
+    }
+
+
+});
+//RechazarrChecklist
+app.put('/web/responderchecklist/rechazar/:id', async(req, res) => {
+    console.log("Body: ", req.body);
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+   
+    let id = req.params.id;
+    let status = 0;
+    let connection;
+  
+    console.log("ID: ",id);
+    console.log("Estado: ",status);
+
+
+    try {
+
+        connection = await oracledb.getConnection(credentials);
+        let query2 = `UPDATE ACCIDENTES SET ACC_ESTADO = ${status} WHERE ACC_ID= ${id}`;
+        console.log("query2 -> ", query2);
+
+        result = await connection.execute(query2, [], {});
+
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return res.json(JSON.stringify({ result }));
+    }
+
+
+});
 
 app.post('/web/cliente', async (req, res) => {
     console.log("Body: ", req.body);

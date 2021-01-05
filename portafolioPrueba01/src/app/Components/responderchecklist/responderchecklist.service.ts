@@ -20,5 +20,14 @@ export class ResponderchecklistService {
   getAccidentes(ACC_ID_PRO:string){
     return this.http.get(`${this.env.apiUrl}/web/responderchecklist/${ACC_ID_PRO}`)
   }
+
+  updateAprobar(ACC_ID:string){
+    return this.http.put(`${this.env.apiUrl}/web/responderchecklist/aprobar/${ACC_ID}`, {headers: this.httpHeaders});
+    
+  }
+  updateRechazar(ACC_ID:string){
+    return this.http.put(`${this.env.apiUrl}/web/responderchecklist/rechazar/${ACC_ID}`, {headers: this.httpHeaders});
+    
+  }
  
 }

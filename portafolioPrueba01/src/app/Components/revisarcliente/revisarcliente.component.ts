@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Cliente } from './cliente'
-import { ClienteService } from './cliente.service'
+import { Cliente } from './cliente';
+import { ClienteService } from './cliente.service';
+import { Router} from '@angular/router';
 
 @Component({
   selector: 'app-revisarcliente',
@@ -11,19 +12,25 @@ export class RevisarclienteComponent implements OnInit {
 
   cliente : Cliente;
 
-  constructor( private clienteService: ClienteService ) { }
+  constructor( private clienteService: ClienteService , private router: Router) { }
 
   ngOnInit(): void {
-    this.clienteService.getClientes().subscribe( 
+    var profesionalId;
+    if (sessionStorage.getItem('USR_IDPERFIL')) {
+    profesionalId = sessionStorage.getItem('USR_IDPERFIL');
       
+    }
+
+    this.clienteService.getClientes(profesionalId).subscribe( 
       res => this.getClientes(res),
       err => console.error(err)
     );
+    
   }
-
   getClientes(res){
+  
     this.cliente = res;
-    console.log("desde rev getcliente",this.cliente);
+    console.log(res);
   }
 
 }

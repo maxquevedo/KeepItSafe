@@ -17,8 +17,8 @@ export class ClienteService {
   constructor(private http: HttpClient ) { }
 
 
-  getClientes(){
-    return this.http.get(`${this.env.apiUrl}/web/rev/clientes`)
+  getClientes(CLI_ID_PRO:string){
+    return this.http.get(`${this.env.apiUrl}/web/rev/clientes/${CLI_ID_PRO}`)
   }
 
   create(cliente: Cliente){
