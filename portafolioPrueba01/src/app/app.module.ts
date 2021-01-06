@@ -46,6 +46,7 @@ import { ModalContentComponent } from './Components/controlar-pagos-cliente/cont
 import { CalcularAccidentabilidadComponent } from './Components/calcular-accidentabilidad/calcular-accidentabilidad.component';
 import { VisualizarActividadesComponent } from './Components/visualizar-actividades/visualizar-actividades.component';
 import { RespondermejoraComponent } from './Components/respondermejora/respondermejora.component';
+import { ListarasesoriasComponent } from './Components/verasesorias/listarasesorias/listarasesorias.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { RespondermejoraComponent } from './Components/respondermejora/responder
     ModalContentComponent,
     CalcularAccidentabilidadComponent,
     VisualizarActividadesComponent,
-    RespondermejoraComponent
+    RespondermejoraComponent,
+    ListarasesoriasComponent
   ],
   imports: [
     BrowserModule,

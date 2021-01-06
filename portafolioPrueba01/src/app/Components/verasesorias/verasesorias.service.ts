@@ -16,6 +16,10 @@ export class VerasesoriasService {
     return this.http.get(`${this.env.apiUrl}/web/asesorias`)
   }
 
+  getAsesoria(){
+    return this.http.get(`${this.env.apiUrl}/web/asesoria`)
+  }
+
   create(formateado){
     return this.http.post(`${this.env.apiUrl}/web/solasesoria`, formateado, {headers: this.httpHeaders})
   }

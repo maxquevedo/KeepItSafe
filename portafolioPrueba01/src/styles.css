@@ -8,6 +8,13 @@
     font-size: 12px;
 }
 
+.botonEditar:disabled{
+    color:#fff;
+    background-color:rgba(255, 140, 0, 0.432);
+    border-color:orange
+}
+
+
 .botonCrear {
     background-color: darkgreen;
     color: white;
@@ -16,6 +23,12 @@
     text-decoration: none;
     border-radius: 4px;
     font-size: 12px;
+}
+
+.botonCrear:disabled{
+    color:#fff;
+    background-color:#28a74667;
+    border-color:#28a745
 }
 
 .botonEliminar {

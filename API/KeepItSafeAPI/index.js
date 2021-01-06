@@ -977,44 +977,47 @@ app.post('/web/solasesoria', async (req, res) => {
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
 
+    let sol_id = req.body.id;
+    let tipo = req.body.tipo;
+    let id_usuario= req.body.id_usuario;
+    let id_pro= req.body.id_pro;
+    let observacion= req.body.observacion;
+    let fecha=req.body.fecha;
+    let cantidad ='';
+    let  disponibles =10;
 
-    let username = req.body.username;
-    let password = req.body.password;
-    let email = req.body.email;
-    let rut = req.body.rut;
-    let name = req.body.name;
-    let apellido = req.body.apellido;
-    let fechaingreso = req.body.fechaingreso;
-    let razonSocial = req.body.razonSocial;
-    let status = 'Disabled';
-    let plan = 1;
-    let tipoUsuario = 'Profesional';
-    let estadousuario = '1';
-/* 
     let connection;
-    let userId = 0;
-    let querypro = `select max(PRO_ID) from pro`;
-    let queryusr = `select max(usr_ID) from usuarios`;
-
-    connection = await oracledb.getConnection(credentials);
-    result = await connection.execute(querypro, [], {});
-    idusuario = await connection.execute(queryusr, [], {});
-
-    let proId = parseInt(result.rows[0]) + 1;
-    let usrId = parseInt(idusuario.rows[0]) + 1;
-    console.log("result", proId);
-    console.log("usrID: ", usrId);
-
-    let query3 = `insert into pro (PRO_RUT,PRO_ID,PRO_NOMBRE,PRO_APELLIDO,PRO_FINGRESO) values('${rut}',${proId},'${name}','${apellido}','${fechaingreso}')`;
-    console.log("query3 -> ", query3);
-
+    
     try {
-        
-        let query2 = `INSERT INTO USUARIOS(USR_ID,USR_USERNAME, USR_CORREO, USR_NOMBRECOMPLETO, USR_PASSWORD, USR_TIPOUSUARIO, USR_IDPERFIL, USR_ESTADO) VALUES ('${usrId}','${username}','${email}','${name} ${apellido}','${password}','${tipoUsuario}',${proId} ,${estadousuario}) `;
-        console.log("query2 -> ", query2);
 
-        result = await connection.execute(query2, [], {});
-        result = await connection.execute(query3, [], {});
+        connection = await oracledb.getConnection(credentials);
+
+        let queryid=`select max(ASE_ID) from ASESORIAS`
+        
+        let querycant=`select ASE_CANTIDAD from ASESORIAS where ASE_ID_USUARIO = ${id_usuario}`
+        connection = await oracledb.getConnection(credentials);
+
+        resultcant = await connection.execute(querycant,[],{});
+        console.log("query: ",querycant, "resultado: ",resultcant );
+
+        resultid = await connection.execute(queryid, [], {});
+        console.log("query: ",queryid, "resultado: ",resultid );
+
+        cantidad = parseInt(resultcant.rows[0]) + 1;
+        let id = parseInt(resultid.rows[0]) + 1;
+        console.log("cantidad : ", cantidad);
+        console.log("id : ", id);
+
+        let query = `INSERT INTO ASESORIAS(ASE_ID, ASE_CANTIDAD ,ASE_DISP ,ASE_TIPOP,ASE_ID_USUARIO,ASE_ID_PRO,ASE_FECHA)
+        VALUES (${id},${cantidad},${disponibles},'${tipo}',${id_usuario}, ${id_pro},'${fecha}')`;
+        console.log("insert: ",query);
+
+        let query2= `UPDATE SOLICITUDES SET SOL_ESTADO = 'aprobado' WHERE SOL_ID = ${sol_id}`;
+
+        result = await connection.execute(query, [], {})
+        result = await connection.execute(query2, [], {})
+
+        
     } catch (err) {
         console.log(err)
         res.send(err);
@@ -1030,7 +1033,7 @@ app.post('/web/solasesoria', async (req, res) => {
         //console.log(result);
         //return res.send(result.rows);
         return res.json(JSON.stringify({ result }));
-    } */
+    }
 
 
 });
@@ -1318,6 +1321,33 @@ app.put('/web/usuario/:id', async function (req, res) {
 
 });
 
+app.put('/web/solasesoria/:id', async function (req, res) {
+
+    let id = req.params.id;
+    let estado = 'rechazado';
+
+    let connection;
+    let query = `UPDATE SOLICITUDES SET SOL_ESTADO ='${estado}'  WHERE SOL_ID = ${id}`
+    console.log("query ->", query)
+    try {
+        connection = await oracledb.getConnection(credentials);
+        result = await connection.execute(query, [], {});
+    } catch (e) {
+        console.log(e);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    res.json(result.rowsAffected)
+
+
+});
+
 app.get('/web/reporteglobal', async (req, res) => {
     let connection;
     let queryid = `select max(REP_ID) from REPORTES_GLOBAL`
@@ -1441,6 +1471,26 @@ app.get('/web/profesionalclientes', async (req, res) => {
 app.get('/web/asesorias', async (req, res) => {
     let connection;
     let query = `select * from SOLICITUDES INNER JOIN pro on SOLICITUDES.SOL_PRO_ID = PRO_ID INNER JOIN clientes on SOLICITUDES.SOL_CLI_ID=CLI_ID`
+    try {
+        connection = await oracledb.getConnection(credentials);
+        result = await connection.execute(query, [], {});
+    } catch (e) {
+        console.log(e);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+
+app.get('/web/asesoria', async (req, res) => {
+    let connection;
+    let query = `select * from ASESORIAS INNER JOIN pro on ASE_ID_PRO = PRO_ID INNER JOIN clientes on ASESORIAS.ASE_ID_USUARIO=CLI_ID`
     try {
         connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});

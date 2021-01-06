@@ -2,7 +2,7 @@
 <div class="card border-warning mb-3">
     <div class="card-header">PROFESIONAL</div>
     <div class="card-body text-Dark">
-        <h5 class="card-title">Lista de Asesorias</h5>
+        <h5 class="card-title">Solicitudes de Asesorias</h5>
         
 
         <table class="table table-bordered table-striped" style="font-size: 12px">
@@ -18,24 +18,29 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let ase of asesoria">
-                    <td>{{ase.SOL_ID}}</td>
+                <tr *ngFor="let ase of solicitud">
+                    <td>{{ase.SOL_ID}}                    </td>
                     <td>{{ase.SOL_TIPO}}</td>
                     <td>{{ase.CLI_RAZONSOCIAL}}</td>
                     <td>{{ase.PRO_NOMBRE}} {{ase.PRO_APELLIDO}}</td>
                     <td>{{ase.SOL_DESCRIPCION}}</td>
                     <td>{{ase.SOL_FECHA | date: 'dd-MM-yyyy'}}</td>
                     <td>
-                        <BUTTON class="botonCrear" style="margin-left: 5px;" (click)="aprobar()"> Aprobar </BUTTON>
+                        <BUTTON class="botonCrear" style="margin-left: 5px;" [disabled]="ase.SOL_ESTADO == 'aprobado'" (click)="aprobar(ase)"> Aprobar </BUTTON>
                     </td>
 
                     <td>
-                        <BUTTON class="botonEditar" style="margin-left: 5px;"> Rechazar </BUTTON>
+                        <BUTTON class="botonEditar" style="margin-left: 5px;" [disabled]="ase.SOL_ESTADO == 'rechazado'" (click)="rechazar(ase.SOL_ID,ase)"> Rechazar </BUTTON>
                     </td>
-
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-outline-secondary" [routerLink]="['/administrador']">volver</button>
+        <label class="h4">Listado de Asesorias: </label>
+        <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/listarasesorias']"> Ver </BUTTON>
+
     </div>
+        <div class="card-footer">
+            <button class="btn btn-outline-secondary" [routerLink]="['/administrador']">volver</button>
+        </div>
+    
 </div>

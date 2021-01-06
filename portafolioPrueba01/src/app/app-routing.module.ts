@@ -22,12 +22,15 @@ import { ReporteclienteComponent } from './Components/reportecliente/reporteclie
 import { ReporteglobalComponent } from './Components/reporteglobal/reporteglobal.component';
 import { AsignarComponent} from './Components/asignar/asignar.component';
 import { VerasesoriasComponent} from './Components/verasesorias/verasesorias.component';
+import { ListarasesoriasComponent } from './Components/verasesorias/listarasesorias/listarasesorias.component'
 import { ControlarPagosClienteComponent } from './Components/controlar-pagos-cliente/controlar-pagos-cliente.component';
 import { CalcularAccidentabilidadComponent } from './Components/calcular-accidentabilidad/calcular-accidentabilidad.component';
 import { VisualizarActividadesComponent } from './Components/visualizar-actividades/visualizar-actividades.component';
 import { RespondermejoraComponent} from './Components/respondermejora/respondermejora.component';
+import { from } from 'rxjs';
 
 const routes: Routes = [
+{path: 'listarasesorias', component: ListarasesoriasComponent},  
 {path: 'respondermejora', component: RespondermejoraComponent},
 {path: 'verasesorias', component: VerasesoriasComponent},
 {path: 'reporteGlobal', component: ReporteglobalComponent },

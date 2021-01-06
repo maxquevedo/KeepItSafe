@@ -1,0 +1,36 @@
+<br>
+<div class="card border-warning mb-3">
+    <div class="card-header">PROFESIONAL</div>
+    <div class="card-body text-Dark">
+        <h5 class="card-title">Solicitudes de Asesorias</h5>
+        
+
+        <table class="table table-bordered table-striped" style="font-size: 12px">
+            <thead>
+                <tr class="text-center">
+                    <th>ID ASESORIA</th>
+                    <th>CANTIDAD</th>
+                    <th>DISPONIBLES</th>
+                    <th>TIPO</th>
+                    <TH>OBSERVACION</TH>
+                    <th>FECHA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let ase of asesoria">
+                    <td>{{ase.ASE_ID}}</td>
+                    <td>{{ase.ASE_CANTIDAD}}</td>
+                    <td>{{ase.ASE_DISP}}</td>
+                    <td>{{ase.ASE_TIPOP}}</td>
+                    <td>{{ase.SOL_DESCRIPCION}}</td>
+                    <td>{{ase.ASE_FECHA | date: 'dd-MM-yyyy'}}</td>
+                  
+                </tr>
+            </tbody>
+        </table>
+    </div>
+        <div class="card-footer">
+            <button class="btn btn-outline-secondary" [routerLink]="['/verasesorias']">volver</button>
+        </div>
+    
+</div>
