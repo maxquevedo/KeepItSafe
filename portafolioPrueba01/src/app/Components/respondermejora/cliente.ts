@@ -1,0 +1,8 @@
+export class Clientes{
+CLI_RUT?;
+CLI_ID?;
+CLI_RAZONSOCIAL?;
+CLI_STATUS?;
+PLANES_PLA_IDPLAN?;
+CLI_ID_PRO?;
+}

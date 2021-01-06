@@ -1829,8 +1829,103 @@ app.post('/web/obtenerDetalleFactura', async (req, res) => {
         res.status(400).send('ocurrió un error al obtener el detalle de la factura');
     }
 });
+//RevisarMejorasProfesional(ResponderMejora)
+app.get('/web/cli/mejoras/:id', async(req, res) => {
+    let connection;
+    let id = req.params.id;
+    console.log(req.params);
+    let query = `select * from mejoras inner join PRO on mejoras.MEJ_IDCLI= pro.pro_cli_asignado WHERE MEJ_IDCLI=${id}`
+    try {
+        connection = await oracledb.getConnection(credentials);
+        result = await connection.execute(query, [], {});
+    } catch (e) {
+        console.log(e);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+});
+
+//ResponderAprobarCli
+app.put('/web/cli/mejoras/aprobar/:id/:resp', async(req, res) => {
+    console.log("Body: ", req.body);
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+    let resp=req.params.resp;
+    let id = req.params.id;
+    let status = 'enviada';
+    let connection;
+    console.log("ID: ",id);
+    console.log("Estado: ",status);
+
+    try {
+
+        connection = await oracledb.getConnection(credentials);
+        let query2 = `UPDATE MEJORAS SET MEJ_ESTADO = '${status}' , MEJ_RESP_CLI = '${resp}' WHERE MEJ_ID= ${id}`;
+        console.log("query2 -> ", query2);
+
+        result = await connection.execute(query2, [], {});
+
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return res.json(JSON.stringify({ result }));
+    }
+
+});
+//ResponderRechazarCli
+app.put('/web/cli/mejoras/rechazar/:id', async(req, res) => {
+    console.log("Body: ", req.body);
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+   
+    let id = req.params.id;
+    let status = 'rechazado';
+    let connection;
+  
+    console.log("ID: ",id);
+    console.log("Estado: ",status);
 
 
+    try {
+
+        connection = await oracledb.getConnection(credentials);
+        let query2 = `UPDATE MEJORAS SET MEJ_ESTADO = '${status}' WHERE MEJ_ID= ${id}`;
+        console.log("query2 -> ", query2);
+
+        result = await connection.execute(query2, [], {});
+
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return res.json(JSON.stringify({ result }));
+    }
+
+});
 // Crearmejoras
 app.post('/web/mejoras', async (req, res) => {
     console.log('post/web/mejoras: ', req.body);
@@ -1875,7 +1970,7 @@ app.post('/web/mejoras', async (req, res) => {
     }
 });
 
-//RevisarMejoras
+//RevisarMejorasProfesional
 app.get('/web/mejoras/:id', async(req, res) => {
     let connection;
     let id = req.params.id;
