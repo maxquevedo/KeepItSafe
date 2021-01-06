@@ -24,7 +24,7 @@ function mapResult(arreglo){
 }
 
 function mapMultipleResult(arreglo){
-    console.log(arreglo.rows.length);
+    //console.log(arreglo.rows.length);
     var respJson = { };
     var resJson = { };
     //for()
@@ -58,7 +58,7 @@ async function getUsuarios(req,res){
                 console.log(err);
             }
         }
-        console.log(result);
+        // console.log(result);
         return res.send(result.rows);
     }
   
@@ -142,12 +142,12 @@ app.get('/login/:username/:password', (req,res)=> {
 });
 
 app.post('/create/profesional', async(req,res)=>{
-    console.log("Body: ",req.body);
-    console.log("Params: ",req.params);
-    console.log("Query: ",req.query);
-    console.log("Body: ",req.body);
-    console.log("Params: ",req.params);
-    console.log("Query: ",req.query);
+    // console.log("Body: ",req.body);
+    // console.log("Params: ",req.params);
+    // console.log("Query: ",req.query);
+    // console.log("Body: ",req.body);
+   // console.log("Params: ",req.params);
+    //console.log("Query: ",req.query);
     let username = req.body.json.username;
     let password = req.body.json.password;
     let email= req.body.json.email;
@@ -157,7 +157,7 @@ app.post('/create/profesional', async(req,res)=>{
     let lastName = nameSplitted[1];
     let current_datetime = new Date()
     let formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear()
-    console.log(formatted_date)
+   // console.log(formatted_date)
     let tipoUsuario = 'Profesional';
 
     let connection;
@@ -198,9 +198,9 @@ app.post('/create/profesional', async(req,res)=>{
 });
 
 app.post('/create/cliente',async(req,res)=>{
-    console.log("Body: ",req.body);
-    console.log("Params: ",req.params);
-    console.log("Query: ",req.query);
+  //  console.log("Body: ",req.body);
+ //   console.log("Params: ",req.params);
+  //  console.log("Query: ",req.query);
     let username = req.body.json.username;
     let password = req.body.json.password;
     let email= req.body.json.email;
@@ -249,9 +249,9 @@ app.post('/create/cliente',async(req,res)=>{
 });
 
 app.patch('/update/email',async(req,res)=>{
-    console.log("Body: ",req.body);
-    console.log("Params: ",req.params);
-    console.log("Query: ",req.query);
+    //console.log("Body: ",req.body);
+    //console.log("Params: ",req.params);
+    //console.log("Query: ",req.query);
     let email = req.body.json.email;
     let id= req.body.json.id;
 
@@ -427,7 +427,7 @@ app.get('/asignarPro/:cli_electo/:fecha/:evento',async function(req,res){
                    }
                 }
             }
-            console.log("profesionalesLibres visita: ",profesionalesLibres)
+            //console.log("profesionalesLibres visita: ",profesionalesLibres)
             if(profesionalesLibres.length == 0 ){
                 break;
             }
@@ -435,7 +435,7 @@ app.get('/asignarPro/:cli_electo/:fecha/:evento',async function(req,res){
             //Capacitaciones
             query  = `select to_char(cap_fecha,'DD/MM/YY'),cap_id_pro from capacitaciones where cap_id_pro = ${profesionalesLibres[pro][1]}`;
             result = await connection.execute(query,[],{});
-            console.log("Capacitaciones: ",result.rows)
+           // console.log("Capacitaciones: ",result.rows)
             if(result.rows[0]!= undefined){
                 for(days in result.rows){
                     console.log(fechaFormateada , result.rows[days][0])
@@ -445,7 +445,7 @@ app.get('/asignarPro/:cli_electo/:fecha/:evento',async function(req,res){
                 }
             }
             
-            console.log("profesionalesLibres capacitacion: ",profesionalesLibres)
+           // console.log("profesionalesLibres capacitacion: ",profesionalesLibres)
             if(profesionalesLibres.length == 0 ){
                 break;
             }
@@ -454,13 +454,13 @@ app.get('/asignarPro/:cli_electo/:fecha/:evento',async function(req,res){
             result = await connection.execute(query,[],{});
             if(result.rows[0]!= undefined){
                 for(days in result.rows){
-                    console.log(fechaFormateada , result.rows[days][0])
+                   // console.log(fechaFormateada , result.rows[days][0])
                    if( fechaFormateada == result.rows[days][0]){
                        profesionalesLibres.splice(pro,1);
                    }
                 }
             }
-            console.log("profesionalesLibres asesoria: ",profesionalesLibres)
+           // console.log("profesionalesLibres asesoria: ",profesionalesLibres)
         }
     }catch(e){
         console.log(e);
@@ -491,12 +491,12 @@ app.post('/asignarPro',async function(req,res){
     let fechaFormat = fecha[3]+fecha[4]+'/'+fecha[0]+fecha[1]+'/'+fecha[6]+fecha[7];
     var connection = await oracledb.getConnection(connectionInfo);;
     let result;
-    console.log("Fecha asignarPro:",fechaFormat);
+   // console.log("Fecha asignarPro:",fechaFormat);
    //to_date(:fechaFormat,'DD/MM/YY')
     try{
         switch(evento){
             case 'asesoria':
-                console.log("asesoria")
+               // console.log("asesoria")
                 query = `select distinct count(*) from asesorias`;
                 result = await connection.execute(query,[],{});
                 let idAse = (result.rows[0][0]+1);
@@ -509,20 +509,20 @@ app.post('/asignarPro',async function(req,res){
                 }
                 query = `insert into asesorias values(:idAse,:cant,:disp,'visita',:idCliente,:idPro,to_date(:fechaFormat,'DD/MM/YY'))`;
                 result = await connection.execute(query,[idAse,cant,disp,idCliente,idPro,fechaFormat],{})
-                console.log(result)
+               // console.log(result)
                 break;
             case 'visita': 
-                console.log('Visita')
+               // console.log('Visita')
                 query = `select distinct count(*) from visitas`;
                 connection = await oracledb.getConnection(connectionInfo);
                 result = await connection.execute(query,[],{})
                 let idVisita = (result.rows[0][0])+1;
                 query = `insert into visitas values(:idVisita,sysdate,to_date(:fechaFormat,'DD/MM/YY'),:idCliente,:idPro)`;
-                console.log(query);
-                console.log("Query params: ",idVisita,fechaFormat,idCliente,idPro);
-                console.log("idPro: "+idPro);
+                //console.log(query);
+               // console.log("Query params: ",idVisita,fechaFormat,idCliente,idPro);
+               // console.log("idPro: "+idPro);
                 result = await connection.execute(query,[idVisita,fechaFormat,idCliente,idPro],{})
-                console.log("Resulta2: ",result);
+               // console.log("Resulta2: ",result);
                 break;
             default: break;
         }
@@ -571,12 +571,12 @@ app.get('/accidentes/:id',async function(req,res){
 app.get('/reportes', async function(req,res){
     let connection;
     let id = req.params.id;
-    console.log(id);
+    //console.log(id);
     let query = `select * from reportes_global `;
     try{    
         connection = await oracledb.getConnection(connectionInfo);
         result = await connection.execute(query,[],{});
-        console.log(result);
+        //console.log(result);
     }catch(e){
         console.log(e);
     }finally{
@@ -620,7 +620,7 @@ app.get('/generateGlobalReport', async function(req,res){
         result = await connection.execute(query,[],{});
         let id = 0;
         id = 1+ parseInt(result.rows[0]);
-        console.log(id);
+        //console.log(id);
         query = `insert into reportes_global values(:id,sysdate,1,1,1,1,1,1)`; 
         result = await connection.execute(query,[id],{});
     }catch(e){
@@ -799,7 +799,7 @@ app.patch('/checkSuccess',async function(req,res){
 })
 
 app.patch('/aprobarMejoras',async function(req,res){
-    console.log("res,body: ",req.body);
+    //console.log("res,body: ",req.body);
     let id = req.body.jeison.id;
     let connection;
     let query = `update mejoras set mej_estado = 'aprobada' where mej_id = :id`
@@ -844,7 +844,7 @@ app.patch('/rechazarMejora',async function(req,res){
 app.patch('/enviarPropuesta',async function(req,res){
     let id = req.body.jeison.id;
     let mensaje = req.body.jeison.propuestaMensaje;
-    console.log(mensaje,id);
+    //console.log(mensaje,id);
     let connection;
     let query = `update mejoras set mej_resp_cli = :mensaje, mej_estado ='enviada' where mej_id = :id`
     try{    
@@ -894,8 +894,8 @@ app.post('/reportarAccidente',async function(req,res){
         query = `select cli_id_pro from clientes where cli_id = ${idCli}`; 
         result = await connection.execute(query);
         idPro = result.rows[0][0];
-        console.log("Id chat: ",idChat);
-        console.log("Id pro: ",idPro);
+       // /console.log("Id chat: ",idChat);
+       // console.log("Id pro: ",idPro);
         query = `insert into chat values(${idChat},${idCli},${idPro},${idAccidente},'${req.body.jeison.descripcion}',sysdate,'cliente','${req.body.jeison.nombreAccidente}')`;
         result = await connection.execute(query);
     }catch(err){
@@ -980,7 +980,8 @@ app.get('/chat/:idCli/:idPro/:idAcc/:cabecera',async function(req,res){
 
 })
 
-app.get('/solicitudes/capacitacion/:idCli', async function(req,res){
+//SOLICITUD CAPACITACION CLIENTE
+app.get('/solicitudes/capacitacionCli/:idCli', async function(req,res){
     let idCli = req.params.idCli;
     let connection;
     let query = "";
@@ -989,7 +990,7 @@ app.get('/solicitudes/capacitacion/:idCli', async function(req,res){
         connection = await oracledb.getConnection(connectionInfo);
         query = `select * from solicitudes where sol_cli_id = ${idCli} and sol_tipo = 'capacitacion' `;
         result = await connection.execute(query);
-        console.log(result);
+        //console.log(result);
     }catch(err){
         console.log(err)
     }
@@ -1006,6 +1007,120 @@ app.get('/solicitudes/capacitacion/:idCli', async function(req,res){
     }
 })
 
+//SOLICITUD CAPACITACION PROFESIONAL
+app.get('/solicitudes/capacitacionPro/:idPro', async function(req,res){
+    let idPro = req.params.idPro;
+    let connection;
+    let query = "";
+    let result;
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        query = `select * from solicitudes where sol_pro_id = ${idPro} and sol_tipo = 'capacitacion' `;
+        result = await connection.execute(query);
+        //console.log(result);
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        return res.json(result.rows)
+    }
+})
+
+//SOLICITUD CAPACITACION
+app.post('/solicitarCapacitacion',async function(req,res){
+    let idCli = req.body.jeison.idCli;
+    let fecha = req.body.jeison.fecha;
+    //console.log(fecha);
+    //console.log("Body : ",req.body)
+    let participantes = req.body.jeison.participantes
+    let idSolicitud = 0;
+    let idPro = 0;
+    let connection;
+    let query = "";
+    let result;
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        //Id solicitud
+        query = `select count(*) from solicitudes`;
+        result = await connection.execute(query);
+        idSolicitud = (result.rows[0][0])+1;
+        //Id Pro
+        query = `select cli_id_pro from clientes where cli_id = ${idCli} `;
+        result = await connection.execute(query);
+        idPro = (result.rows[0][0]);
+        //Insertar
+        query = `insert into solicitudes values(${idSolicitud},${idCli},${idPro},'${participantes}','enviada','capacitacion',to_date('${fecha}','MM-DD-YY'))`;
+       // console.log("QUery: ",query);
+        result = await connection.execute(query);
+       // console.log(result.rows);
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        return res.json({})
+    }
+})
+
+//CREAR CAPACITACION
+app.post('/crearCapacitacion',async function(req,res){
+    console.log(req.body);
+    let idCapa = 0;
+    let idCli = parseInt(req.body.jeison.idCli);
+    let idPro = parseInt(req.body.jeison.idPro);
+    let fecha = req.body.jeison.fecha;
+    let participantes = ''+req.body.jeison.participantes.replace(/\n/g,',');
+    let materiales = ''+req.body.jeison.materiales.replace(/\n/g,',');
+    let idSol = req.body.jeison.idSol;
+    let connection;
+    let query = "";
+    let result;
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        //Id
+        query = `select count(*) from capacitaciones`;
+        result = await connection.execute(query);
+        idCapa = (result.rows[0][0])+1;
+        //Insert capa
+        query = `insert into capacitaciones values(${idCapa},'${participantes}','${materiales}',${idPro},${idCli},to_date('${fecha}','MM-DD-YY'))`;
+        result = await connection.execute(query);
+        console.log(result);
+        //Update sol
+        query = `update solicitudes set sol_estado = 'aprobada' where sol_id = ${idSol}`;
+        result = await connection.execute(query);
+        
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        return res.json({});
+    }
+
+
+});
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}..`));
