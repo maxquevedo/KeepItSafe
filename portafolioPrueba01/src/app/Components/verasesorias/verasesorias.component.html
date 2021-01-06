@@ -1,40 +1,37 @@
 <br>
 <div class="card border-warning mb-3">
-    <div class="card-header">Clientes</div>
+    <div class="card-header">PROFESIONAL</div>
     <div class="card-body text-Dark">
         <h5 class="card-title">Lista de Asesorias</h5>
-        <div class="my-2 text-left">
-
-            <div class="form-group col-sm-4">
-                <label for="" class=" text-primary">Seleccione Cliente</label>
-                <select class="form-control" name="clientes" >
-                    <option *ngFor="let ase of asesoria" >{{ase.CLI_RAZONSOCIAL}}</option>
-                </select>
-            </div> 
-
-        </div>
+        
 
         <table class="table table-bordered table-striped" style="font-size: 12px">
             <thead>
-                <tr >
+                <tr class="text-center">
                     <th>ID ASESORIA</th>
-                    <th>CANTIDAD DE ASESORIAS</th>
-                    <th>ASESORIAS DISPONIBLES</th>
-                    <th>TIPO DEASESORIA</th>
+                    <th>TIPO DE ASESORIA</th>
                     <th>CLIENTE</th>
                     <th>PROFESIONAL</th>
+                    <th>OBSERVACION</th>
                     <th>FECHA</th>
+                    <th colspan="2" >CONTROLES</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let ase of asesoria">
-                    <td>{{ase.ASE_ID}}</td>
-                    <td>{{ase.ASE_CANTIDAD}}</td>
-                    <td>{{ase.ASE_DISP}}</td>
-                    <td>{{ase.ASE_TIPOP}}</td>
+                    <td>{{ase.SOL_ID}}</td>
+                    <td>{{ase.SOL_TIPO}}</td>
                     <td>{{ase.CLI_RAZONSOCIAL}}</td>
                     <td>{{ase.PRO_NOMBRE}} {{ase.PRO_APELLIDO}}</td>
-                    <td>{{ase.ASE_FECHA}}</td>
+                    <td>{{ase.SOL_DESCRIPCION}}</td>
+                    <td>{{ase.SOL_FECHA | date: 'dd-MM-yyyy'}}</td>
+                    <td>
+                        <BUTTON class="botonCrear" style="margin-left: 5px;" (click)="aprobar()"> Aprobar </BUTTON>
+                    </td>
+
+                    <td>
+                        <BUTTON class="botonEditar" style="margin-left: 5px;"> Rechazar </BUTTON>
+                    </td>
 
                 </tr>
             </tbody>
