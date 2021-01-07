@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Profesional} from '../profesionales/profesional';
 import { environment } from '../../../environments/environment'
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SolicitarasesoriaService {
-
+export class SolicitarcapacitacionService {
   private env = environment;
 
   constructor(private http: HttpClient) { }
@@ -17,6 +15,6 @@ export class SolicitarasesoriaService {
   }
 
   crearSolicitud(solicitud){
-    return this.http.post(`${this.env.apiUrl}/web/solicitudes/asesoria`, solicitud);
+    return this.http.post(`${this.env.apiUrl}/web/solicitudes/capacitacion`, solicitud);
   }
 }

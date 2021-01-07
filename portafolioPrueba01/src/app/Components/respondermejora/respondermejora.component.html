@@ -22,7 +22,7 @@
                                 <td>{{mej.PRO_NOMBRE}}</td>
                                 <td>{{mej.MEJ_DESCRIPCION}}</td>
                                 <td>{{mej.MEJ_ESTADO}}</td>
-                                <td>  <input type="text" name="respuesta" [(ngModel)]="mej.MEJ_RESP_CLI" [disabled]="mej.MEJ_ESTADO == 'enviada' || mej.MEJ_ESTADO == 'rechazado'" placeholder="Escribir respuesta">
+                                <td>  <input type="text" name="respuesta" [(ngModel)]="mej.MEJ_RESP_CLI" [disabled]="mej.MEJ_ESTADO == 'enviada' || mej.MEJ_ESTADO == 'rechazado' || mej.MEJ_ESTADO == 'aprobada' " placeholder="Escribir respuesta">
                                 </td>
             
                                 <TD>

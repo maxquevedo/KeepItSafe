@@ -47,6 +47,8 @@ import { CalcularAccidentabilidadComponent } from './Components/calcular-acciden
 import { VisualizarActividadesComponent } from './Components/visualizar-actividades/visualizar-actividades.component';
 import { RespondermejoraComponent } from './Components/respondermejora/respondermejora.component';
 import { ListarasesoriasComponent } from './Components/verasesorias/listarasesorias/listarasesorias.component';
+import { SolicitarcapacitacionComponent } from './Components/solicitarcapacitacion/solicitarcapacitacion.component';
+import { VercapacitacionesComponent } from './Components/vercapacitaciones/vercapacitaciones.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +82,9 @@ import { ListarasesoriasComponent } from './Components/verasesorias/listarasesor
     CalcularAccidentabilidadComponent,
     VisualizarActividadesComponent,
     RespondermejoraComponent,
-    ListarasesoriasComponent
+    ListarasesoriasComponent,
+    SolicitarcapacitacionComponent,
+    VercapacitacionesComponent
   ],
   imports: [
     BrowserModule,
