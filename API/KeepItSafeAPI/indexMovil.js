@@ -685,9 +685,9 @@ app.get('/propuestas/:id/:user',async function(req,res){
     let usu = req.params.user;
     let connection;
     if(usu == "Cliente"){
-        var query = `select * from mejoras where mej_idCli = :id`
+        var query = `select * from mejoras where mej_idCli = :id order by mej_id asc`
     }else{
-        var query = `select * from mejoras where mej_idPro = :id`
+        var query = `select * from mejoras where mej_idPro = :id order by mej_id asc`
     }
     try{    
         connection = await oracledb.getConnection(connectionInfo);
@@ -1120,6 +1120,71 @@ app.post('/crearCapacitacion',async function(req,res){
     }
 
 
+});
+
+//INSERTAR PROPUESTA DE MEJORA
+app.post('/crearMejora',async function(req,res){
+    let items = [];
+    let result;
+    let connection;
+    let query = "";
+    let idPro = -1;
+    let idMejora = -1;
+    let duplicada= false;
+    let idCli = req.body.jeison.idCli;
+    let checks = req.body.jeison.checks;
+
+    for(var i=0;i<checks.length;i++){
+        items.push(checks[i][1]);
+    }
+ 
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        //idMejora
+        query = `select count(*) from mejoras`;
+        result = await connection.execute(query);
+        idMejora = (result.rows[0][0])+1;
+        //idPro
+        query = `select cli_id_pro from clientes where cli_id = ${idCli}`;
+        result = await connection.execute(query);
+        idPro = result.rows[0][0];
+        //Quitar repetidas
+        query = `select * from mejoras where mej_idcli = ${idCli}`;
+        result = await connection.execute(query);
+        console.log("Murio?");
+        for(var i=0;i < result.rows.length;i++){
+            for(var j=0;j < items.length;j++){
+                console.log(result.rows[i][2], ' == ', items[j],'? ',result.rows[i][2] == items[j])
+                if(result.rows[i][2] == items[j]){
+                    duplicada = true;
+                    items.splice(j,1);
+                }
+            }
+        }
+        //console.log(items);
+        if(items.length > 0){
+            for(var i=0;i < items.length;i++){
+                query = `insert into mejoras values(${idMejora},'abierta','${items[i]}',null,${idPro},${idCli})`;
+                //console.log("query: ",query);
+                result = await connection.execute(query);
+                //console.log("Holi desde i=",i, "\n respuesta es: ",result);
+                idMejora+=1;
+            }            
+        }
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        return res.json({});
+    }
 });
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;

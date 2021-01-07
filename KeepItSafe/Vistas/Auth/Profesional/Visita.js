@@ -16,7 +16,13 @@ class Visita extends Component {
             checks: [],
             nombresChecks: [],
             estadoChecks: [],
-            failedChecks: []
+            failedChecks: [],
+            checksFallidos: [],
+            checksNoFallidos:[],
+            redIndexes:[],
+            greenIndexes:[],
+            color1: 'black',
+            color2: 'black'
         }
     }
 
@@ -38,62 +44,116 @@ class Visita extends Component {
         this.setState({nombresChecks:nombres,estadoChecks:estados,loading:false,checks:respJson})
     }
 
-    async _checkFailed(data)  {
+    async prueba(data,check){
+        var { checksFallidos,redIndexes,greenIndexes,checksNoFallidos } = this.state;
         var item = data.item;
+        var indexToPop = -1;
+        //isInAprobar
+        var aprobar = false;
+        //isInRechazar
+        var rechazar = false;
         var estadoChecks = this.state.estadoChecks;
+        var wasHere = false;
         estadoChecks[data.index] = 1;
-        let jeison = {
-            id:item[0]
-        }
-        let resp = await fetch(`http://10.0.2.2:8080/checkFail`,{
-            method: "PATCH",
-            headers: {
-                'Content-Type':'application/json; charset="UTF-8"'
-            },
-            body: JSON.stringify({jeison})
-        });
-        let respJson = await resp.json();
-        this.setState({estadoChecks})
-    }
 
-    async _checkSuecceded(data) {
-        var item = data.item;
-        var estadoChecks = this.state.estadoChecks;
-        estadoChecks[data.index] = 0;
-        let jeison = {
-            id:item[0]
+        if(checksFallidos.length == 0 && checksNoFallidos.length == 0){
+            if(check == "aprobar"){
+                checksNoFallidos.push(data.item);
+                greenIndexes.push(data.index);
+                this.setState({checksNoFallidos,greenIndexes});
+                return;
+            }else{
+                checksFallidos.push(data.item);
+                redIndexes.push(data.index);
+                this.setState({checksFallidos,redIndexes});
+                return;
+            }
+        } 
+        for(var i=0;i<checksFallidos.length;i++){
+            if(item == checksFallidos[i]){
+                rechazar = true;
+                wasHere = true;
+                indexToPop = i;
+                continue;
+            }
         }
-        let resp = await fetch(`http://10.0.2.2:8080/checkSuccess`,{
-            method: "PATCH",
-            headers: {
-                'Content-Type':'application/json; charset="UTF-8"'
-            },
-            body: JSON.stringify({jeison})
-        });
-        this.setState({estadoChecks})
+
+        for(var i=0;i<checksNoFallidos.length;i++){
+            if(data.item == checksNoFallidos[i]){
+                aprobar = true;
+                wasHere = true;
+                indexToPop = i;
+                continue;
+            }
+        }
+
+        if(rechazar && check == "aprobar"){
+            //Borrarlo de rechazar
+            if(indexToPop != -1){
+                checksFallidos.splice(indexToPop,1);
+                redIndexes.splice(indexToPop,1);
+                aprobar = true;
+                rechazar = false;
+            }
+        }
+
+        if(aprobar && check == "rechazar"){
+            //Borrarlo de aprobar
+            if(indexToPop != -1){
+                checksNoFallidos.splice(indexToPop,1);
+                greenIndexes.splice(indexToPop,1);
+                rechazar = true;                
+                aprobar = false;
+            }
+        }
+
+        if(aprobar || (!wasHere && check == "aprobar")){
+            checksNoFallidos.push(data.item);
+            greenIndexes.push(data.index);
+            this.setState({checksFallidos,checksNoFallidos,redIndexes,greenIndexes});
+        }
+
+        if(rechazar || (!wasHere && check == "rechazar")){
+            checksFallidos.push(data.item);
+            redIndexes.push(data.index);
+            this.setState({checksFallidos,checksNoFallidos,redIndexes,greenIndexes});
+        }
     }
 
     renderItem = (data) => {
+        var { greenIndexes, redIndexes,estadoChecks,color2,color1,checksFallidos,checksNoFallidos } = this.state;
         var estado = this.state.estadoChecks[data.index];
-        var color1 = "black";
-        var color2 = "black";
         var itemToUpdate = data.item;
-
-        if(estado == "1" ){
+        var isInRedindex = false;
+        var isInGreenIndex = false;
+        for(var i=0;i<redIndexes.length;i++){
+            if(data.index == redIndexes[i]){
+                color1 = "red";
+                color2 = "black";
+                isInRedIndex = true;
+                break;
+            }
+        }
+        for(var i=0;i<greenIndexes.length;i++){
+            if(data.index == greenIndexes[i]){
+                color1 = "black";
+                color2 = "green";
+                isInGreenIndex = true;
+                break;
+            }
+        }
+        if(isInRedindex){
             color1 = "red";
             color2 = "black";
-        }else{
-            color1 = "black";
-            color2 = "green";
         }
 
        return(<View  style={{justifyContent:'space-around',padding:30}}>
                         <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-around'}}>
                             <Text style={{fontSize:25}}>{((data.index)+1)+" - " +data.item[1]} </Text>
-                            <TouchableOpacity onPress={()=> this._checkFailed(data)}>
+                            <TouchableOpacity onPress={()=> this.prueba(data,"rechazar")}>
                                 <Ionicons name="md-close-circle" size={25} color={color1}/>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={()=> this._checkSuecceded(data)}>
+                            <TouchableOpacity onPress={()=> this.prueba(data,"aprobar")}>
                                 <Ionicons name="md-checkmark-circle" size={25} color={ color2} />
                             </TouchableOpacity>
                         </View>
@@ -102,21 +162,45 @@ class Visita extends Component {
     }
     
     async _generarInforme(){
-        const { estadoChecks,nombresChecks } = this.state;
-        var template =`\n Visita finalizada.\n `;
-        for(var i=0;i<estadoChecks.length;i++){
-            if(estadoChecks[i] == 0){
-                template += `\n ${nombresChecks[i]}: Aprobado `;    
-            }else{
-                template += `\n ${nombresChecks[i]}: Fallado `;
+        const { checks,checksFallidos,checksNoFallidos } = this.state;
+        let rechazados = checksFallidos.length;
+        let aprobados = checksNoFallidos.length;
+        let idCli = await AsyncStorage.getItem("id2");
+
+        if(aprobados + rechazados != checks.length){
+            Alert.alert('Error','No has completado todos los checks',[{text:'Ok'}]);
+        }else{
+            var template =`\n Visita finalizada.\n\n `;
+            template += `\t\t\t\t\t\t\t\t\tFallidos:`;
+            for(var i =0;i<checksFallidos.length;i++){
+                template += `\n \t\t\t\t${checksFallidos[i][1]}`;
             }
+            template += `\n\n\t\t\t\t\t\t\t\t\tAprobados: \n`
+            for(var i =0;i<checksNoFallidos.length;i++){
+                template += `\n \t\t\t\t${checksNoFallidos[i][1]}`;
+            }
+            Alert.alert("Informe",template,[{text:'Ok'}]);
+            //console.log(checksFallidos);
+            let jeison = {
+                idCli,
+                checks: checksFallidos
+            }
+            let resp = await fetch(`http://10.0.2.2:8080/crearMejora`,{
+                method:'POST',
+                headers: {
+                    'Content-Type':'application/json; charset="UTF-8"'
+                },
+                body:JSON.stringify({jeison})
+            });
+            let respJson = await resp.json();
+            //console.log(respJson);
+            this.setState({ checksFallidos: [], checksNoFallidos:[], redIndexes:[], greenIndexes:[] })
         }
-        Alert.alert("Informe",template,[{text:'Ok'}]);
     }
 
 
     render() {
-        const { checks,nombresChecks,estadoChecks,loading } = this.state;
+        const { checks,estadoChecks,loading } = this.state;
 
         return (
             <View style={{flex:1}}>
