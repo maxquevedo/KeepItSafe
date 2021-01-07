@@ -1464,7 +1464,7 @@ app.get('/web/reportecliente/:id', async (req, res) => {
 
 })
 
-app.get('web/accidentabilidad/:id', async (req, res) => {
+app.get('/web/accidentabilidad/:id', async (req, res) => {
 
     let id = req.params.id;
     let connection;
@@ -1485,8 +1485,8 @@ app.get('web/accidentabilidad/:id', async (req, res) => {
                 console.log(err);
             }
         }
-        console.log(result);
-        return res.json(mapResult(result))
+        console.log(result.row);
+        return res.json(mapMultipleResult(result))
     }
 
 })

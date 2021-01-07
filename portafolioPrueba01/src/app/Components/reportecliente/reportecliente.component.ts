@@ -30,7 +30,7 @@ export class ReporteclienteComponent implements OnInit {
       console.log("id: ",id)
       this.reporteclienteservice.getaccidentabilidad(id).subscribe(
         res => {
-          this.accidentabilidad = res;
+          this.accidentabilidad = res[0].PORC;
           console.log("respuesta API: ",res)
         
         },
