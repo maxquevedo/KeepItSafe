@@ -2,7 +2,7 @@
 <div class="card border-warning mb-3">
     <div class="card-header">PROFESIONAL</div>
     <div class="card-body text-Dark">
-        <h5 class="card-title">Solicitudes de Capacitacion</h5>
+        <h5 class="card-title">Solicitudes de capacitacion</h5>
         
 
         <table class="table table-bordered table-striped" style="font-size: 12px">
@@ -11,9 +11,9 @@
                     <th>ID SOLICITUD</th>
                     <th>TIPO DE SOLICITUD</th>
                     <th>CLIENTE</th>
-                    <th>PROFESIONAL</th>
-                    <th>OBSERVACION</th>
+                    <th>INTEGRANTES</th>
                     <th>FECHA</th>
+                    <th>MATERIAL</th>
                     <th colspan="2" >CONTROLES</th>
                 </tr>
             </thead>
@@ -22,9 +22,9 @@
                     <td>{{cap.SOL_ID}}                    </td>
                     <td>{{cap.SOL_TIPO}}</td>
                     <td>{{cap.CLI_RAZONSOCIAL}}</td>
-                    <td>{{cap.PRO_NOMBRE}} {{cap.PRO_APELLIDO}}</td>
                     <td>{{cap.SOL_DESCRIPCION}}</td>
                     <td>{{cap.SOL_FECHA | date: 'dd-MM-yyyy'}}</td>
+                    <TD><textarea id="my-textarea" class="form-control"   name="descripcionMaterial" rows="3"></textarea></TD>
                     <td>
                         <!-- <BUTTON class="botonCrear" style="margin-left: 5px;" [disabled]="ase.SOL_ESTADO == 'aprobado'" (click)="aprobar(ase)"> Aprobar </BUTTON> -->
                     </td>
@@ -35,8 +35,8 @@
                 </tr>
             </tbody>
         </table>
-        <label class="h4">Listado de Capacitaciones: </label>
-        <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/listarasesorias']"> Ver </BUTTON>
+        <label class="h4">Listado de capacitaciones: </label>
+        <BUTTON class="botonEditar" style="margin-left: 5px;" [routerLink]="['/listarcapacitaciones']"> Ver </BUTTON>
 
     </div>
         <div class="card-footer text-center">

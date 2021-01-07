@@ -2,7 +2,7 @@
 <div class="card border-warning mb-3">
     <div class="card-header">PROFESIONAL</div>
     <div class="card-body text-Dark">
-        <h5 class="card-title">Solicitudes de asesorias</h5>
+        <h5 class="card-title">Solicitudes de capacitaciones</h5>
         
 
         <table class="table table-bordered table-striped" style="font-size: 12px">
@@ -17,20 +17,20 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let ase of asesoria">
-                    <td>{{ase.ASE_ID}}</td>
-                    <td>{{ase.ASE_CANTIDAD}}</td>
-                    <td>{{ase.ASE_DISP}}</td>
-                    <td>{{ase.ASE_TIPOP}}</td>
-                    <td>{{ase.SOL_DESCRIPCION}}</td>
-                    <td>{{ase.ASE_FECHA | date: 'dd-MM-yyyy'}}</td>
+                <tr *ngFor="let cap of capacitacion">
+                    <td>{{cap.CAP_ID}}</td>
+                    <td>{{cap.CAP_PARTICIPANTES}}</td>
+                    <td>{{cap.CAP_MATERIALES}}</td>
+                    <td>{{cap.CAP_ID_PRO}}</td>
+                    <td>{{cap.CAP_ID_CLI}}</td>
+                    <td>{{cap.CAP_FECHA | date: 'dd-MM-yyyy'}}</td>
                   
                 </tr>
             </tbody>
         </table>
     </div>
         <div class="card-footer text-center">
-            <button class="botonCrear btn btn-success" [routerLink]="['/verasesorias']">volver</button>
+            <button class="botonCrear btn btn-success" [routerLink]="['/vercapacitaciones']">volver</button>
         </div>
     
 </div>

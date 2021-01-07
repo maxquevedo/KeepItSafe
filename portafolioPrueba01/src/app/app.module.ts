@@ -49,6 +49,7 @@ import { RespondermejoraComponent } from './Components/respondermejora/responder
 import { ListarasesoriasComponent } from './Components/verasesorias/listarasesorias/listarasesorias.component';
 import { SolicitarcapacitacionComponent } from './Components/solicitarcapacitacion/solicitarcapacitacion.component';
 import { VercapacitacionesComponent } from './Components/vercapacitaciones/vercapacitaciones.component';
+import { ListarcapacitacionesComponent } from './Components/vercapacitaciones/listarcapacitaciones/listarcapacitaciones.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { VercapacitacionesComponent } from './Components/vercapacitaciones/verca
     RespondermejoraComponent,
     ListarasesoriasComponent,
     SolicitarcapacitacionComponent,
-    VercapacitacionesComponent
+    VercapacitacionesComponent,
+    ListarcapacitacionesComponent
   ],
   imports: [
     BrowserModule,
