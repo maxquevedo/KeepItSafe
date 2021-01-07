@@ -97,7 +97,7 @@ app.get('/usuarios', (req,res) => {
 
 app.get('/clientes', async(req,res) => {
     let connection;
-    let query = `select * from usuarios where usr_tipousuario = 'Cliente'`
+    let query = `select * from usuarios where usr_tipousuario = 'Cliente' order by usr_id asc`
     try{    
         connection = await oracledb.getConnection(connectionInfo);
         result = await connection.execute(query,[],{});
@@ -117,7 +117,7 @@ app.get('/clientes', async(req,res) => {
 
 app.get('/profesionales', async(req,res) => {
     let connection;
-    let query = `select * from usuarios where usr_tipousuario = 'Profesional'`
+    let query = `select * from usuarios where usr_tipousuario = 'Profesional' order by usr_id asc`
     try{    
         connection = await oracledb.getConnection(connectionInfo);
         result = await connection.execute(query,[],{});
@@ -149,7 +149,6 @@ app.get('/cliStatus/:idCli',async function(req,res){
     try{    
         connection = await oracledb.getConnection(connectionInfo);
         result = await connection.execute(query,[],{});
-        console.log(result);
     }catch(e){
         console.log(e);
     }finally{
@@ -165,12 +164,6 @@ app.get('/cliStatus/:idCli',async function(req,res){
 });
 
 app.post('/create/profesional', async(req,res)=>{
-    // console.log("Body: ",req.body);
-    // console.log("Params: ",req.params);
-    // console.log("Query: ",req.query);
-    // console.log("Body: ",req.body);
-   // console.log("Params: ",req.params);
-    //console.log("Query: ",req.query);
     let username = req.body.json.username;
     let password = req.body.json.password;
     let email= req.body.json.email;
@@ -180,27 +173,38 @@ app.post('/create/profesional', async(req,res)=>{
     let lastName = nameSplitted[1];
     let current_datetime = new Date()
     let formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear()
-   // console.log(formatted_date)
-    let tipoUsuario = 'Profesional';
 
-    let connection;
-    let userId = 0;
-    let query1 = `select count(*) from usuarios`;
-    let query3 =  `insert into pro values('${rut}','${name}','${lastName}',TO_DATE('${formatted_date}','dd-mm-yyyy'),0)`;
-    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Profesional' `
+    console.log("username: ",username,"\npassword: ",password,"\nemail: ",email,"\nrut: ",rut,
+    "\nName splitted: ",nameSplitted,
+    "\nname :",name,
+    "\nlastname: ",lastName,
+    "\ncurrent_date_time: ",current_datetime,
+    "\nformatted_date: ",formatted_date);
+
+    var connection;
+    var userId = -1;
+    var proId = -1;
+    var query;
+    
     try{
-        //console.log("Query 3:",query3);
-        //Agregar el id correspondiente y crearlo en usuario
-
         connection = await oracledb.getConnection(connectionInfo);
-        result = await connection.execute(query1,[],{})
-        
+        //Id usuario
+        query = `select count(*) from usuarios`;
+        result = await connection.execute(query,[],{});
         userId = (result.rows[0][0])+1;
-        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}',${userId},0) `;
-        
-        result = await connection.execute(query2,[],{});
-        result = await connection.execute(query3,[],{});
-       // console.log(result);      
+        //Id Pro
+        query = `select count(*) from pro`;
+        result = await connection.execute(query,[],{});
+        proId = (result.rows[0][0])+1;
+        //Insertar cliente 
+        query = `insert into pro values('${rut}',${proId},'${name}','${lastName}',sysdate,null)`;
+        result = await connection.execute(query,[],{});
+        if(result.errorNum){
+            res.json({result});
+        }
+        //Insertar usuario tipo cliente
+        query = `insert into usuarios values(${userId},'${username}','${email}','${req.body.json.name}','${password}','Profesional',${proId},1)`;
+        result = await connection.execute(query,[],{});
     }catch(err){
         console.log("Error en query: ",err)
         res.send(err);
@@ -216,40 +220,42 @@ app.post('/create/profesional', async(req,res)=>{
             }
         }
         //console.log(result);
-        return res.json(JSON.stringify({result}));
+        return res.json(result);
     }
 });
 
 app.post('/create/cliente',async(req,res)=>{
-  //  console.log("Body: ",req.body);
- //   console.log("Params: ",req.params);
-  //  console.log("Query: ",req.query);
     let username = req.body.json.username;
     let password = req.body.json.password;
     let email= req.body.json.email;
     let rut = req.body.json.rut;
     let name = req.body.json.name;
     let razonSocial = req.body.json.razonSocial;
-    let status = 'Disabled';
     let plan = 1;
     let tipoUsuario = 'Cliente';
-
     let connection;
-    let userId = 0;
-    let query1 = `select count(*) from usuarios`;
-    let query3 =  `insert into clientes values('${rut}','${razonSocial}','${status}',${plan})`;
-    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente' `
-    try{
-        //console.log("Query 3:",query3);
+    let userId = -1;
+    let idCli = -1;
 
+    try{
         connection = await oracledb.getConnection(connectionInfo);
-        result = await connection.execute(query1,[],{})
-        
+        //Id usuario
+        let query = `select count(*) from usuarios`;
+        result = await connection.execute(query,[],{})
         userId = (result.rows[0][0])+1;
-        let query2 = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}',${userId}) `;
-        
-        result = await connection.execute(query2,[],{});
-        result = await connection.execute(query3,[],{});
+        //idCli
+        query = `select count(*) from clientes`;
+        result = await connection.execute(query,[],{})
+        idCli = (result.rows[0][0])+1;
+        //Insert en clientes
+        query = `insert into clientes values('${rut}',${idCli},'${razonSocial}','Disabled',${plan},null)`;
+        result = await connection.execute(query,[],{})
+        if(result.errorNum){
+            res.json({result});
+        }
+        //Insert en usuarios
+        query = `INSERT INTO USUARIOS VALUES (${userId},'${username}','${email}','${name}','${password}','${tipoUsuario}',${idCli},0) `;
+        result = await connection.execute(query,[],{})
     }catch(err){
         console.log(err)
         res.send(err);
@@ -263,9 +269,7 @@ app.post('/create/cliente',async(req,res)=>{
                 console.log(err);
             }
         }
-        //console.log(result);
-        //return res.send(result.rows);
-        return res.json(JSON.stringify({result}));
+        return res.json(result);
     }
   
 
@@ -1236,6 +1240,8 @@ app.post('/crearMejora',async function(req,res){
         return res.json({});
     }
 });
+
+
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}..`));

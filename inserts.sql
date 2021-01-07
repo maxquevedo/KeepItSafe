@@ -34,7 +34,7 @@ insert into precios_extra values(2,'Capacitacion',2);
 insert into precios_extra values(3,'Asesoria especial',3);
 insert into precios_extra values(4,'Reporte cliente',2);
 insert into precios_extra values(5,'Cambiar checks',4);
-insert into precios_extra values (6,'Subscripción mensual', 18)
+insert into precios_extra values (6,'Subscripción mensual', 18);
 --ACCIDENTES
 insert into accidentes values(1,'accidente fisico',1,1,0);
 insert into accidentes values(2,'extintor',1,1,0);

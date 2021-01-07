@@ -70,7 +70,6 @@ const postUsuario = async(values,props) =>{
     let url = 'http://10.0.2.2:8080/create';
 
     if(values.razonSocial == null){
-        console.log("tipo profesional");
         let json = {
             username: values.usuario,
             password: values.contraseña,
@@ -89,16 +88,10 @@ const postUsuario = async(values,props) =>{
 
         let respJson = await resp.json()
 
-        console.log("RespJson: ",respJson); 
-        console.log(resp.status)
-        if(respJson.errorNum===1) {
-           Alert.alert("Ups","Profesional duplicado",[
-               {text: 'Ok',onPress: ()=> {console.log("Apretó ok")} }
-           ],{
-               cancelable: false
-           });
-        } else {
-            Alert.alert("Exito","Profesional agregado",[
+        if(respJson.errorNum){
+            Alert.alert("Error","Rut duplicado",[{text:'Ok'}])
+        }else{
+            Alert.alert("Exito","Profesional creado correctamente",[
                 {text: 'Ok',onPress: ()=> {
                     props.reset();
                     props.navigation.popToTop();
@@ -107,7 +100,6 @@ const postUsuario = async(values,props) =>{
                 cancelable: false
             });
         }
-
     }else{
         console.log("tipo cliente");
         let json = {
@@ -131,9 +123,9 @@ const postUsuario = async(values,props) =>{
 
         console.log("RespJson: ",respJson);       
        
-        if(respJson.errorNum===1) {
-            Alert.alert("Ups","Cliente duplicado",[
-                {text: 'Ok',onPress: ()=> {console.log("Apretó ok")} }
+        if(respJson.errorNum) {
+            Alert.alert("Error","Rut duplicado",[
+                {text: 'Ok',onPress: ()=> {} }
             ],{
                 cancelable: false
             });
