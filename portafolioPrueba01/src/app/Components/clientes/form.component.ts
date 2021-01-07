@@ -17,7 +17,7 @@ export class FormComponent implements OnInit {
   clientes: Cliente;
   params = this.activedRoute.snapshot.params;
   id = this.params.id_cliente;
-
+  mensajeExito = null;
   cli: Cliente ={
     
     CLI_ID: '',
@@ -60,6 +60,7 @@ export class FormComponent implements OnInit {
   }
 
   guardarCliente(){
+    this.mensajeExito = "Cliente creado con éxito";
     var formateado = JSON.stringify({
       
       "id": this.id,

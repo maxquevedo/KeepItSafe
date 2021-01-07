@@ -103,15 +103,21 @@
                 </div>
 
             </form>
-
-            <button class="btn btn-outline-success" style="margin-left: 10%;" role="button" (click)="guardarCliente()">Guardar</button>
-            <div class="my-2 text-left">
-                <button class="btn btn-outline-success" style="margin-left: 10%;" role="button" [routerLink]="['/clientes']" >Volver</button>
-            </div>  
-
+            <div class="row">
+                <div class=" form-group col-sm-12">
+            <button class="botonCrear btn-success" style="margin-left: 10%;" role="button" (click)="guardarCliente()">Guardar</button>
+        </div>
+            <span class="text-success">{{mensajeExito}}</span>
         </div>
 
+             
+
+        </div>
+        <div class=" card-footer text-center">
+            <button class="botonCrear btn-success" style="margin-left: 10%;" role="button" [routerLink]="['/clientes']" >Volver</button>
+        </div> 
     </div>
+
 </div>
 
     

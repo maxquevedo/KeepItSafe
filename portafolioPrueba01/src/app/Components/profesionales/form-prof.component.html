@@ -84,8 +84,13 @@
 
 
         </div>
-        
+        <div class="row">
+            <div class=" form-group col-sm-11">
         <button class="botonCrear btn-success" style="margin-left: 10%;" role="button" (click)="GuardarProfesional()" >Guardar</button>
+            </div>
+        <span class="text-success">{{mensajeExito}}</span>
+    </div>
+
         <div class="card-footer text-center">
             <button class="botonCrear btn-success" [routerLink]="['/profesionales']">volver</button>
         </div>

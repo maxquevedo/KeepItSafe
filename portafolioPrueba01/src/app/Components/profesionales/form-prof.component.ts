@@ -16,7 +16,7 @@ export class FormProfComponent implements OnInit {
   now = Date.now();
   params = this.activedRoute.snapshot.params;
   id = this.params.Profesional;
-  
+  mensajeExito = null;
 
   pro: Profesional={
 
@@ -60,7 +60,7 @@ export class FormProfComponent implements OnInit {
   }
 
   GuardarProfesional(){
-
+this.mensajeExito = "Profesional creado con éxito";
     var formateado = JSON.stringify({
       "id":this.id,
       "username":this.pro.USR_USERNAME,
@@ -70,6 +70,7 @@ export class FormProfComponent implements OnInit {
       "name":this.pro.PRO_NOMBRE,
       "apellido":this.pro.PRO_APELLIDO,
       "fechaingreso": this.datepipe.transform(this.now, 'dd/MM/yyyy')
+      
   });
 
     if (this.id) {
