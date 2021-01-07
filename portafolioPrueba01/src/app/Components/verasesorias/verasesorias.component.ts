@@ -60,12 +60,14 @@ export class VerasesoriasComponent implements OnInit {
       });
     console.log("formato: ",formateado);
 
-    
      this.verasesoriaService.create(formateado).subscribe(
-      res=> console.log("nueva solicitud",res),
+      res=> {
+        console.log("nueva solicitud",res);
+        this.ngOnInit();
+      },
       err=> console.error(err)
     )
-    this.ngOnInit();
+    
   }
 
   rechazar(solid,ase){

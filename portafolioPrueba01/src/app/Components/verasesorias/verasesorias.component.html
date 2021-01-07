@@ -11,8 +11,8 @@
                     <th>ID ASESORIA</th>
                     <th>TIPO DE ASESORIA</th>
                     <th>CLIENTE</th>
-                    <th>PROFESIONAL</th>
-                    <th>OBSERVACION</th>
+                    <th>DESCRIPCION</th>
+                    <th>ESTADO</th>
                     <th>FECHA</th>
                     <th colspan="2" >CONTROLES</th>
                 </tr>
@@ -22,8 +22,8 @@
                     <td>{{ase.SOL_ID}}                    </td>
                     <td>{{ase.SOL_TIPO}}</td>
                     <td>{{ase.CLI_RAZONSOCIAL}}</td>
-                    <td>{{ase.PRO_NOMBRE}} {{ase.PRO_APELLIDO}}</td>
                     <td>{{ase.SOL_DESCRIPCION}}</td>
+                    <td>{{ase.SOL_ESTADO}}</td>
                     <td>{{ase.SOL_FECHA | date: 'dd-MM-yyyy'}}</td>
                     <td>
                         <BUTTON class="botonCrear" style="margin-left: 5px;" [disabled]="ase.SOL_ESTADO == 'aprobado'" (click)="aprobar(ase)"> Aprobar </BUTTON>
