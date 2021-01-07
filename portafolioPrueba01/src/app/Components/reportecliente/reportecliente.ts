@@ -18,4 +18,6 @@ export class Reportecliente {
     REP_PROFESIONAL?;
     REP_CAPACITACIONES?;
 
+    REP_ACCIDENTABILIDAD?;
+
 }

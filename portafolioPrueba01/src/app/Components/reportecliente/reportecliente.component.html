@@ -38,7 +38,7 @@
                 <tr *ngFor="let reportecliente of reporteCliente">
                     <td>{{ reportecliente.REP_CLI_ID }}</td>
                     <td>{{ reportecliente.REP_ID_CLI }}</td>
-                    <td>{{ reportecliente.REP_FECHA }}</td>
+                    <td>{{ reportecliente.REP_FECHA | date : 'dd-MM-yyyy' }}</td>
                     <td>{{ reportecliente.REP_VISITAS }}</td>
                     <td>{{ reportecliente.REP_ASESORIAS}}</td>
                     <td>{{ reportecliente.REP_ACCIDENTES}}</td>
@@ -48,6 +48,14 @@
                 </tr>
             </tbody>
         </table>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-success input-group-text" (click)="calcular(verSeleccion)" >Calular</button>
+                <input class="form-control" type="text" name="" [(ngModel)]="accidentabilidad"  placeholder="% Accidentabilidad" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
         <button class="btn btn-outline-secondary" [routerLink]="['/admin']">volver</button>
     </div>
 </div>

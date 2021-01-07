@@ -12,12 +12,16 @@ export class ReporteclienteService {
 
   constructor(private http : HttpClient) { }
   
-  getReporteClientes(id){
-    return this.http.get(`${this.env.apiUrl}/web/reporteclientes/${id}`)
+  getReporteClientes(){
+    return this.http.get(`${this.env.apiUrl}/web/reporteclientes/`)
   }
 
   getReporteCliente(id){
-    return this.http.get(`${this.env.apiUrl}/web/reportecliente/:id`)
+    return this.http.get(`${this.env.apiUrl}/web/reportecliente/${id}`)
+  }
+
+  getaccidentabilidad(id){
+    return this.http.get(`${this.env.apiUrl}/web/accidentabilidad/${id}`)
   }
 
 }

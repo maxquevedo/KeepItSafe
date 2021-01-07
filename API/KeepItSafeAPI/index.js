@@ -1389,28 +1389,17 @@ app.get('/web/reporteglobal', async (req, res) => {
     }
 })
 
-app.get('/web/reporteclientes/:id', async (req, res) => {
+app.get('/web/reporteclientes', async (req, res) => {
 
-    let id = req.params.id;
     let connection;
-    let queryid = `select max(REP_CLI_ID) from REPORTES_CLI`;
-    let query = `SELECT * FROM reportes_cli where REP_CLI_ID = ${id}`;
-    let idreporte = "0";
-
+    
     try {
         connection = await oracledb.getConnection(credentials);
-        resultqryid = await connection.execute(queryid);
+        
 
-        if (resultqryid.rows[0][0] == null) {
-            idreporte = '1';
-
-        } else {
-            idreporte = parseInt(resultqryid.rows[0]) + 1;
-            
-        }
-
-        let query2 =`insert into REPORTES_CLI ( REP_CLI_ID, REP_ID_CLI, REP_PROFESIONAL) values (${idreporte},1,'1') `
-        result = await connection.execute(query2);
+        let query =`SELECT * FROM reportes_cli`
+        console.log(query);
+        
         result = await connection.execute(query);
     } catch (err) {
         console.log(err)
@@ -1426,14 +1415,40 @@ app.get('/web/reporteclientes/:id', async (req, res) => {
         console.log(result);
         return res.json(mapMultipleResult(result))
     }
+
 })
 
-app.get('/web/reportecliente', async (req, res) => {
+app.get('/web/reportecliente/:id', async (req, res) => {
+
+
+    let id = req.params.id;
     let connection;
-    let query = `select * from Reporte_cliente' where REP_ID_CLIENTE = :id`
+    let queryid = `select max(REP_CLI_ID) from REPORTES_CLI`;
+    let queryidpro = `select  PRO.PRO_NOMBRE,PRO.PRO_APELLIDO from pro where PRO.PRO_CLI_ASIGNADO = ${id}`
+    let query = `SELECT * FROM reportes_cli where REP_CLI_ID = ${id}`;
+    let idreporte = "0";
+    let idpro='null';
+    console.log(id);
     try {
         connection = await oracledb.getConnection(credentials);
-        result = await connection.execute(query, [], {});
+        resultqryidpro = await connection.execute(queryidpro, [], {});
+        resultqryid = await connection.execute(queryid, [], {});
+        idpro = resultqryidpro.rows[0];
+        console.log("id Pro: ",idpro);
+
+        if (resultqryid.rows[0][0] == null) {
+            idreporte = '1';
+
+        } else {
+            idreporte = parseInt(resultqryid.rows[0]) + 1;
+        }
+
+        let query2 =`insert into REPORTES_CLI ( REP_CLI_ID, REP_FECHA, REP_ID_CLI, REP_PROFESIONAL) values (${idreporte},sysdate,${id},'1')`
+        console.log(query2);
+        result = await connection.execute(query2);
+        result = await connection.execute(query);
+
+
     } catch (e) {
         console.log(e);
     } finally {
@@ -1446,6 +1461,34 @@ app.get('/web/reportecliente', async (req, res) => {
         }
     }
     res.json(mapMultipleResult(result))
+
+})
+
+app.get('web/accidentabilidad/:id', async (req, res) => {
+
+    let id = req.params.id;
+    let connection;
+    
+    try {
+        connection = await oracledb.getConnection(credentials);
+        let query =`select avg(ACC_ESTADO)*100 as porc from ACCIDENTES where ACC_ID_CLIENTE = ${id}`
+        console.log(query);
+        result = await connection.execute(query);
+    } catch (err) {
+        console.log(err)
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        console.log(result);
+        return res.json(mapResult(result))
+    }
+
 })
 
 app.get('/web/profesionalclientes', async (req, res) => {
