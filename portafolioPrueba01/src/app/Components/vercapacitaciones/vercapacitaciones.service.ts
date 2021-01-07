@@ -16,14 +16,19 @@ export class VercapacitacionesService {
   getCapacitaciones(){
     return this.http.get(`${this.env.apiUrl}/web/capacitaciones`)
   }
+  getCapacitacion(){
+    return this.http.get(`${this.env.apiUrl}/web/capacitacion`)
+  }
+
+  create(formateado){
+    return this.http.post(`${this.env.apiUrl}/web/solcapacitacion`, formateado, {headers: this.httpHeaders})
+  }
 
  /*  getAsesoria(){
     return this.http.get(`${this.env.apiUrl}/web/asesoria`)
   }
 
-  create(formateado){
-    return this.http.post(`${this.env.apiUrl}/web/solasesoria`, formateado, {headers: this.httpHeaders})
-  }
+ 
 
   update(SOL_ID:string,asesoria){
     return this.http.put(`${this.env.apiUrl}/web/solasesoria/${SOL_ID}`,asesoria, {headers: this.httpHeaders});
