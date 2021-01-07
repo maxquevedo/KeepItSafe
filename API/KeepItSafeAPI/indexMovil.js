@@ -70,6 +70,7 @@ async function logIn(req,res,username,password){
     try{    
         connection = await oracledb.getConnection(connectionInfo);
         result = await connection.execute(query,[username,password],{});
+        console.log(result);
     }catch(e){
         console.log(e);
     }finally{
@@ -139,6 +140,28 @@ app.get('/login/:username/:password', (req,res)=> {
     let password = req.params.password;
 
    logIn(req,res,username,password)
+});
+
+app.get('/cliStatus/:idCli',async function(req,res){
+    let idCli = req.params.idCli;
+    let connection;
+    let query = `select cli_status from clientes where cli_id = ${idCli}`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[],{});
+        console.log(result);
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rows);
 });
 
 app.post('/create/profesional', async(req,res)=>{

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, Button,KeyboardAvoidingView } from 'react-native';
+import { View, Text, TextInput, Button,KeyboardAvoidingView,Alert } from 'react-native';
 import { Field, reduxForm } from 'redux-form';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../styles';
@@ -8,26 +8,35 @@ import { NavigationActions } from 'react-navigation';
 const loggin = async (values) => {
 
     let url = `http://10.0.2.2:8080/login/${values.username}/${values.password}` ;
-    const resp = await fetch(url);
+    var resp = await fetch(url);
     const respJson = await resp.json();
     const status = parseInt(respJson.code);
-    //console.log(respJson[0][5]);
-    await AsyncStorage.setItem('id',(respJson[0][0]).toString());
-    await AsyncStorage.setItem('username',respJson[0][1]);
-    await AsyncStorage.setItem('email',respJson[0][2]);
-    await AsyncStorage.setItem('name',respJson[0][3]);
-    //await AsyncStorage.setItem('password',respJson[0][5]);
-    await AsyncStorage.setItem('tipoUsuario',respJson[0][5]);
-    await AsyncStorage.setItem('id2',(respJson[0][6]).toString());
-    return true;
-    if(status === 200){
-
-        //switch(respJson[5]){}
+    if(respJson.length == 0){
+        Alert.alert('Error','Usuario y/o contraseña incorrecto(s)',[{text:'Ok'}]);
+    }else{
+        if(respJson[0][5] == 'Cliente'){
+            resp = await fetch(`http://10.0.2.2:8080/cliStatus/${(respJson[0][6]).toString()}`);
+            let statusResp = await resp.json();
+            let status = statusResp[0];
+            if(status == 'Disabled'){
+                Alert.alert('Error','Usuario se encuentra deshabilitado',[{text:'Ok'}]);
+                return;
+            }
+            if(status == 'Debt'){
+                Alert.alert('Por favor verifique sus pagos','Usted se encuentra atrasado en sus pagos',[{text:'Ok'}]);
+            }
+        }
+        await AsyncStorage.setItem('id',(respJson[0][0]).toString());
+        await AsyncStorage.setItem('username',respJson[0][1]);
+        await AsyncStorage.setItem('email',respJson[0][2]);
+        await AsyncStorage.setItem('name',respJson[0][3]);
+        await AsyncStorage.setItem('tipoUsuario',respJson[0][5]);
+        await AsyncStorage.setItem('id2',(respJson[0][6]).toString());
+        return true;
     }
 }
 
 const fieldLogin = (props) => {
-    //console.log(props);
     return(
         <View style={{alignContent:'center',alignItems:'center',alignSelf:'center'}}>
             <Text style={styles.text}>{props.nm}</Text>
@@ -69,22 +78,13 @@ const validate = (values) =>{
     return errors;
 }
 
-// const resetAction = NavigationActions.reset({
-//     index: 1,
-//     actions: [NavigationActions.navigate({ routeName: 'Profile' })],
-//     key: null,
-//   });
-
 const LoginForm = (props) => {
     const { navigation } = props;
-    //AsyncStorage.getAllKeys().then(data=> console.log(data))
     AsyncStorage.getItem('tipoUsuario').then((value) => {
         if(value == null){
-            //console.log('Sesion no iniciada')
         }else{
             switch(value){
                 case 'Cliente':
-                    //console.log('Nav to client');
                     navigation.reset({
                         index:0,
                         routes: [{
@@ -93,7 +93,6 @@ const LoginForm = (props) => {
                     })
                     break;
                 case 'Profesional':
-                    //console.log('Nav to profesional');
                     navigation.reset({
                         index:0,
                         routes: [{
@@ -102,7 +101,6 @@ const LoginForm = (props) => {
                     })
                     break;
                 case 'Admin':
-                    //console.log('Nav to admin');
                     navigation.reset({
                         index:0,
                         routes: [{
