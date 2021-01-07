@@ -69,6 +69,11 @@ class Perfil extends Component {
                         <Text style={styles.titulo}>{nombre}</Text>
                             <View><Text></Text></View>
                         <Button color={'#095813'}  title="Cerrar Sesion" onPress={async() => {
+                            await AsyncStorage.removeItem('Canal_cabecera');
+                            await AsyncStorage.removeItem('Canal_id_pro');
+                            await AsyncStorage.removeItem('Canal_id');
+                            await AsyncStorage.removeItem('Canal_id_acc');
+                            await AsyncStorage.removeItem('Canal_id_cliente');
                             await AsyncStorage.removeItem('id');
                             await AsyncStorage.removeItem('email');
                             await AsyncStorage.removeItem('name');

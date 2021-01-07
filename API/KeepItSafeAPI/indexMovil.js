@@ -988,7 +988,7 @@ app.get('/solicitudes/capacitacionCli/:idCli', async function(req,res){
     let result;
     try{
         connection = await oracledb.getConnection(connectionInfo);
-        query = `select * from solicitudes where sol_cli_id = ${idCli} and sol_tipo = 'capacitacion' `;
+        query = `select * from solicitudes where sol_cli_id = ${idCli} and sol_tipo = 'capacitacion' order by sol_id asc `;
         result = await connection.execute(query);
         //console.log(result);
     }catch(err){
@@ -1015,7 +1015,7 @@ app.get('/solicitudes/capacitacionPro/:idPro', async function(req,res){
     let result;
     try{
         connection = await oracledb.getConnection(connectionInfo);
-        query = `select * from solicitudes where sol_pro_id = ${idPro} and sol_tipo = 'capacitacion' `;
+        query = `select * from solicitudes where sol_pro_id = ${idPro} and sol_tipo = 'capacitacion' order by sol_id asc `;
         result = await connection.execute(query);
         //console.log(result);
     }catch(err){
@@ -1122,6 +1122,33 @@ app.post('/crearCapacitacion',async function(req,res){
 
 });
 
+//RECHAZAR SOLICITUD CAPACITACION
+app.put('/rechazarCapacitacion/:idSol',async function(req,res){
+    let idSol = req.params.idSol;
+    let connection;
+    let query = "";
+    let result;
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        query = `update solicitudes set sol_estado = 'rechazada' where sol_id = ${idSol}`;
+        result = await connection.execute(query);
+        //console.log(result);
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        return res.json(result.rows)
+    }
+});
+
 //INSERTAR PROPUESTA DE MEJORA
 app.post('/crearMejora',async function(req,res){
     let items = [];
@@ -1154,7 +1181,7 @@ app.post('/crearMejora',async function(req,res){
         console.log("Murio?");
         for(var i=0;i < result.rows.length;i++){
             for(var j=0;j < items.length;j++){
-                console.log(result.rows[i][2], ' == ', items[j],'? ',result.rows[i][2] == items[j])
+                //console.log(result.rows[i][2], ' == ', items[j],'? ',result.rows[i][2] == items[j])
                 if(result.rows[i][2] == items[j]){
                     duplicada = true;
                     items.splice(j,1);

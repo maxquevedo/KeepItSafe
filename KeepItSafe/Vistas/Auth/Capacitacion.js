@@ -98,7 +98,7 @@ class Capacitacion extends Component {
     }
 
    async crearCapacitacion(){
-        console.log("Entró a crearCapa");
+        //console.log("Entró a crearCapa");
         var { capaElegida,asistentes, materiales,listaAsistentes} = this.state;
         let idCli = await AsyncStorage.getItem("id2");
         let idPro =capaElegida[2];
@@ -121,6 +121,19 @@ class Capacitacion extends Component {
             body:JSON.stringify({jeison})
         });
         let respJson = await resp.json();
+        this.setState({capaElegida:[],listaAsistentes:[],selectedIndex:-1,materiales:'',asistentes:''})
+        this.refreshSolicitudes();
+   }
+
+   async rechazarCapacitacion(){
+    var { capaElegida } = this.state;
+        let idSol = capaElegida[0];
+        let resp = await fetch(`http://10.0.2.2:8080/rechazarCapacitacion/${idSol}`,{
+            method:'PUT',
+            headers: {
+                'Content-Type':'application/json; charset="UTF-8"'
+            }
+        });
         this.setState({capaElegida:[],listaAsistentes:[],selectedIndex:-1,materiales:'',asistentes:''})
         this.refreshSolicitudes();
    }
@@ -160,9 +173,9 @@ class Capacitacion extends Component {
                             showDatePicker? <DateTimePicker
                                                 testID="dateTimePicker"
                                                 value={new Date(fechaSeleccionada)}
-                                                mode={"calendar"}
+                                                mode={"date"}
                                                 is24Hour={true}
-                                                display="default"
+                                                display="calendar"
                                                 minimumDate = { minDate }
                                                 onChange={(event,selectedDate)=>{this.setState({fechaSeleccionada:selectedDate})}}
                                             />:
@@ -179,7 +192,7 @@ class Capacitacion extends Component {
                         multiline={true}
                         placeholder="Asistentes aquí"
                         numberOfLines={4}
-                        onChangeText={(asistentes) => this.setState({asistentes})}
+                        onChangeText={(asistentes) => this.setState({asistentes,showDatePicker:false})}
                         value={this.state.asistentes}/>
                 </KeyboardAvoidingView>
 
@@ -200,7 +213,8 @@ class Capacitacion extends Component {
     }
 
     proView(){
-        const { solicitudes,refreshList,listaAsistentes } = this.state;
+        const { solicitudes,refreshList,listaAsistentes,capaElegida } = this.state;
+        console.log(capaElegida);
         return(
             <KeyboardAvoidingView style={{flex:1}} behavior="height">
                 <KeyboardAvoidingView style={{flex:0.2, alignItems:'center'}} behavior="padding">
@@ -220,10 +234,17 @@ class Capacitacion extends Component {
                 </ScrollView>
                 </KeyboardAvoidingView>
 
-                <KeyboardAvoidingView>
-                   <Button title="Confirmar capacitacion" color="#095813" onPress={ ()=> {this.crearCapacitacion()}}/>
+                <KeyboardAvoidingView style={{flex:0.1}}>
+                    {
+                        capaElegida[4] == 'enviada'? <Button title="Confirmar capacitacion" color="#095813" onPress={ ()=> {this.crearCapacitacion()}}/>:<Text></Text>
+                    }
                 </KeyboardAvoidingView>
-                <KeyboardAvoidingView style={{flex:0.5}}>
+                <View style={{flex:0.1}}>
+                    {
+                        capaElegida[4] == 'enviada'?<Button title="Rechazar capacitacion" color="#095813" onPress={ ()=> {this.rechazarCapacitacion()}}/>:<Text></Text>
+                    }                    
+                </View>
+                <KeyboardAvoidingView style={{flex:0.4}}>
                     <View style={styles.FieldSeparator}></View>
                     <View style={{flexDirection:'row'}}>
                         <Text style={{fontSize: 25 }}>Fecha capacitación</Text>
@@ -237,7 +258,8 @@ class Capacitacion extends Component {
     }
 
     render() {
-        const { loading, tipoUsu } = this.state;
+        const { loading, tipoUsu,showDatePicker } = this.state;
+        console.log(showDatePicker);
         return (
             <View style={{flex:2}}>
                 {
