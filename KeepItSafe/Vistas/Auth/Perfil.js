@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, Button, ActivityIndicator } from 'react-native';
+import { View, Text, Button, ActivityIndicator,ScrollView } from 'react-native';
 import styles from '../styles';
 import EditarPerfilForm from '../Forms/EditarPerfilForm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -59,7 +59,7 @@ class Perfil extends Component {
         const { navigation } = this.props;
         
         return (
-            <View style={{alignContent:'center', justifyContent:'center',flex:1}}>
+            <ScrollView style={{alignContent:'center', flex:1}}>
 
             { loading? <ActivityIndicator animating={true} color="#095813" size="large"/>:
             <View style={styles.orderScreen}>
@@ -96,7 +96,7 @@ class Perfil extends Component {
                 <EditarPerfilForm editar={editar} correo={correo} navigation={navigation} />
             </View>
             }
-            </View>
+            </ScrollView>
         );
     }
 }

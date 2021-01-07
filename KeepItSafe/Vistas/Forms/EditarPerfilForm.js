@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
-import { View, Text, TextInput, Button, ScrollView,Alert } from 'react-native';
+import { View, Text, TextInput, Button, ScrollView,Alert,KeyboardAvoidingView } from 'react-native';
 import { Field, reduxForm } from 'redux-form';
 import styles from '../styles';
 
@@ -30,21 +30,21 @@ const fieldCrearCuenta = (props) => {
 const validate = (values) =>{
     const errors = {};
 
-    //usuario
-    if(!values.usuario){
-        errors.usuario = 'requerido';
-    }else if(values.usuario.length < 5){
-        errors.usuario = 'usuario debe tener al menos 5 caracteres';
-    }else if(values.usuario.length > 20){
-        errors.usuario= 'usuario debe tener menos de 20 caracteres';
-    }
+    // //usuario
+    // if(!values.usuario){
+    //     errors.usuario = 'requerido';
+    // }else if(values.usuario.length < 5){
+    //     errors.usuario = 'usuario debe tener al menos 5 caracteres';
+    // }else if(values.usuario.length > 20){
+    //     errors.usuario= 'usuario debe tener menos de 20 caracteres';
+    // }
 
-    //largo correo
-    if(!values.correo){
-        errors.correo = 'requerido';
-    }else if(values.correo.length < 5){
-        errors.correo = 'correo inválido'
-    }
+    // //largo correo
+    // if(!values.correo){
+    //     errors.correo = 'requerido';
+    // }else if(values.correo.length < 5){
+    //     errors.correo = 'correo inválido'
+    // }
 
     return errors;
 }
@@ -92,7 +92,7 @@ const SignUpForm = (props) => {
             <View><Text></Text></View>
             <View><Text></Text></View>
             <View><Text></Text></View>
-            <View style={{alignSelf:'stretch'}}>
+            <KeyboardAvoidingView style={{alignSelf:'stretch'}} enabled>
                 {
                     editable? <Button title="guardar" color="#095813" onPress={props.handleSubmit((values)=>{
                         //7console.log(values);
@@ -100,7 +100,7 @@ const SignUpForm = (props) => {
                         editable = false;
                     })} />:<Text></Text>
                 }
-            </View>
+            </KeyboardAvoidingView>
         </ScrollView>
     )
 }
