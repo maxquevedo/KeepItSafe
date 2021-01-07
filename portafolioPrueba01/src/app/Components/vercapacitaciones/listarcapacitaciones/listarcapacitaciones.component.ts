@@ -15,8 +15,9 @@ export class ListarcapacitacionesComponent implements OnInit {
   ngOnInit(): void {
     this.importCapacitaciones();
   }
+  
   importCapacitaciones(){
-    this.vercapacitacionesService.getCapacitaciones().subscribe(
+    this.vercapacitacionesService.getCapacitacion().subscribe(
       res => {
         this.capacitacion = res;
         console.log("desde import capacitacitacion :", res)

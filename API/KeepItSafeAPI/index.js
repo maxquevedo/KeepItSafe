@@ -13,8 +13,8 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 // max user
 // const credentials = { user: "c##max2330", password: "Aa123456", connectString: "localhost:1521" };
 // dev user
-//const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
-const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
+const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
+//const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
 
 function mapResult(arreglo) {
     if (!arreglo || !arreglo.metaData || !arreglo.rows)
@@ -1108,6 +1108,69 @@ app.post('/web/solasesoria', async (req, res) => {
 
 });
 
+app.post('/web/solcapacitacion', async (req, res) => {
+    console.log("Body: ", req.body);
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+
+    let sol_id = req.body.id;
+    let participantes = req.body.PARTICIPANTES;
+    let materiales = req.body.MATERIALES;
+    let id_pro= req.body.ID_PRO;
+    let id_cli= req.body.ID_CLI;
+    let fecha=req.body.FECHA;
+
+    let connection;
+    
+    try {
+
+        connection = await oracledb.getConnection(credentials);
+
+        let queryid=`select max(CAP_ID) from CAPACITACIONES`
+        connection = await oracledb.getConnection(credentials);
+
+        resultid = await connection.execute(queryid, [], {});
+        console.log("query: ",queryid, "resultado: ",resultid );
+
+        if (resultid.rows[0][0] == null) {
+            id = '1';
+            
+        } else {
+            id = parseInt(resultid.rows[0]) + 1;
+            
+        };
+        console.log("id : ", id);
+
+        let query = `INSERT INTO capacitaciones (cap_id, cap_participantes, cap_materiales,cap_id_pro,cap_id_cli,cap_fecha) 
+                                                VALUES (${id}, '${participantes}', '${materiales}', ${id_pro}, ${id_cli}, '${fecha}')`;
+        console.log("insert: ",query);
+
+        let query2= `UPDATE SOLICITUDES SET SOL_ESTADO = 'aprobado' WHERE SOL_ID = ${sol_id}`;
+
+        result = await connection.execute(query, [], {})
+        result = await connection.execute(query2, [], {})
+
+        
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        //console.log(result);
+        //return res.send(result.rows);
+        return res.json(JSON.stringify({ result }));
+    }
+
+
+});
+
 app.put('/web/cliente/:id', async(req, res) => {
     console.log("Body: ", req.body);
     console.log("Params: ", req.params);
@@ -1620,6 +1683,26 @@ app.get('/web/asesorias', async (req, res) => {
 app.get('/web/capacitaciones', async (req, res) => {
     let connection;
     let query = `select * from SOLICITUDES INNER JOIN pro on SOLICITUDES.SOL_PRO_ID = PRO_ID INNER JOIN clientes on SOLICITUDES.SOL_CLI_ID=CLI_ID where SOLICITUDES.SOL_TIPO = 'capacitacion' `
+    try {
+        connection = await oracledb.getConnection(credentials);
+        result = await connection.execute(query, [], {});
+    } catch (e) {
+        console.log(e);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+
+app.get('/web/capacitacion', async (req, res) => {
+    let connection;
+    let query = `select * from capacitaciones INNER JOIN pro on CAP_ID_PRO = PRO_ID INNER JOIN clientes on CAP_ID_CLI=CLI_ID`
     try {
         connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});

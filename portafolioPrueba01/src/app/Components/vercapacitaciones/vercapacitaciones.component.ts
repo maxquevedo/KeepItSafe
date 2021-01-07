@@ -44,4 +44,30 @@ export class VercapacitacionesComponent implements OnInit {
     console.log("desde getCapacitaciones",res);
   }
 
+
+  aprobar(cap){
+    this.solicitudes = cap;
+
+    var formateado = JSON.stringify({
+
+      "PARTICIPANTES": this.solicitudes.SOL_DESCRIPCION,
+      "MATERIALES": this.solicitudes.CAP_MATERIALES,
+      "ID_PRO": this.solicitudes.SOL_PRO_ID,
+      "ID_CLI": this.solicitudes.SOL_CLI_ID,
+      "FECHA": this.datepipe.transform(this.solicitudes.SOL_FECHA , 'dd/MM/yyyy')
+    })
+    console.log("Formateado: ",formateado);
+
+    this.vercapacitacionesService.create(formateado).subscribe(
+      res => {
+        console.log("nueva solicitud:", res)
+        this.ngOnInit();
+      },
+      err => console.error(err)
+    )
+
+  }
+
+  
+
 }
