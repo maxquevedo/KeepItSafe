@@ -13,16 +13,18 @@
             
         </div>
         <div>
-            <button class="botonAdmin  btn btn-success" [routerLink]="['/crearchecklist']" >Crear checkList</button>
-            <button class="botonAdmin btn btn-success" [routerLink]="['/vercapacitaciones']">Crear capacitación</button>
+            <button class="botonAdmin btn btn-success" [routerLink]="['/ingresarmejora']" >Ingresar propuesta de mejora</button>
+            <button class="botonAdmin btn btn-success" [routerLink]="['/revisarmejora']" >Revisar propuesta de mejora</button>
+            
             
         </div>
         <div>
-            <button class="botonAdmin btn btn-success" [routerLink]="['/ingresarmejora']" >Ingresar propuesta de mejora</button>
-            <button class="botonAdmin btn btn-success" [routerLink]="['/revisarmejora']" >Revisar propuesta de mejora</button>
+            <button class="botonAdmin btn btn-success" [routerLink]="['/verasesorias']">Crear asesorias</button>
+        <button class="botonAdmin btn btn-success" [routerLink]="['/vercapacitaciones']">Crear capacitación</button>
+          
         </div>
-        <button class="botonAdmin btn btn-success" [routerLink]="['/verasesorias']">Ingresar asesorias</button>
-        <button class="botonAdmin btn btn-success" [routerLink]="['/verasesorias']">Crear caso asesoría</button>
+        
+        <button class="botonAdmin  btn btn-success" [routerLink]="['/crearchecklist']" >Crear checkList</button>
     </div>
     <div class="card-footer text-center">
         <button class="botonEliminar" (click)="logout()" >Salir</button>
