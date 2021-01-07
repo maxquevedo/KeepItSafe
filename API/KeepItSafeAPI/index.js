@@ -13,8 +13,8 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 // max user
 // const credentials = { user: "c##max2330", password: "Aa123456", connectString: "localhost:1521" };
 // dev user
-const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
-//const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
+//const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
+const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
 
 function mapResult(arreglo) {
     if (!arreglo || !arreglo.metaData || !arreglo.rows)
