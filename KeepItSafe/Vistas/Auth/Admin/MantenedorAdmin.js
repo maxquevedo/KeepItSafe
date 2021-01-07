@@ -20,7 +20,6 @@ class MantenedorAdmin extends Component {
                 <Stack.Screen name="Agregar usuario" component={CrearUsuario}/>
                 <Stack.Screen name="Ver profesionales" component={VerProfesionales}/>
                 <Stack.Screen name="Ver clientes" component={VerClientes}/>
-                
             </Stack.Navigator>
         );
     }
