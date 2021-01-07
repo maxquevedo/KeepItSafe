@@ -17,7 +17,8 @@ export class SolicitarasesoriaComponent implements OnInit {
   nombreCliente = null;
   mensajeError = null;
   mensajeExito = null;
-  fechaMinima = new Date();
+  fechaMinima = (new Date()).setDate(new Date().getDate() + 1);
+  
   
   constructor(private solicitarasesoriaService : SolicitarasesoriaService) { }
 

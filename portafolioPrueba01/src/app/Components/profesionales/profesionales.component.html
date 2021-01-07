@@ -2,9 +2,9 @@
 <div class="card border-warning mb-3">
     <div class="card-header">Profesionales</div>
     <div class="card-body text-Dark">
-        <h5 class="card-title">Lista de Profesionales</h5>
+        <h5 class="card-title">Lista de profesionales</h5>
         <div class="my-2 text-left">
-            <button class="botonAdmin btn-warning " [routerLink]="[ '/profesionales/form-prof']">Crear profesional</button>
+            <button class="botonCrear btn-success " [routerLink]="[ '/profesionales/form-prof']">Crear profesional</button>
         </div>
 
         <table class="table table-bordered table-striped" style="font-size: 12px">
@@ -12,16 +12,18 @@
                 <tr>
                     <th>ID USUARIO</th>
                     <th>NOMBRE DE USUARIO</th>
-                    <th>CORREO</th>
                     <th>NOMBRE COMPLETO</th>
+                    <th>CORREO</th>
+                    <th colspan="3"  class="text-center">      CONTROLES</th>
+                    
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let Profesional of profesionales">
                     <td>{{ Profesional.USR_ID }}</td>
                     <td>{{ Profesional.USR_USERNAME }}</td>
-                    <td>{{ Profesional.USR_CORREO }}</td>
                     <td>{{ Profesional.USR_NOMBRECOMPLETO }}</td>
+                    <td>{{ Profesional.USR_CORREO }}</td>
 
                     <td>
                         <BUTTON class="botonCrear" style="margin-left: 5px;" (click)='asignarpro(Profesional)'> Asignar </BUTTON>
@@ -31,13 +33,14 @@
                         <BUTTON class="botonEditar" style="margin-left: 5px;"(click)='editar(Profesional.USR_ID)'> Editar </BUTTON>
                     </td>
                     <td>
-                        <BUTTON class="botonEliminar" name="eliminar" (click)='delete(Profesional)'> Eliminar </BUTTON>
+                        <BUTTON class="botonEliminar" name="eliminar" (click)='delete(Profesional)'> Deshabilitar </BUTTON>
                     </td>
                 </tr>
             </tbody>
             
         </table>
-        <button class="btn btn-outline-secondary" [routerLink]="['/administrador']">volver</button>
-        
+        <div class=" text-center">
+        <button class="botonCrear btn-success" [routerLink]="['/administrador']">volver</button>
+    </div>
     </div>
 </div>

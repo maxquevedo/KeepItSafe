@@ -4,7 +4,7 @@
     <div class="card-body text-Dark">
         <h5 class="card-title">Lista de clientes</h5>
         <div class="my-2 text-left">
-            <button class="botonAdmin btn-warning" [routerLink]="[ '/clientes/form']">Crear cliente</button>
+            <button class="botonCrear btn-success" [routerLink]="[ '/clientes/form']">Crear cliente</button>
         </div>
 
         <table class="table table-bordered table-striped" style="font-size: 12px">
@@ -15,6 +15,7 @@
                     <th>CORREO</th>
                     <th>NOMBRE COMPLETO</th>
                     <th>ESTADO</th>
+                    <th colspan="2"  class="text-center">      CONTROLES</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,11 +37,13 @@
                         <BUTTON class="botonEditar" style="margin-left: 5px;" (click)='editar(usuario.USR_ID)'> Editar </BUTTON>
                     </TD>
                     <TD>
-                        <BUTTON class="botonEliminar" name="eliminar" (click)='delete(usuario)'> Eliminar </BUTTON>
+                        <BUTTON class="botonEliminar" name="eliminar" (click)='delete(usuario)'> Deshabilitar </BUTTON>
                     </TD>
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-outline-secondary" [routerLink]="['/administrador']">volver</button>
+        <div class=" text-center">
+        <button class="botonCrear btn-success" [routerLink]="['/administrador']">volver</button>
+    </div>
     </div>
 </div>

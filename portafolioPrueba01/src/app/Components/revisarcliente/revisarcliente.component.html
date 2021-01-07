@@ -1,6 +1,6 @@
 <br>
 <div class="card border-warning mb-3">
-    <div class="card-header">Clientes</div>
+    <div class="card-header">PROFESIONAL</div>
     <div class="card-body text-Dark">
         <h5 class="card-title">Lista de clientes</h5>
         
@@ -12,6 +12,7 @@
                     <th>RUT_CLIENTE</th>
                     <th>RAZON_SOCIAL</th>
                     <th>TIPO_CONTRATO</th>
+                    <th>EMAIL</th>
                     <th>STATUS_CLIENTE</th>
                 </tr>
             </thead>
@@ -21,12 +22,15 @@
                     <td>{{ cli.CLI_RUT }}</td>
                     <td>{{ cli.CLI_RAZONSOCIAL }}</td>
                     <td>{{ cli.PLANES_PLA_IDPLAN }}</td>
+                    <td>{{ cli.USR_CORREO }}</td>
                     <td>{{ cli.CLI_STATUS }}</td>
 
                     
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-secondary" [routerLink]="['/prof']">Volver</button>
     </div>
+</div>
+<div class=" text-center">
+    <button class="botonCrear btn-success" [routerLink]="['/prof']">Volver</button>
 </div>

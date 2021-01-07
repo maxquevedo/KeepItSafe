@@ -48,7 +48,7 @@ export class VisualizarActividadesComponent implements OnInit {
 
   iniciarAnios() {
     let year = new Date().getFullYear();
-    for (let index = new Date().getFullYear(); index > (year - 100); index--) {
+    for (let index = new Date().getFullYear(); index > (year - 2); index--) {
       this.anios.push(index);
     }
   }

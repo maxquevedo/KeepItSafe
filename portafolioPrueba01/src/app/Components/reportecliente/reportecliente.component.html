@@ -12,7 +12,7 @@
                     <option *ngFor="let cli of clientes" value="{{cli.USR_IDPERFIL}}">{{cli.USR_NOMBRECOMPLETO}}</option>
                 </select>
                 <div class="input-group-append">
-                    <button class="btn btn-outline-success" (click)="generarReporte(verSeleccion)" > Generar Reporte </button>
+                    <button class="botonCrear btn-success" (click)="generarReporte(verSeleccion)" > Generar Reporte </button>
                 </div>  
             </div>
             <p [hidden]="opcionSeleccionado == '0'">Haz seleccionado la opción # {{ verSeleccion }}</p>
@@ -48,14 +48,15 @@
                 </tr>
             </tbody>
         </table>
+        <h5 class="card-title">Accidentabilidad</h5>
         <div class="input-group">
             <div class="input-group-prepend">
-                <button class="btn btn-outline-success input-group-text" (click)="calcular(verSeleccion)" >Calular</button>
+                <button class="btn btn-outline-success input-group-text" (click)="calcular(verSeleccion)" >Calcular</button>
                 <input class="form-control" type="text" name="" [(ngModel)]="accidentabilidad"  placeholder="% Accidentabilidad" disabled>
             </div>
         </div>
     </div>
-    <div class="card-footer">
-        <button class="btn btn-outline-secondary" [routerLink]="['/admin']">volver</button>
+    <div class="card-footer text-center">
+        <button class="botonCrear btn-success" [routerLink]="['/admin']">volver</button>
     </div>
 </div>

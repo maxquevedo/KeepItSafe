@@ -13,8 +13,8 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 // max user
 // const credentials = { user: "c##max2330", password: "Aa123456", connectString: "localhost:1521" };
 // dev user
-const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
-//const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
+//const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
+const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
 
 function mapResult(arreglo) {
     if (!arreglo || !arreglo.metaData || !arreglo.rows)
@@ -768,7 +768,7 @@ app.get('/web/clientes', async (req, res) => {
 app.get('/web/rev/clientes/:id', async (req, res) => {
     let connection;
     let id = req.params.id;
-    let query = `select * from clientes WHERE CLI_ID_PRO=${id}`
+    let query = `select * from clientes inner join usuarios on clientes.cli_id= USUARIOS.USR_IDPERFIL WHERE CLI_ID_PRO=${id} and usuarios.usr_tipousuario='Cliente'`
     try {
         connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
@@ -1036,12 +1036,11 @@ app.post('/web/solasesoria', async (req, res) => {
     }
 
 
-});
-
-app.post('/web/cliente', async (req, res) => {
+});app.put('/web/cliente/:id', async(req, res) => {
     console.log("Body: ", req.body);
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
+    let id = req.body.id;
     let username = req.body.username;
     let password = req.body.password;
     let email = req.body.email;
@@ -1053,24 +1052,40 @@ app.post('/web/cliente', async (req, res) => {
     let tipoUsuario = 'Cliente';
     let estadousuario = '1';
 
+    //update -->    
+
     let connection;
+    /*let userId = 0;
+    let query1 = `select max(usr_id) from usuarios`; */
+    /* let querypro = `select max(PRO_ID) from pro`;
+    let query4 = `select count(*) from usuarios where usr_tipousuario = 'Cliente'` */
+
     
+
     try {
-        //console.log("Query 3:",query3);
-        let querycli = `select max(CLI_ID) from clientes`;
-        let queryusr = `select max(USR_ID) from USUARIOS`;
-        connection = await oracledb.getConnection(credentials);
-        resultCliId = await connection.execute(querycli, [], {})
-        resultUsrId = await connection.execute(queryusr, [], {})
 
+        connection = await oracledb.getConnection(connectionInfo2);
+        //result = await connection.execute(querypro, [], {});
 
-        cliId = (resultCliId.rows[0][0]) + 1;
-        usrid = (resultUsrId.rows[0][0]) + 1;
-        let query3 = `insert into   clientes(CLI_RUT, CLI_ID, CLI_RAZONSOCIAL, CLI_STATUS, PLANES_PLA_IDPLAN) 
-                                    values('${rut}','${cliId}','${razonSocial}','${status}',${plan})`;
-        let query2 = `INSERT INTO   USUARIOS(USR_ID,USR_USERNAME,USR_CORREO,USR_NOMBRECOMPLETO,USR_PASSWORD,USR_TIPOUSUARIO,USR_IDPERFIL,USR_ESTADO) 
-                                    VALUES ('${usrid}','${username}','${email}','${name}','${password}','${tipoUsuario}','${cliId}',${estadousuario}) `;
+        //let proId = parseInt(result.rows[0]) + 1;
+        //console.log("result", result);
+        let query2 = `update USUARIOS set USR_USERNAME = '${username}', USR_CORREO = '${email}', USR_NOMBRECOMPLETO = '${name}', USR_PASSWORD = '${password}' where USR_ID= ${id}`;
         console.log("query2 -> ", query2);
+
+        let queryidCli =`select USUARIOS.USR_IDPERFIL from usuarios where USUARIOS.USR_ID='${id}'`;
+        idCli = await connection.execute(queryidCli, [], {});
+        
+        console.log("idCli->", idCli);
+
+        let query3 = `update Clientes set CLI_RUT ='${rut}', CLI_RAZONSOCIAL = '${razonSocial}' where CLI_ID =${idCli.rows}`;
+        console.log("query3 -> ", query3);
+
+        //console.log("Query 3:",query3);
+
+        //result = await connection.execute(query1,[],{})
+
+        //userId = (result++);
+        
 
         result = await connection.execute(query2, [], {});
         result = await connection.execute(query3, [], {});
@@ -2195,7 +2210,7 @@ app.post('/web/solicitudes/asesoria', async (req, res) => {
     let idCliente =  req.body.SOL_CLI_ID;
     let idProfesional= req.body.SOL_PRO_ID;
     let descripcionSolicitud= req.body.SOL_DESCRIPCION;
-    let estadoSolicitud= 'pendiente';
+    let estadoSolicitud= 'abierta';
     let tipoSolicitud= 'asesoria especial';
     let fechaSolicitud=req.body.SOL_FECHA;
     let solicitudID=0;

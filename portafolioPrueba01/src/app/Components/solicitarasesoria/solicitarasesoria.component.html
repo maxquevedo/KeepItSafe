@@ -3,7 +3,7 @@
     <div class="card-header">
         Crear Solicitud Asesoria
     </div>
-    <div class="card-body">
+    
 
         <div class="card bg-aqua text-dark col-sm-12">
 
@@ -34,7 +34,7 @@
                     </div>
                     <div class="row">
                         <div class=" form-group col-sm-12">
-                            <button class="btn btn-success" (click)="crearSolicitud()" [disabled]="!form.valid">Guardar</button>
+                            <button class="botonCrear btn btn-success" (click)="crearSolicitud()" [disabled]="!form.valid">Guardar</button>
                         </div>
 
                         <span class="text-danger">{{mensajeError}}</span>
@@ -45,8 +45,7 @@
             </div>
         </div>
 
-    </div>
     <div class="card-footer text-muted">
-        <button class="btn btn-outline-success" [routerLink]="['/Cliente']">Volver</button>
+        <button class="botonCrear btn btn-success" [routerLink]="['/Cliente']">Volver</button>
     </div>
 </div>

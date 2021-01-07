@@ -8,23 +8,23 @@
         
         <div>
             
-            <button class="botonAdmin btn btn-warning" [routerLink]="['/revisarcliente']" >Revisar cliente</button>
-            <button class="botonAdmin btn btn-warning" [routerLink]="['/planificarvisita']">Planificar visita</button>
-            <button class="botonAdmin btn btn-warning" [routerLink]="['/vercapacitaciones']">Crear capacitación</button>
-        </div>
-        <div>
-            <button class="botonAdmin btn btn-warning" [routerLink]="['/crearchecklist']" >Crear checkList</button>
-            <button class="botonAdmin btn btn-warning" [routerLink]="['/responderchecklist']" >Responder checkList</button>
+            <button class="botonAdmin btn btn-success" [routerLink]="['/revisarcliente']" >Revisar cliente</button>
+            <button class="botonAdmin btn btn-success" [routerLink]="['/planificarvisita']">Planificar visita</button>
             
         </div>
         <div>
-            <button class="botonAdmin btn btn-warning" [routerLink]="['/ingresarmejora']" >Ingresar propuesta de mejora</button>
-            <button class="botonAdmin btn btn-warning" [routerLink]="['/revisarmejora']" >Revisar propuesta de mejora</button>
+            <button class="botonAdmin  btn btn-success" [routerLink]="['/crearchecklist']" >Crear checkList</button>
+            <button class="botonAdmin btn btn-success" [routerLink]="['/vercapacitaciones']">Crear capacitación</button>
+            
         </div>
-        <button class="botonAdmin btn btn-warning" [routerLink]="['/verasesorias']">Ingresar asesorias</button>
-        <button class="botonAdmin btn btn-warning" [routerLink]="['/verasesorias']">Crear caso asesoría</button>
+        <div>
+            <button class="botonAdmin btn btn-success" [routerLink]="['/ingresarmejora']" >Ingresar propuesta de mejora</button>
+            <button class="botonAdmin btn btn-success" [routerLink]="['/revisarmejora']" >Revisar propuesta de mejora</button>
+        </div>
+        <button class="botonAdmin btn btn-success" [routerLink]="['/verasesorias']">Ingresar asesorias</button>
+        <button class="botonAdmin btn btn-success" [routerLink]="['/verasesorias']">Crear caso asesoría</button>
     </div>
-    <div class="card-footer text-muted">
-        <button class="btn btn-outline-secondary" (click)="logout()" >Salir</button>
+    <div class="card-footer text-center">
+        <button class="botonEliminar" (click)="logout()" >Salir</button>
     </div>
 </div>

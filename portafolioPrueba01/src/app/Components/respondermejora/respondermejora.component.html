@@ -1,20 +1,18 @@
 <br>
-<div class="card text-center" style="width: 720px;">
+<div class="card border-warning mb-3" >
     <div class="card-header">
-        RESPONDER MEJORA
+        CLIENTE
     </div>
-    <div class="card-body text-center" style="width: 500px;">
-        
-
-                    <table class="table table-striped" style="font-size: 12px">
+    <div class="card-body text-Dark" >
+        <h5 class="card-title">Responder mejora</h5>
+                    <table class="table table-bordered table-striped" style="font-size: 12px">
                         <thead>
-                            <tr>
+                            <tr class="text-center">
                                 <th>PROFESIONAL</th>
                                 <th>DESCRIPCION</th>
                                 <th>ESTADO</th>
                                 <th>RESPUESTA</th>
-                                <th>APROBAR</th>
-                                <th>RECHAZAR</th>
+                                <th colspan="2"  class="text-center">      CONTROLES</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -26,10 +24,10 @@
                                 </td>
             
                                 <TD>
-                                    <BUTTON class="btn btn-success" style="margin-left: 5px;" [disabled]="mej.MEJ_ESTADO == 'enviada' || mej.MEJ_ESTADO == 'rechazado'" (click)='editarAprobar(mej.MEJ_ID,mej.MEJ_RESP_CLI)'> A </BUTTON>
+                                    <BUTTON class="botonCrear" style="margin-left: 5px;" [disabled]="mej.MEJ_ESTADO == 'enviada' || mej.MEJ_ESTADO == 'rechazado' || mej.MEJ_ESTADO == 'aprobada'" (click)='editarAprobar(mej.MEJ_ID,mej.MEJ_RESP_CLI)'> Aprobar </BUTTON>
                                 </TD>
                                 <TD>
-                                    <BUTTON class="btn btn-danger" style="margin-left: 5px;" [disabled]="mej.MEJ_ESTADO == 'enviada' || mej.MEJ_ESTADO == 'rechazado' "  (click)='editarRechazar(mej.MEJ_ID)' > R </BUTTON>
+                                    <BUTTON class="botonEditar" style="margin-left: 5px;" [disabled]="mej.MEJ_ESTADO == 'enviada' || mej.MEJ_ESTADO == 'rechazado' || mej.MEJ_ESTADO == 'rechazado' || mej.MEJ_ESTADO == 'aprobada'"  (click)='editarRechazar(mej.MEJ_ID)' > Rechazar </BUTTON>
                                 </TD>
                             </tr>
                             
@@ -37,7 +35,7 @@
                     </table>
 
     </div>
-    <div class="card-footer text-muted">
-        <button class="btn btn-outline-success" [routerLink]="['/prof']">Volver</button>
+    <div class="card-footer text-center">
+        <button class="botonCrear btn btn-success" [routerLink]="['/prof']">Volver</button>
     </div>
 </div>

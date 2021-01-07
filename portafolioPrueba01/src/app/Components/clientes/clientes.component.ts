@@ -50,13 +50,12 @@ delete(usuario: Usuario): void{
     buttonsStyling: false
   });
   swalWithBootstrapButtons.fire({
-    title: 'Estás Seguro?',
-    text: `¿Seguro que deseas eliminar al cliente ${usuario.USR_NOMBRECOMPLETO}?`,
+    title: 'Deshabilitar',
+    text: `¿Seguro que deseas deshabilitar al cliente ${usuario.USR_NOMBRECOMPLETO}?`,
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonText: 'Si, Eliminar!',
+    confirmButtonText: 'Si, deshabilitar!',
     cancelButtonText: 'No, Cancelar!',
-    reverseButtons: true
   }).then((result) => {
     if (result.isConfirmed) {
       this.clienteService.delete(usuario.USR_ID).subscribe(
@@ -64,8 +63,8 @@ delete(usuario: Usuario): void{
           this.ngOnInit();
           //this.usuario = this.usuario.filter(cli => cli !== cliente)
           swalWithBootstrapButtons.fire(
-            'Cliente eliminado!',
-            `Cliente ${usuario.USR_NOMBRECOMPLETO} Eliminado con éxito `,
+            'Cliente deshabilitado!',
+            `Cliente ${usuario.USR_NOMBRECOMPLETO} deshabilitar con éxito `,
             'success'
           );
         }

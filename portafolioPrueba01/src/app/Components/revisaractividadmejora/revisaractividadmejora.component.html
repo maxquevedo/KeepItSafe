@@ -16,8 +16,7 @@
                                 <th>DESCRIPCION</th>
                                 <th>ESTADO</th>
                                 <th>RESPUESTA</th>
-                                <th>APROBAR</th>
-                                <th>RECHAZAR</th>
+                                <th colspan="2"  class="text-center">      CONTROLES</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -28,10 +27,10 @@
                                 <td>{{mej.MEJ_RESP_CLI}}</td>
             
                                 <TD>
-                                    <BUTTON class="btn btn-success" style="margin-left: 5px;" [disabled]="mej.MEJ_ESTADO == 'aprobada' || mej.MEJ_ESTADO == 'abierta' " (click)='editarAprobar(mej.MEJ_ID)'> A </BUTTON>
+                                    <BUTTON class="botonCrear" style="margin-left: 5px;" [disabled]="mej.MEJ_ESTADO == 'aprobada' || mej.MEJ_ESTADO == 'abierta' " (click)='editarAprobar(mej.MEJ_ID)'> Aprobar </BUTTON>
                                 </TD>
                                 <TD>
-                                    <BUTTON class="btn btn-danger" style="margin-left: 5px;" [disabled]="mej.MEJ_ESTADO == 'aprobada' || mej.MEJ_ESTADO == 'rechazado' || mej.MEJ_ESTADO == 'abierta' "  (click)='editarRechazar(mej.MEJ_ID)' > R </BUTTON>
+                                    <BUTTON class="botonEditar" style="margin-left: 5px;" [disabled]="mej.MEJ_ESTADO == 'aprobada' || mej.MEJ_ESTADO == 'rechazado' || mej.MEJ_ESTADO == 'abierta' "  (click)='editarRechazar(mej.MEJ_ID)' > Rechazar </BUTTON>
                                 </TD>
                             </tr>
                             
@@ -42,7 +41,7 @@
         </div>
 
     
-    <div class="card-footer text-muted">
-        <button class="btn btn-outline-success" [routerLink]="['/prof']">Volver</button>
+    <div class="card-footer text-center">
+        <button class="botonCrear btn-success" [routerLink]="['/prof']">Volver</button>
     </div>
 </div>

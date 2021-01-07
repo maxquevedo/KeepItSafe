@@ -13,7 +13,7 @@
                 </select>
             </div>
             <div class="col">
-                <button *ngIf="mostrarGenerarFacturas()" type="button" (click)="generarFacturas()" class="btn btn-secondary float-right"> Generar facturas </button>
+                <button *ngIf="mostrarGenerarFacturas()" type="button" (click)="generarFacturas()" class="botonCrear btn-success float-right"> Generar facturas </button>
             </div>
         </div>
 
@@ -50,6 +50,8 @@
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-outline-secondary" [routerLink]="['/admin']">volver</button>
+        <div class=" text-center">
+        <button class="botonCrear btn-success" [routerLink]="['/admin']">volver</button>
+    </div>
     </div>
 </div>

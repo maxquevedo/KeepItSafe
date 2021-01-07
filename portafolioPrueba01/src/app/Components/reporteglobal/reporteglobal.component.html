@@ -4,7 +4,7 @@
     <div class="card-body text-Dark">
         <div>
             <h5 class="card-title">Reporte Global</h5>
-            <button type="button" class="btn btn-outline-secondary" (click)="generarReporte()">Generar Reporte</button>
+            <button type="button" class="botonCrear btn-success" (click)="generarReporte()">Generar Reporte</button>
         </div>
 
         <table class="table table-bordered table-striped" style="font-size: 12px">
@@ -32,6 +32,8 @@
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-outline-secondary" [routerLink]="['/admin']">volver</button>
+        <div class=" text-center">
+        <button class="botonCrear btn-success" [routerLink]="['/admin']">volver</button>
+    </div>
     </div>
 </div> 

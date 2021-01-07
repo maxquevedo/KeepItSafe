@@ -61,13 +61,12 @@ export class ProfesionalesComponent implements OnInit {
       buttonsStyling: false
     });
     swalWithBootstrapButtons.fire({
-      title: 'Estás Seguro?',
-      text: `¿Seguro que deseas eliminar al Profesional ${profesional.USR_NOMBRECOMPLETO} ?`,
+      title: 'Deshabilitar',
+      text: `¿Seguro que deseas deshabilitar al profesional ${profesional.USR_NOMBRECOMPLETO} ?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si, Eliminar!',
-      cancelButtonText: 'No, Cancelar!',
-      reverseButtons: true
+        cancelButtonText: '¡No, cancelar!',
+      confirmButtonText: '¡Si, deshabilitar!'
     }).then((result) => {
       if (result.isConfirmed) {
         this.profesionalService.delete(profesional.USR_ID).subscribe(
@@ -75,8 +74,8 @@ export class ProfesionalesComponent implements OnInit {
             this.ngOnInit();
             //this.profesionales = this.profesionales.filter(pro => pro !== profesional);
             swalWithBootstrapButtons.fire(
-              'Profesional eliminado!',
-              `Profesional ${profesional.USR_NOMBRECOMPLETO} Eliminado con éxito `,
+              'Profesional deshabilitar!',
+              `Profesional ${profesional.USR_NOMBRECOMPLETO} Deshabilitado con éxito `,
               'success'
             );
           }

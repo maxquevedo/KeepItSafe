@@ -17,7 +17,7 @@ export class SolicitarcapacitacionComponent implements OnInit {
   nombreCliente = null;
   mensajeError = null;
   mensajeExito = null;
-  fechaMinima = new Date();
+  fechaMinima  = (new Date()).setDate(new Date().getDate() + 15);
   
   constructor(private solicitarcapacitacionService : SolicitarcapacitacionService) { }
 

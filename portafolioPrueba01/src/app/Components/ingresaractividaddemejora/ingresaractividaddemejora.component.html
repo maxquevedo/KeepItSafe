@@ -13,10 +13,6 @@
                     <div class="form-row">
                         
                         <div class="form-group col-sm-4">
-                            <label for="">Profesional</label>
-                            <input class="form-control" type="text" name="profesional" [(ngModel)]="nombreProfesional" readonly>
-                        </div>
-                        <div class="form-group col-sm-4">
                             <label for="">Cliente</label>
                             <input class="form-control" type="text" name="cliente" [(ngModel)]="cliente.CLI_RAZONSOCIAL" readonly>
                         </div>
@@ -28,7 +24,7 @@
                     </div>
                     <div class="row">
                         <div class=" form-group col-sm-12">
-                            <button class="btn btn-success" (click)="crearMejora()" [disabled]="!form.valid">Guardar</button>
+                            <button class="botonCrear btn btn-success" (click)="crearMejora()" [disabled]="!form.valid">Guardar</button>
                         </div>
                         <span class="text-success">{{mensajeExito}}</span>
                     </div>
@@ -38,7 +34,7 @@
         </div>
 
     </div>
-    <div class="card-footer text-muted">
-        <button class="btn btn-outline-success" [routerLink]="['/Profesional']">Volver</button>
+    <div class="card-footer text-center">
+        <button class="botonCrear btn btn-success" [routerLink]="['/Profesional']">Volver</button>
     </div>
 </div>

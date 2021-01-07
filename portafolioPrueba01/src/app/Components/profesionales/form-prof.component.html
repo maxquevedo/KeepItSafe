@@ -1,6 +1,6 @@
 <br>
 <div class="card bg-aqua text-dark text-center col-sm-12">
-    <div class="card-header"> Crear nuevo Profesional
+    <div class="card-header"> Formulario profesional
         <div class="card-body text-center">
             <form>
                 <div class="form-group row">
@@ -84,9 +84,10 @@
 
 
         </div>
-        <button class="btn btn-outline-success" style="margin-left: 10%;" role="button" (click)="GuardarProfesional()" >Guardar</button>
-        <div class="my-2 text-left">
-            <button class="btn btn-outline-success" [routerLink]="['/profesionales']">volver</button>
+        
+        <button class="botonCrear btn-success" style="margin-left: 10%;" role="button" (click)="GuardarProfesional()" >Guardar</button>
+        <div class="card-footer text-center">
+            <button class="botonCrear btn-success" [routerLink]="['/profesionales']">volver</button>
         </div>
     </div>
 

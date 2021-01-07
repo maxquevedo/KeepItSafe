@@ -29,7 +29,7 @@ export class ClienteService {
   }
 
   update(USR_ID:string,cliente){
-    return this.http.put(`${this.env.apiUrl}/web/Cliente/${USR_ID}`,cliente);
+    return this.http.put(`${this.env.apiUrl}/web/cliente/${USR_ID}`,cliente);
   }
 
   delete(USR_ID: number){

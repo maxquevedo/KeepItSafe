@@ -15,7 +15,7 @@ export class PlanificarvisitaComponent implements OnInit {
   nombreProfesional = null;
   mensajeError = null;
   mensajeExito = null;
-  fechaMinima = new Date();
+  fechaMinima = (new Date()).setDate(new Date().getDate() + 1);
 
   constructor(private planificarvisitaService : PlanificarvisitaService) { }
 
