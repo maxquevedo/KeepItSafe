@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, Button, ActivityIndicator } from 'react-native';
+import { View, Text, Button, ActivityIndicator,ScrollView } from 'react-native';
 import styles from '../styles';
 import EditarPerfilForm from '../Forms/EditarPerfilForm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -59,7 +59,7 @@ class Perfil extends Component {
         const { navigation } = this.props;
         
         return (
-            <View style={{alignContent:'center', justifyContent:'center',flex:1}}>
+            <ScrollView style={{alignContent:'center', flex:1}}>
 
             { loading? <ActivityIndicator animating={true} color="#095813" size="large"/>:
             <View style={styles.orderScreen}>
@@ -69,6 +69,11 @@ class Perfil extends Component {
                         <Text style={styles.titulo}>{nombre}</Text>
                             <View><Text></Text></View>
                         <Button color={'#095813'}  title="Cerrar Sesion" onPress={async() => {
+                            await AsyncStorage.removeItem('Canal_cabecera');
+                            await AsyncStorage.removeItem('Canal_id_pro');
+                            await AsyncStorage.removeItem('Canal_id');
+                            await AsyncStorage.removeItem('Canal_id_acc');
+                            await AsyncStorage.removeItem('Canal_id_cliente');
                             await AsyncStorage.removeItem('id');
                             await AsyncStorage.removeItem('email');
                             await AsyncStorage.removeItem('name');
@@ -96,7 +101,7 @@ class Perfil extends Component {
                 <EditarPerfilForm editar={editar} correo={correo} navigation={navigation} />
             </View>
             }
-            </View>
+            </ScrollView>
         );
     }
 }

@@ -12,7 +12,7 @@ const ActividadesForm = (props) => {
     const asesorias = props.asesorias;
     const visitas = props.visitas;
     const capacitaciones = props.capacitaciones;
-    console.log("Ase: "+asesorias,"Visi: "+visitas,"Capa: "+capacitaciones);
+    //console.log("Ase: "+asesorias,"Visi: "+visitas,"Capa: "+capacitaciones);
     const [selectedStartDate, setSelectedStartDate] = useState('');
     const [selectedEndDate, setSelectedEndDate] = useState('');
 

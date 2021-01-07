@@ -70,6 +70,7 @@ async function logIn(req,res,username,password){
     try{    
         connection = await oracledb.getConnection(connectionInfo);
         result = await connection.execute(query,[username,password],{});
+        console.log(result);
     }catch(e){
         console.log(e);
     }finally{
@@ -139,6 +140,28 @@ app.get('/login/:username/:password', (req,res)=> {
     let password = req.params.password;
 
    logIn(req,res,username,password)
+});
+
+app.get('/cliStatus/:idCli',async function(req,res){
+    let idCli = req.params.idCli;
+    let connection;
+    let query = `select cli_status from clientes where cli_id = ${idCli}`
+    try{    
+        connection = await oracledb.getConnection(connectionInfo);
+        result = await connection.execute(query,[],{});
+        console.log(result);
+    }catch(e){
+        console.log(e);
+    }finally{
+        if(connection){
+            try{
+                await connection.close();
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+    return res.json(result.rows);
 });
 
 app.post('/create/profesional', async(req,res)=>{
@@ -685,9 +708,9 @@ app.get('/propuestas/:id/:user',async function(req,res){
     let usu = req.params.user;
     let connection;
     if(usu == "Cliente"){
-        var query = `select * from mejoras where mej_idCli = :id`
+        var query = `select * from mejoras where mej_idCli = :id order by mej_id asc`
     }else{
-        var query = `select * from mejoras where mej_idPro = :id`
+        var query = `select * from mejoras where mej_idPro = :id order by mej_id asc`
     }
     try{    
         connection = await oracledb.getConnection(connectionInfo);
@@ -988,7 +1011,7 @@ app.get('/solicitudes/capacitacionCli/:idCli', async function(req,res){
     let result;
     try{
         connection = await oracledb.getConnection(connectionInfo);
-        query = `select * from solicitudes where sol_cli_id = ${idCli} and sol_tipo = 'capacitacion' `;
+        query = `select * from solicitudes where sol_cli_id = ${idCli} and sol_tipo = 'capacitacion' order by sol_id asc `;
         result = await connection.execute(query);
         //console.log(result);
     }catch(err){
@@ -1015,7 +1038,7 @@ app.get('/solicitudes/capacitacionPro/:idPro', async function(req,res){
     let result;
     try{
         connection = await oracledb.getConnection(connectionInfo);
-        query = `select * from solicitudes where sol_pro_id = ${idPro} and sol_tipo = 'capacitacion' `;
+        query = `select * from solicitudes where sol_pro_id = ${idPro} and sol_tipo = 'capacitacion' order by sol_id asc `;
         result = await connection.execute(query);
         //console.log(result);
     }catch(err){
@@ -1120,6 +1143,98 @@ app.post('/crearCapacitacion',async function(req,res){
     }
 
 
+});
+
+//RECHAZAR SOLICITUD CAPACITACION
+app.put('/rechazarCapacitacion/:idSol',async function(req,res){
+    let idSol = req.params.idSol;
+    let connection;
+    let query = "";
+    let result;
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        query = `update solicitudes set sol_estado = 'rechazada' where sol_id = ${idSol}`;
+        result = await connection.execute(query);
+        //console.log(result);
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        return res.json(result.rows)
+    }
+});
+
+//INSERTAR PROPUESTA DE MEJORA
+app.post('/crearMejora',async function(req,res){
+    let items = [];
+    let result;
+    let connection;
+    let query = "";
+    let idPro = -1;
+    let idMejora = -1;
+    let duplicada= false;
+    let idCli = req.body.jeison.idCli;
+    let checks = req.body.jeison.checks;
+
+    for(var i=0;i<checks.length;i++){
+        items.push(checks[i][1]);
+    }
+ 
+    try{
+        connection = await oracledb.getConnection(connectionInfo);
+        //idMejora
+        query = `select count(*) from mejoras`;
+        result = await connection.execute(query);
+        idMejora = (result.rows[0][0])+1;
+        //idPro
+        query = `select cli_id_pro from clientes where cli_id = ${idCli}`;
+        result = await connection.execute(query);
+        idPro = result.rows[0][0];
+        //Quitar repetidas
+        query = `select * from mejoras where mej_idcli = ${idCli}`;
+        result = await connection.execute(query);
+        console.log("Murio?");
+        for(var i=0;i < result.rows.length;i++){
+            for(var j=0;j < items.length;j++){
+                //console.log(result.rows[i][2], ' == ', items[j],'? ',result.rows[i][2] == items[j])
+                if(result.rows[i][2] == items[j]){
+                    duplicada = true;
+                    items.splice(j,1);
+                }
+            }
+        }
+        //console.log(items);
+        if(items.length > 0){
+            for(var i=0;i < items.length;i++){
+                query = `insert into mejoras values(${idMejora},'abierta','${items[i]}',null,${idPro},${idCli})`;
+                //console.log("query: ",query);
+                result = await connection.execute(query);
+                //console.log("Holi desde i=",i, "\n respuesta es: ",result);
+                idMejora+=1;
+            }            
+        }
+    }catch(err){
+        console.log(err)
+    }
+    finally{
+        if(connection){
+            try{
+                await connection.close();
+               
+            }catch(err){
+                console.log(err);
+            }
+        }
+        return res.json({});
+    }
 });
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;

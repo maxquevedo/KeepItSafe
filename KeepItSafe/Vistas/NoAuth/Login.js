@@ -14,14 +14,6 @@ class Login extends Component {
         }
     }
 
-    // toggleLoading = () => {
-    //     this.setState({loading:!this.state.loading});
-    // }
-
-    // componentDidMount(){
-    //     this.setState({loading:false})
-    // }
-
     render() {
         const { navigation,login } = this.props;
         return (<View style={{flex:1, justifyContent:'center'}}>

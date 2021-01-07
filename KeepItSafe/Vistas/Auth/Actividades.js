@@ -48,7 +48,7 @@ class Actividades extends Component {
 
     render() {
         const { visitas, asesorias, capacitaciones, loading } = this.state;
-        console.log("Asesorias: ",asesorias[0],"Capacitaciones: ",capacitaciones[0], "Visitas: ",visitas[0], "Cargando: ",loading);
+        //console.log("Asesorias: ",asesorias[0],"Capacitaciones: ",capacitaciones[0], "Visitas: ",visitas[0], "Cargando: ",loading);
         return (
         <View style={styles.topBar}>
             {

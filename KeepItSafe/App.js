@@ -68,8 +68,6 @@ function Cliente(){
           iconName = 'ios-person';
         } else if (route.name === "Actividades") {
           iconName = 'ios-calendar';
-        } else if(route.name === "Reportes"){
-          iconName = focused ? 'ios-folder-open' : 'ios-folder';
         } else if(route.name === "Accidentes"){
           iconName = 'ios-flame';
         } else if(route.name === "Asesoria"){
@@ -83,7 +81,6 @@ function Cliente(){
       <Tab.Screen name="Actividades" component={Actividades}/>
       <Tab.Screen name="Accidentes" component={Accidentes}/>
       <Tab.Screen name="Asesoria" component={AsesoriaStack}/>
-      <Tab.Screen name="Reportes" component={VerReportes}/>
     </Tab.Navigator>
   );
 }
