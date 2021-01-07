@@ -1064,8 +1064,17 @@ app.post('/web/solasesoria', async (req, res) => {
         resultid = await connection.execute(queryid, [], {});
         console.log("query: ",queryid, "resultado: ",resultid );
 
-        cantidad = parseInt(resultcant.rows[0]) + 1;
-        let id = parseInt(resultid.rows[0]) + 1;
+        if (resultid.rows[0][0] == null) {
+            id = '1';
+            cantidad = '1';
+            
+        } else {
+            id = parseInt(resultid.rows[0]) + 1;
+            cantidad = parseInt(resultcant.rows[0]) + 1;
+            
+        };
+
+        
         console.log("cantidad : ", cantidad);
         console.log("id : ", id);
 
