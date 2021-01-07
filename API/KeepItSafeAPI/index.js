@@ -1470,7 +1470,26 @@ app.get('/web/profesionalclientes', async (req, res) => {
 
 app.get('/web/asesorias', async (req, res) => {
     let connection;
-    let query = `select * from SOLICITUDES INNER JOIN pro on SOLICITUDES.SOL_PRO_ID = PRO_ID INNER JOIN clientes on SOLICITUDES.SOL_CLI_ID=CLI_ID`
+    let query = `select * from SOLICITUDES INNER JOIN pro on SOLICITUDES.SOL_PRO_ID = PRO_ID INNER JOIN clientes on SOLICITUDES.SOL_CLI_ID=CLI_ID where SOLICITUDES.SOL_TIPO = 'asesoria especial' `
+    try {
+        connection = await oracledb.getConnection(credentials);
+        result = await connection.execute(query, [], {});
+    } catch (e) {
+        console.log(e);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    res.json(mapMultipleResult(result))
+})
+app.get('/web/capacitaciones', async (req, res) => {
+    let connection;
+    let query = `select * from SOLICITUDES INNER JOIN pro on SOLICITUDES.SOL_PRO_ID = PRO_ID INNER JOIN clientes on SOLICITUDES.SOL_CLI_ID=CLI_ID where SOLICITUDES.SOL_TIPO = 'capacitacion' `
     try {
         connection = await oracledb.getConnection(credentials);
         result = await connection.execute(query, [], {});
@@ -2124,7 +2143,7 @@ app.put('/web/mejoras/rechazar/:id', async(req, res) => {
 });
 
 // CrearSolicitudAsesorias
-app.post('/web/solicitudes', async (req, res) => {
+app.post('/web/solicitudes/asesoria', async (req, res) => {
     console.log("Body: ", req.body);
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
@@ -2169,6 +2188,51 @@ app.post('/web/solicitudes', async (req, res) => {
     }
 });
 
+// CrearSolicitudCapacitacion
+app.post('/web/solicitudes/capacitacion', async (req, res) => {
+    console.log("Body: ", req.body);
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+
+    
+    let idCliente =  req.body.SOL_CLI_ID;
+    let idProfesional= req.body.SOL_PRO_ID;
+    let descripcionSolicitud= req.body.SOL_DESCRIPCION;
+    let estadoSolicitud= 'pendiente';
+    let tipoSolicitud= 'capacitacion';
+    let fechaSolicitud=req.body.SOL_FECHA;
+    let solicitudID=0;
+    let query1 = 'select count(*) from SOLICITUDES';
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(credentials);
+        result = await connection.execute(query1, [], {})
+        console.log("result query1", result);
+        solicitudID = parseInt(result.rows[0][0]) + 1;
+        console.log("ResultRows",result.rows);
+        console.log("VALOR",solicitudID);
+        console.log(typeof(solicitudID));
+        let query2 = `INSERT INTO SOLICITUDES (SOL_ID, SOL_CLI_ID, SOL_PRO_ID, SOL_DESCRIPCION, SOL_ESTADO,SOL_TIPO, SOL_FECHA) VALUES (${solicitudID},${idCliente},${idProfesional},'${descripcionSolicitud}','${estadoSolicitud}','${tipoSolicitud}',TO_DATE('${fechaSolicitud}','YYYY-MM-DD'))`;
+        console.log("insert: ",query2)
+        result = await connection.execute(query2, [], {});
+       
+        
+    } catch (err) {
+        console.log("Error en query: ",err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return res.json(JSON.stringify({ result }));
+    }
+});
 // CrearAccidentes
 app.post('/web/accidentes', async (req, res) => {
     console.log("Body: ", req.body);
