@@ -28,8 +28,8 @@ export class ClienteService {
     return this.http.get(`${this.env.apiUrl}/web/cliente/${USR_ID}`);
   }
 
-  update(USR_ID:string,cliente){
-    return this.http.put(`${this.env.apiUrl}/web/cliente/${USR_ID}`,cliente);
+  update(USR_ID:string,formateado){
+    return this.http.put(`${this.env.apiUrl}/web/cliente/${USR_ID}`,formateado, {headers: this.httpHeaders});
   }
 
   delete(USR_ID: number){

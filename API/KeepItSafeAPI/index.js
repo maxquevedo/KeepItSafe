@@ -13,8 +13,8 @@ oracledb.outFormat = oracledb.OUT_FORMAT_ARRAY;
 // max user
 // const credentials = { user: "c##max2330", password: "Aa123456", connectString: "localhost:1521" };
 // dev user
-//const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
-const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
+const credentials = { user: "c##dba_desarrollo", password: "Aa123456", connectString: "localhost:1521" };
+//const credentials = { user: "system", password: "Aa123456", connectString: "localhost:1521" };
 
 function mapResult(arreglo) {
     if (!arreglo || !arreglo.metaData || !arreglo.rows)
@@ -765,6 +765,67 @@ app.get('/web/clientes', async (req, res) => {
     res.json(mapMultipleResult(result))
 })
 
+//crear  cliente
+app.post('/web/cliente', async (req, res) => {
+    console.log("Body: ", req.body);
+    console.log("Params: ", req.params);
+    console.log("Query: ", req.query);
+    let username = req.body.username;
+    let password = req.body.password;
+    let email = req.body.email;
+    let rut = req.body.rut;
+    let name = req.body.name;
+    let razonSocial = req.body.razonSocial;
+    let status = 'Disabled';
+    let plan = 1;
+    let tipoUsuario = 'Cliente';
+    let estadousuario = '1';
+
+    let connection;
+
+    let querycli = `select max(CLI_ID) from clientes`;
+    let queryusr = `select max(usr_ID) from usuarios`;
+
+    try {
+        //console.log("Query 3:",query3);
+
+        connection = await oracledb.getConnection(credentials);
+        resultclid = await connection.execute(querycli, [], {})
+        resultusid = await connection.execute(queryusr, [], {})
+        console.log("max cli: ",resultclid,"max usr: " , resultusid)
+
+        let cliId = parseInt(resultclid.rows[0]) + 1;
+        let usrid = parseInt(resultusid.rows[0]) + 1;
+        console.log("cliid: ",cliId,"usrid: ",usrid)
+
+        let query3 = `insert into clientes(CLI_RUT, CLI_ID, CLI_RAZONSOCIAL, CLI_STATUS, PLANES_PLA_IDPLAN) values('${rut}','${cliId}','${razonSocial}','${status}',${plan})`;
+        console.log("query3 -> ", query3);
+        let query2 = `INSERT INTO USUARIOS(USR_ID,USR_USERNAME,USR_CORREO,USR_NOMBRECOMPLETO,USR_PASSWORD,USR_TIPOUSUARIO,USR_IDPERFIL,USR_ESTADO) 
+                                   VALUES ('${usrid}','${username}','${email}','${name}','${password}','${tipoUsuario}','${cliId}',${estadousuario}) `;
+        console.log("query2 -> ", query2);
+
+        result = await connection.execute(query2, [], {});
+        result = await connection.execute(query3, [], {});
+    } catch (err) {
+        console.log(err)
+        res.send(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        //console.log(result);
+        //return res.send(result.rows);
+        return res.json(JSON.stringify({ result }));
+    }
+
+
+});
+
 app.get('/web/rev/clientes/:id', async (req, res) => {
     let connection;
     let id = req.params.id;
@@ -1036,7 +1097,9 @@ app.post('/web/solasesoria', async (req, res) => {
     }
 
 
-});app.put('/web/cliente/:id', async(req, res) => {
+});
+
+app.put('/web/cliente/:id', async(req, res) => {
     console.log("Body: ", req.body);
     console.log("Params: ", req.params);
     console.log("Query: ", req.query);
@@ -1064,7 +1127,7 @@ app.post('/web/solasesoria', async (req, res) => {
 
     try {
 
-        connection = await oracledb.getConnection(connectionInfo2);
+        connection = await oracledb.getConnection(credentials);
         //result = await connection.execute(querypro, [], {});
 
         //let proId = parseInt(result.rows[0]) + 1;
